@@ -1,4 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import heroVideo from '@/assets/hero-video.mp4';
 import mybubuLogo from '@/assets/mybubu-logo.png';
 import { GlowButton } from './GlowButton';
@@ -6,6 +7,7 @@ import { CountdownTimer } from './CountdownTimer';
 import { ParticleField } from './ParticleField';
 
 export const HeroSection = () => {
+  const navigate = useNavigate();
   const { scrollY } = useScroll();
   const logoY = useTransform(scrollY, [0, 500], [0, -100]);
   const logoScale = useTransform(scrollY, [0, 500], [1, 0.8]);
@@ -202,7 +204,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <GlowButton size="large">🐱 Launch App</GlowButton>
+          <GlowButton size="large" onClick={() => navigate('/app')}>🐱 Launch App</GlowButton>
           <GlowButton variant="secondary" size="large">📄 Whitepaper</GlowButton>
         </motion.div>
 
