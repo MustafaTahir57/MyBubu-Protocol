@@ -1,73 +1,62 @@
-# Welcome to your Lovable project
+# MYBUBU Ecosystem 🐱
 
-## Project info
+A comprehensive DeFi protocol on BSC featuring dual-token mechanics (MYBUBU + MYMOMO), NFT Node dividends, and a 10-level referral system. Built with React, Framer Motion, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Features
 
-## How can I edit this code?
+### Dual Token System
+- **MYBUBU Token**: Main utility token with 21M max supply
+- **MYMOMO Token**: Secondary token with burn mechanics
 
-There are several ways of editing your application.
+### LP Mechanism
+- 70% of deposits → LP (35% Labubu + 35% BNB on PancakeSwap)
+- 20% → Referral & Network Rewards
+- 10% → Global Pool for Node Dividend holders
 
-**Use Lovable**
+### NFT Node Rewards
+- 6-tier reward system with 1x to 18x multipliers
+- Daily 10% BNB distribution to NFT holders
+- 0.55 BNB mint price | 1,000 max supply
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Referral System
+- 10-level network rewards (5% → 1%)
+- Smart contract managed distributions
 
-Changes made via Lovable will be committed automatically to this repo.
+### Tokenomics
+- Max Supply: 21,000,000 MYBUBU
+- Transfer Tax: 2% (1% LP + 1% Burn)
+- Max Wallet: 20,000 MYBUBU
+- Team Reserve: 5%
 
-**Use your preferred IDE**
+## 🛠️ Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Frontend**: React 18, Vite, TypeScript
+- **Styling**: Tailwind CSS, shadcn/ui
+- **Animations**: Framer Motion
+- **Network**: Binance Smart Chain (BSC)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 📦 Installation
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Navigate to project directory
+cd mybubu-ecosystem
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🔗 Smart Contracts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- MYBUBU Token Contract
+- MYBUBU NFT Node Contract
+- MYMOMO Token Contract
 
-**Use GitHub Codespaces**
+## 📄 License
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+MIT License - see LICENSE file for details.
