@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { GlowButton } from './GlowButton';
+import mybubuLogo from '@/assets/mybubu-logo.png';
 
 const navLinks = [
   { label: 'About', href: '#about' },
@@ -26,9 +27,18 @@ export const Navbar = () => {
           <motion.a
             href="#"
             whileHover={{ scale: 1.05 }}
-            className="font-display text-2xl font-bold gradient-text"
+            className="flex items-center gap-3"
           >
-            MyBubu
+            <motion.img
+              src={mybubuLogo}
+              alt="MyBubu"
+              className="w-12 h-12 object-contain"
+              animate={{ rotate: [0, -5, 5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <span className="font-display text-2xl font-bold gradient-text">
+              MyBubu
+            </span>
           </motion.a>
 
           {/* Desktop Navigation */}
@@ -46,7 +56,7 @@ export const Navbar = () => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
               </motion.a>
             ))}
-            <GlowButton>Buy Now</GlowButton>
+            <GlowButton>🐱 Buy Now</GlowButton>
           </div>
 
           {/* Mobile Menu Button */}
@@ -76,7 +86,7 @@ export const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <GlowButton>Buy Now</GlowButton>
+          <GlowButton>🐱 Buy Now</GlowButton>
         </div>
       </motion.div>
     </motion.nav>
