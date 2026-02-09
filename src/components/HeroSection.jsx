@@ -93,7 +93,7 @@ export const HeroSection = () => {
             <motion.img
               src={mybubuLogo}
               alt="MyBubu"
-              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain relative z-10 drop-shadow-2xl"
+              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain relative z-10 drop-shadow-2xl mt-24"
               animate={{ 
                 y: [0, -15, 0],
               }}
