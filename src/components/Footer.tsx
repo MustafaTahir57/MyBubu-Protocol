@@ -19,7 +19,7 @@ export const Footer = () => {
             whileHover={{ scale: 1.05 }}
             className="font-display text-3xl font-bold gradient-text"
           >
-            NEXUS
+            MyBubu
           </motion.a>
 
           {/* Social Links */}
@@ -43,7 +43,7 @@ export const Footer = () => {
 
           {/* Copyright */}
           <p className="text-muted-foreground text-sm">
-            © 2024 NEXUS Protocol. All rights reserved.
+            © 2024 MyBubu Protocol. All rights reserved.
           </p>
         </div>
 

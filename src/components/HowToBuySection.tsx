@@ -19,7 +19,7 @@ const steps = [
   {
     step: 3,
     icon: ShoppingCart,
-    title: 'Purchase NEXUS',
+    title: 'Purchase MyBubu',
     description: 'Enter the amount of tokens you want to buy and confirm the transaction in your wallet.',
   },
   {
@@ -49,7 +49,7 @@ export const HowToBuySection = () => {
             How to <span className="gradient-text">Buy</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Join the presale in just a few simple steps and secure your NEXUS tokens 
+            Join the presale in just a few simple steps and secure your MyBubu tokens 
             at the lowest possible price.
           </p>
         </motion.div>

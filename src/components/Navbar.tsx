@@ -28,7 +28,7 @@ export const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             className="font-display text-2xl font-bold gradient-text"
           >
-            NEXUS
+            MyBubu
           </motion.a>
 
           {/* Desktop Navigation */}

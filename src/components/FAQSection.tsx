@@ -8,12 +8,12 @@ import {
 
 const faqs = [
   {
-    question: 'What is NEXUS Protocol?',
-    answer: 'NEXUS Protocol is a next-generation decentralized ecosystem built on blockchain technology, offering ultra-fast transactions, military-grade security, and community-driven governance.',
+    question: 'What is MyBubu Protocol?',
+    answer: 'MyBubu Protocol is a next-generation decentralized ecosystem built on blockchain technology, offering ultra-fast transactions, military-grade security, and community-driven governance.',
   },
   {
     question: 'How do I participate in the presale?',
-    answer: 'Simply connect your Web3 wallet (MetaMask, Trust Wallet, etc.), ensure you have ETH or USDT, and purchase NEXUS tokens directly through our presale interface.',
+    answer: 'Simply connect your Web3 wallet (MetaMask, Trust Wallet, etc.), ensure you have ETH or USDT, and purchase MyBubu tokens directly through our presale interface.',
   },
   {
     question: 'When will I receive my tokens?',
@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     question: 'What happens after the presale?',
-    answer: 'After the presale, NEXUS will be listed on major decentralized exchanges (DEXs) with locked liquidity. The launch price will be 2x the presale price.',
+    answer: 'After the presale, MyBubu will be listed on major decentralized exchanges (DEXs) with locked liquidity. The launch price will be 2x the presale price.',
   },
   {
     question: 'Is there a minimum or maximum purchase?',

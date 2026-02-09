@@ -43,7 +43,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6"
         >
-          <span className="gradient-text">NEXUS</span>
+          <span className="gradient-text">MyBubu</span>
           <br />
           <span className="text-foreground">Protocol</span>
         </motion.h1>

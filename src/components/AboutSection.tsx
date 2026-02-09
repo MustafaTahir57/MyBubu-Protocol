@@ -38,13 +38,13 @@ export const AboutSection = () => {
           className="text-center mb-16"
         >
           <span className="text-primary font-medium uppercase tracking-widest text-sm mb-4 block">
-            About Nexus
+            About MyBubu
           </span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-            Why Choose <span className="gradient-text">NEXUS</span>?
+            Why Choose <span className="gradient-text">MyBubu</span>?
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Built on cutting-edge technology, Nexus Protocol offers unparalleled 
+            Built on cutting-edge technology, MyBubu Protocol offers unparalleled 
             security, speed, and accessibility for the future of decentralized finance.
           </p>
         </motion.div>
