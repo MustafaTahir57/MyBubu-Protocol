@@ -1,19 +1,13 @@
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 
-interface GlowButtonProps {
-  children: ReactNode;
-  variant?: 'primary' | 'secondary';
-  size?: 'default' | 'large';
-  onClick?: () => void;
-}
 
 export const GlowButton = ({ 
   children, 
   variant = 'primary',
   size = 'default',
   onClick 
-}: GlowButtonProps) => {
+}) => {
   const sizeClasses = size === 'large' 
     ? 'px-8 py-4 text-lg' 
     : 'px-6 py-3 text-base';

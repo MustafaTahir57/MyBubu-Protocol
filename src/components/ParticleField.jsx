@@ -1,18 +1,9 @@
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 
-interface Particle {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  duration: number;
-  delay: number;
-  type: 'circle' | 'heart' | 'star' | 'paw';
-}
 
 export const ParticleField = () => {
-  const particles = useMemo<Particle[]>(() => {
+  const particles = useMemo(() => {
     return Array.from({ length: 40 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
@@ -20,11 +11,11 @@ export const ParticleField = () => {
       size: Math.random() * 4 + 2,
       duration: Math.random() * 20 + 15,
       delay: Math.random() * 10,
-      type: ['circle', 'heart', 'star', 'paw'][Math.floor(Math.random() * 4)] as Particle['type'],
+      type: ['circle', 'heart', 'star', 'paw'][Math.floor(Math.random() * 4)],
     }));
   }, []);
 
-  const renderParticle = (particle: Particle) => {
+  const renderParticle = (particle) => {
     if (particle.type === 'heart') {
       return <span className="text-primary/30">💖</span>;
     }

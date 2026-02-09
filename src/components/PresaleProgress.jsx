@@ -1,11 +1,6 @@
 import { motion } from 'framer-motion';
 
-interface PresaleProgressProps {
-  raised: number;
-  goal: number;
-}
-
-export const PresaleProgress = ({ raised, goal }: PresaleProgressProps) => {
+export const PresaleProgress = ({ raised, goal }) => {
   const percentage = (raised / goal) * 100;
 
   return (

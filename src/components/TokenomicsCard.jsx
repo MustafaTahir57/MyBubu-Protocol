@@ -1,13 +1,6 @@
 import { motion } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 
-interface TokenomicsCardProps {
-  icon: LucideIcon;
-  title: string;
-  percentage: number;
-  description: string;
-  index: number;
-}
 
 export const TokenomicsCard = ({ 
   icon: Icon, 
@@ -15,7 +8,7 @@ export const TokenomicsCard = ({
   percentage, 
   description, 
   index 
-}: TokenomicsCardProps) => {
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}

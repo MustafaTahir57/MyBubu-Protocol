@@ -1,21 +1,13 @@
 import { motion } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 
-interface HowToBuyStepProps {
-  step: number;
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  index: number;
-}
-
 export const HowToBuyStep = ({ 
   step, 
   icon: Icon, 
   title, 
   description, 
   index 
-}: HowToBuyStepProps) => {
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}

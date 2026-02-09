@@ -1,11 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-interface TimeUnit {
-  value: number;
-  label: string;
-}
-
 export const CountdownTimer = () => {
   const [timeLeft, setTimeLeft] = useState({
     days: 12,
@@ -45,7 +40,7 @@ export const CountdownTimer = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const timeUnits: TimeUnit[] = [
+  const timeUnits = [
     { value: timeLeft.days, label: 'Days' },
     { value: timeLeft.hours, label: 'Hours' },
     { value: timeLeft.minutes, label: 'Minutes' },
