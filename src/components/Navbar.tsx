@@ -6,8 +6,10 @@ import mybubuLogo from '@/assets/mybubu-logo.png';
 
 const navLinks = [
   { label: 'About', href: '#about' },
+  { label: 'Mechanism', href: '#mechanism' },
   { label: 'Tokenomics', href: '#tokenomics' },
-  { label: 'How to Buy', href: '#how-to-buy' },
+  { label: 'NFT Nodes', href: '#nft-nodes' },
+  { label: 'Referral', href: '#referral' },
   { label: 'FAQ', href: '#faq' },
 ];
 

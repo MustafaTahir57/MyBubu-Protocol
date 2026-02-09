@@ -1,44 +1,44 @@
 import { motion } from 'framer-motion';
-import { Coins, Users, Flame, Lock, Rocket, Gift } from 'lucide-react';
+import { Coins, Users, Flame, Lock, Wallet, Zap } from 'lucide-react';
 import { TokenomicsCard } from './TokenomicsCard';
 import { FloatingOrbs } from './FloatingOrbs';
 
 const tokenomicsData = [
   {
     icon: Coins,
-    title: 'Presale',
-    percentage: 40,
-    description: 'Available during presale phases at discounted rates for early supporters.',
+    title: 'LP Deposits',
+    percentage: 70,
+    description: 'Split into 35% Labubu + 35% BNB for PancakeSwap liquidity pairing.',
   },
   {
     icon: Users,
-    title: 'Liquidity Pool',
-    percentage: 25,
-    description: 'Locked liquidity to ensure stable trading and prevent rug pulls.',
+    title: 'Referral & Network',
+    percentage: 20,
+    description: 'Smart contract managed rewards for multi-level referral system.',
   },
   {
-    icon: Rocket,
-    title: 'Development',
-    percentage: 15,
-    description: 'Funding ongoing development, upgrades, and ecosystem growth.',
-  },
-  {
-    icon: Gift,
-    title: 'Marketing',
+    icon: Wallet,
+    title: 'Global Pool',
     percentage: 10,
-    description: 'Strategic partnerships, campaigns, and community building.',
+    description: 'Distributed to users who activate the "Node Dividend" feature.',
+  },
+  {
+    icon: Zap,
+    title: 'Passive Income',
+    percentage: 1,
+    description: 'Daily distribution of 1% from total accumulated LP to holders.',
   },
   {
     icon: Lock,
-    title: 'Team',
-    percentage: 5,
-    description: 'Vested over 24 months with cliff periods for alignment.',
+    title: 'LP Lock',
+    percentage: 1,
+    description: '1% of each transaction goes into LP for price stability.',
   },
   {
     icon: Flame,
-    title: 'Burn Reserve',
-    percentage: 5,
-    description: 'Periodic burns to increase scarcity and value over time.',
+    title: 'Burn Mechanism',
+    percentage: 1,
+    description: '1% of each transaction burned to Dead Wallet for deflation.',
   },
 ];
 
@@ -61,8 +61,8 @@ export const TokenomicsSection = () => {
             <span className="gradient-text">Tokenomics</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Carefully designed token distribution ensuring long-term sustainability 
-            and growth for all stakeholders.
+            A carefully designed dual-token ecosystem with MYBUBU and MYMOMO 
+            working together for sustainable growth and rewards.
           </p>
         </motion.div>
 
@@ -71,14 +71,14 @@ export const TokenomicsSection = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass-card p-8 mb-12 max-w-3xl mx-auto"
+          className="glass-card p-8 mb-12 max-w-4xl mx-auto"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
-              { label: 'Total Supply', value: '1B' },
-              { label: 'Presale Price', value: '$0.025' },
-              { label: 'Launch Price', value: '$0.05' },
-              { label: 'Network', value: 'ETH' },
+              { label: 'Max Supply', value: '21M' },
+              { label: 'Transfer Tax', value: '2%' },
+              { label: 'Team Reserve', value: '5%' },
+              { label: 'Network', value: 'BSC' },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -94,6 +94,18 @@ export const TokenomicsSection = () => {
               </motion.div>
             ))}
           </div>
+        </motion.div>
+
+        {/* Wallet Limit Notice */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="glass-card p-4 mb-8 max-w-xl mx-auto text-center border-primary/30"
+        >
+          <p className="text-sm text-muted-foreground">
+            <span className="text-primary font-semibold">Max Wallet Limit:</span> 20,000 MYBUBU per wallet
+          </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

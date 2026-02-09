@@ -140,7 +140,7 @@ export const HeroSection = () => {
           className="mb-4"
         >
           <span className="inline-block px-6 py-3 glass-card text-primary text-sm font-medium tracking-wider uppercase border-primary/30">
-            🚀 Presale Now Live • Join the Cutest Revolution! 🐱
+            🚀 BSC Network • Dual Token Ecosystem • NFT Nodes 🎯
           </span>
         </motion.div>
 
@@ -161,7 +161,7 @@ export const HeroSection = () => {
               ease: "linear"
             }}
           >
-            MyBubu
+            MYBUBU
           </motion.span>
           <br />
           <motion.span 
@@ -170,7 +170,7 @@ export const HeroSection = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
           >
-            Protocol
+            Ecosystem
           </motion.span>
         </motion.h1>
 
@@ -180,8 +180,8 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
         >
-          The cutest meme coin with the strongest community! Join MyBubu's 
-          adventure and be part of the pawsitively amazing future of crypto. 🐾
+          A comprehensive DeFi ecosystem with MYBUBU Token, NFT Nodes, and MYMOMO Token
+          working together for sustainable rewards and passive income. 🐾
         </motion.p>
 
         <motion.div
@@ -202,7 +202,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <GlowButton size="large">🐱 Join Presale</GlowButton>
+          <GlowButton size="large">🐱 Launch App</GlowButton>
           <GlowButton variant="secondary" size="large">📄 Whitepaper</GlowButton>
         </motion.div>
 
