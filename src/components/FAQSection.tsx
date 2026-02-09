@@ -8,28 +8,28 @@ import {
 
 const faqs = [
   {
-    question: 'What is MyBubu Protocol?',
-    answer: 'MyBubu Protocol is a next-generation decentralized ecosystem built on blockchain technology, offering ultra-fast transactions, military-grade security, and community-driven governance.',
+    question: 'What is the MYBUBU Ecosystem?',
+    answer: 'MYBUBU is a comprehensive DeFi ecosystem on BSC featuring three interconnected smart contracts: MYBUBU Token (main utility), MYBUBU NFT Node (tiered dividend system), and MYMOMO Token (secondary token with burn mechanics). Together they create a sustainable reward and incentive system.',
   },
   {
-    question: 'How do I participate in the presale?',
-    answer: 'Simply connect your Web3 wallet (MetaMask, Trust Wallet, etc.), ensure you have ETH or USDT, and purchase MyBubu tokens directly through our presale interface.',
+    question: 'How does the LP mechanism work?',
+    answer: '70% of LP deposits are split into 35% Labubu + 35% BNB, paired automatically on PancakeSwap. 20% goes to referral/network rewards, and 10% to the Global Pool for Node Dividend holders.',
   },
   {
-    question: 'When will I receive my tokens?',
-    answer: 'Tokens will be claimable immediately after the presale ends and the token generation event (TGE) is complete. You\'ll be able to claim them directly to your wallet.',
+    question: 'What are the NFT Node tiers and rewards?',
+    answer: 'There are 6 NFT tiers with multipliers from 1x to 18x based on holdings. Every day, 10% of new BNB is distributed among NFT Node holders. Mint price is 0.55 BNB with max supply of 1,000 NFTs.',
   },
   {
-    question: 'Is the smart contract audited?',
-    answer: 'Yes, our smart contracts have been thoroughly audited by leading blockchain security firms. Audit reports are available in our documentation.',
+    question: 'How does the referral system work?',
+    answer: 'Multi-level referral rewards across 10 levels: Level 1 (1 invite) = 5%, Level 2 (3 invites) = 4%, Level 3 (5 invites) = 3%, Level 4 (7 invites) = 2%, Levels 5-10 (10 invites) = 1% each.',
   },
   {
-    question: 'What happens after the presale?',
-    answer: 'After the presale, MyBubu will be listed on major decentralized exchanges (DEXs) with locked liquidity. The launch price will be 2x the presale price.',
+    question: 'What are the tokenomics?',
+    answer: 'Max supply is 21,000,000 MYBUBU with 2% transfer tax and 5% team reserve. Each wallet can hold maximum 20,000 MYBUBU. 1% of each transaction goes to LP and 1% is burned for deflation protection.',
   },
   {
-    question: 'Is there a minimum or maximum purchase?',
-    answer: 'The minimum purchase is $50 worth of tokens. There is no maximum during the public presale phase, but early phases may have tier-based limits.',
+    question: 'How do I activate dual token rewards?',
+    answer: 'To activate Zimo mining and dual token rewards, you need to deposit 100 Labubu + BNB. For partner activation, send 2 Labubu to the new member, and they send 1 back to your wallet.',
   },
 ];
 
