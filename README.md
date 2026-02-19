@@ -16,7 +16,7 @@ A comprehensive DeFi protocol on BSC featuring dual-token mechanics (MYBUBU + MY
 ### NFT Node Rewards
 - 6-tier reward system with 1x to 18x multipliers
 - Daily 10% BNB distribution to NFT holders
-- 0.55 BNB mint price | 1,000 max supply
+- 500 USDT mint price | 1,000 max supply
 
 ### Referral System
 - 10-level network rewards (5% → 1%)

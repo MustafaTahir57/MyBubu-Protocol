@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     question: 'What are the NFT Node tiers and rewards?',
-    answer: 'There are 6 NFT tiers with multipliers from 1x to 18x based on holdings. Every day, 10% of new BNB is distributed among NFT Node holders. Mint price is 0.55 BNB with max supply of 1,000 NFTs.',
+    answer: 'There are 6 NFT tiers with multipliers from 1x to 18x based on holdings. Every day, 10% of new BNB is distributed among NFT Node holders. Mint price is 500 USDT with max supply of 1,000 NFTs.',
   },
   {
     question: 'How does the referral system work?',

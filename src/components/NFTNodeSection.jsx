@@ -44,7 +44,7 @@ export const NFTNodeSection = () => {
         >
           <div className="grid grid-cols-3 gap-6 text-center">
             {[
-              { label: 'Mint Price', value: '0.55 BNB' },
+              { label: 'Mint Price', value: '500 USDT' },
               { label: 'Max Supply', value: '1,000' },
               { label: 'Daily Revenue', value: '10%' },
             ].map((stat, index) => (

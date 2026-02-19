@@ -75,7 +75,7 @@ export const TokenomicsSection = () => {
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
-              { label: 'Max Supply', value: '21M' },
+              { label: 'Max Supply', value: '210M' },
               { label: 'Transfer Tax', value: '2%' },
               { label: 'Team Reserve', value: '5%' },
               { label: 'Network', value: 'BSC' },
@@ -97,7 +97,7 @@ export const TokenomicsSection = () => {
         </motion.div>
 
         {/* Wallet Limit Notice */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -106,7 +106,7 @@ export const TokenomicsSection = () => {
           <p className="text-sm text-muted-foreground">
             <span className="text-primary font-semibold">Max Wallet Limit:</span> 20,000 MYBUBU per wallet
           </p>
-        </motion.div>
+        </motion.div> */}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tokenomicsData.map((item, index) => (
