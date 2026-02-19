@@ -3,12 +3,12 @@ import { Crown, Star, Award, Gem, Trophy, Sparkles } from 'lucide-react';
 import { FloatingOrbs } from './FloatingOrbs';
 
 const nftTiers = [
-  { tier: 1, minNFTs: 1, multiplier: '1x', name: 'Basic', icon: Star, color: 'text-gray-400' },
-  { tier: 2, minNFTs: 2, multiplier: '2x', name: 'Bronze', icon: Award, color: 'text-amber-600' },
-  { tier: 3, minNFTs: 3, multiplier: '3x', name: 'Silver', icon: Gem, color: 'text-gray-300' },
-  { tier: 4, minNFTs: 5, multiplier: '5x', name: 'Gold', icon: Trophy, color: 'text-yellow-400' },
-  { tier: 5, minNFTs: 10, multiplier: '10x', name: 'Platinum', icon: Sparkles, color: 'text-cyan-400' },
-  { tier: 6, minNFTs: 18, multiplier: '18x', name: 'VIP', icon: Crown, color: 'text-primary' },
+  { tier: 1, nodes: 1, tokens: '10K', name: 'Starter', icon: Star, color: 'text-gray-400' },
+  { tier: 2, nodes: 2, tokens: '20K', name: 'Bronze', icon: Award, color: 'text-amber-600' },
+  { tier: 3, nodes: 3, tokens: '30K', name: 'Silver', icon: Gem, color: 'text-gray-300' },
+  { tier: 4, nodes: 5, tokens: '50K', name: 'Gold', icon: Trophy, color: 'text-yellow-400' },
+  { tier: 5, nodes: 10, tokens: '100K', name: 'Platinum', icon: Sparkles, color: 'text-cyan-400' },
+  { tier: 6, nodes: 20, tokens: '200K', name: 'VIP', icon: Crown, color: 'text-primary' },
 ];
 
 export const NFTNodeSection = () => {
@@ -30,8 +30,8 @@ export const NFTNodeSection = () => {
             <span className="gradient-text">NFT Node</span> Revenue
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Every day, 10% of new BNB is distributed equally among NFT Node holders.
-            Higher tiers unlock greater reward multipliers!
+            Each NFT Node costs 500 USDT and grants you 10,000 MYBUBU tokens.
+            Tokens are released 10% monthly over 10 months!
           </p>
         </motion.div>
 
@@ -44,9 +44,9 @@ export const NFTNodeSection = () => {
         >
           <div className="grid grid-cols-3 gap-6 text-center">
             {[
-              { label: 'Mint Price', value: '500 USDT' },
-              { label: 'Max Supply', value: '1,000' },
-              { label: 'Daily Revenue', value: '10%' },
+              { label: 'Node Price', value: '500 USDT' },
+              { label: 'Tokens/Node', value: '10,000' },
+              { label: 'Monthly Release', value: '10%' },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -105,11 +105,12 @@ export const NFTNodeSection = () => {
                 whileHover={{ scale: 1.1 }}
                 className="text-2xl font-display font-bold gradient-text"
               >
-                {tier.multiplier}
+                {tier.tokens}
               </motion.p>
+              <p className="text-xs text-muted-foreground">MYBUBU</p>
               
               <p className="text-xs text-muted-foreground mt-2">
-                Min: {tier.minNFTs} NFT{tier.minNFTs > 1 ? 's' : ''}
+                {tier.nodes} Node{tier.nodes > 1 ? 's' : ''} • {tier.nodes * 500} USDT
               </p>
 
               {/* Shine effect */}
@@ -128,27 +129,37 @@ export const NFTNodeSection = () => {
           className="mt-12 glass-card p-8 max-w-3xl mx-auto"
         >
           <h3 className="text-xl font-display font-bold text-center mb-6">
-            🎯 Activation Requirements
+            📅 How Token Release Works
           </h3>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="p-4 rounded-xl bg-muted/30 border border-border"
+              className="p-4 rounded-xl bg-muted/30 border border-border text-center"
             >
-              <h4 className="font-semibold text-primary mb-2">Partner Activation</h4>
+              <h4 className="font-semibold text-primary mb-2">Buy Nodes</h4>
               <p className="text-sm text-muted-foreground">
-                Send 2 Labubu to new member, member sends 1 back to upline to activate.
+                Purchase NFT Nodes at 500 USDT each. Each node = 10,000 MYBUBU tokens.
               </p>
             </motion.div>
             
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="p-4 rounded-xl bg-muted/30 border border-border"
+              className="p-4 rounded-xl bg-muted/30 border border-border text-center"
             >
-              <h4 className="font-semibold text-primary mb-2">Dual Token Reward</h4>
+              <h4 className="font-semibold text-primary mb-2">Monthly Release</h4>
               <p className="text-sm text-muted-foreground">
-                Deposit 100 Labubu + BNB to activate Zimo mining for dual rewards.
+                10% of your total tokens are released every month for 10 months.
+              </p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="p-4 rounded-xl bg-muted/30 border border-border text-center"
+            >
+              <h4 className="font-semibold text-primary mb-2">Example</h4>
+              <p className="text-sm text-muted-foreground">
+                10 Nodes = 100K MYBUBU → claim 10K tokens each month for 10 months.
               </p>
             </motion.div>
           </div>

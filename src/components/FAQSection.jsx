@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     question: 'What are the NFT Node tiers and rewards?',
-    answer: 'There are 6 NFT tiers with multipliers from 1x to 18x based on holdings. Every day, 10% of new BNB is distributed among NFT Node holders. Mint price is 500 USDT with max supply of 1,000 NFTs.',
+    answer: 'Each NFT Node costs 500 USDT and grants 10,000 MYBUBU tokens. Tokens are released at 10% per month over 10 months. For example, purchasing 10 Nodes gives you 100,000 MYBUBU tokens, claimable at 10,000 tokens per month.',
   },
   {
     question: 'How does the referral system work?',
@@ -28,8 +28,8 @@ const faqs = [
     answer: 'Max supply is 21,000,000 MYBUBU with 2% transfer tax and 5% team reserve. Each wallet can hold maximum 20,000 MYBUBU. 1% of each transaction goes to LP and 1% is burned for deflation protection.',
   },
   {
-    question: 'How do I activate dual token rewards?',
-    answer: 'To activate Zimo mining and dual token rewards, you need to deposit 100 Labubu + BNB. For partner activation, send 2 Labubu to the new member, and they send 1 back to your wallet.',
+    question: 'How does the monthly token release work?',
+    answer: 'When you purchase NFT Nodes, your MYBUBU tokens are vested over 10 months. Each month, 10% of your total allocation is released and can be claimed. This ensures a sustainable and steady token distribution.',
   },
 ];
 
