@@ -45,7 +45,7 @@ export const NFTNodeSection = () => {
           <div className="grid grid-cols-3 gap-6 text-center">
             {[
               { label: 'Node Price', value: '500 USDT' },
-              { label: 'Tokens/Node', value: '10,000' },
+              { label: 'Total Nodes', value: '1000 Only' },
               { label: 'Monthly Release', value: '10%' },
             ].map((stat, index) => (
               <motion.div
