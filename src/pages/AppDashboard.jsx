@@ -86,7 +86,7 @@ const AppDashboard = () => {
         >
           {tabs.map((tab, index) => {
             const isActive = activeTab === tab.id;
-            const isLocked = !isJoined && tab.id !== 'join' && tab.id !== 'myboo';
+            const isLocked = tab.id !== 'myboo';
             
             return (
               <motion.button
@@ -110,7 +110,7 @@ const AppDashboard = () => {
                 <span className="text-lg">{tab.emoji}</span>
                 {tab.label}
                 {isLocked && (
-                  <span className="text-xs ml-1">🔒</span>
+                  <span className="text-xs ml-1">🔒 Soon</span>
                 )}
                 {isActive && (
                   <motion.div
