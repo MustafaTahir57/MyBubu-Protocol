@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Crown, Gem, Sparkles, Plus, Minus, TrendingUp, Star, Zap } from 'lucide-react';
 
 const tiers = [
-  { nfts: 1, multiplier: '1x', tier: 'Bronze', emoji: '🥉', color: 'from-amber-600 to-amber-800' },
-  { nfts: 2, multiplier: '2x', tier: 'Silver', emoji: '🥈', color: 'from-slate-400 to-slate-600' },
-  { nfts: 3, multiplier: '3x', tier: 'Gold', emoji: '🥇', color: 'from-yellow-400 to-amber-500' },
-  { nfts: 5, multiplier: '5x', tier: 'Platinum', emoji: '💎', color: 'from-cyan-400 to-blue-500' },
-  { nfts: 8, multiplier: '10x', tier: 'Diamond', emoji: '👑', color: 'from-purple-400 to-pink-500' },
-  { nfts: 13, multiplier: '18x', tier: 'Legendary', emoji: '🌟', color: 'from-primary to-secondary' },
+  { nfts: 1, tokens: '10K', tier: 'Starter', emoji: '🥉', color: 'from-amber-600 to-amber-800' },
+  { nfts: 2, tokens: '20K', tier: 'Bronze', emoji: '🥈', color: 'from-slate-400 to-slate-600' },
+  { nfts: 3, tokens: '30K', tier: 'Silver', emoji: '🥇', color: 'from-yellow-400 to-amber-500' },
+  { nfts: 5, tokens: '50K', tier: 'Gold', emoji: '💎', color: 'from-cyan-400 to-blue-500' },
+  { nfts: 10, tokens: '100K', tier: 'Platinum', emoji: '👑', color: 'from-purple-400 to-pink-500' },
+  { nfts: 20, tokens: '200K', tier: 'VIP', emoji: '🌟', color: 'from-primary to-secondary' },
 ];
 
 const PRICE_PER_NFT = 500; // USDT
@@ -52,7 +52,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
           NFT Node Minting
         </h2>
         <p className="text-muted-foreground text-sm relative">
-          Mint NFT Nodes to boost your rewards • 500 USDT per Node
+          500 USDT per Node • 10,000 MYBUBU per Node • 10% monthly release
         </p>
       </motion.div>
 
@@ -71,7 +71,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
             animate={{ scale: 1, opacity: 1 }}
             className={`inline-block px-6 py-2 rounded-full bg-gradient-to-r ${currentTier.color} text-white font-display font-bold text-sm mb-2`}
           >
-            {currentTier.emoji} {currentTier.tier} — {currentTier.multiplier} Rewards
+            {currentTier.emoji} {currentTier.tier} — {currentTier.tokens} MYBUBU
           </motion.div>
         </div>
 
@@ -148,8 +148,12 @@ export const NFTNodePanel = ({ walletConnected }) => {
             </motion.span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Reward Multiplier</span>
-            <span className="text-secondary font-bold">{currentTier.multiplier}</span>
+            <span className="text-muted-foreground">Total MYBUBU</span>
+            <span className="text-secondary font-bold">{(mintCount * 10000).toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Monthly Claim</span>
+            <span className="text-secondary font-bold">{(mintCount * 1000).toLocaleString()} / month</span>
           </div>
         </div>
       </motion.div>
@@ -211,8 +215,8 @@ export const NFTNodePanel = ({ walletConnected }) => {
                 >
                   <span className="text-2xl">{tier.emoji}</span>
                   <p className="font-display font-bold text-xs text-foreground mt-1">{tier.tier}</p>
-                  <p className="text-xs text-muted-foreground">{tier.nfts}+ NFTs</p>
-                  <p className="text-sm font-bold text-primary">{tier.multiplier}</p>
+                  <p className="text-xs text-muted-foreground">{tier.nfts} Node{tier.nfts > 1 ? 's' : ''}</p>
+                  <p className="text-sm font-bold text-primary">{tier.tokens} MYBUBU</p>
                 </motion.div>
               ))}
             </div>
