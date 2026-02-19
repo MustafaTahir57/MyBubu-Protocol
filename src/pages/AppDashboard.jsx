@@ -7,10 +7,12 @@ import { JoinPanel } from '@/components/app/JoinPanel';
 import { DepositBNBPanel } from '@/components/app/DepositBNBPanel';
 import { BuyTokensPanel } from '@/components/app/BuyTokensPanel';
 import { NFTNodePanel } from '@/components/app/NFTNodePanel';
+import { MyBooPanel } from '@/components/app/MyBooPanel';
 import { UserStatsBar } from '@/components/app/UserStatsBar';
 import { FloatingOrbs } from '@/components/FloatingOrbs';
 
 const tabs = [
+  { id: 'myboo', label: 'MyBoo Token', icon: ShoppingCart, emoji: '🚀' },
   { id: 'join', label: 'Join', icon: Users, emoji: '🤝' },
   { id: 'deposit', label: 'Deposit BNB', icon: Coins, emoji: '💰' },
   { id: 'buy', label: 'Buy Tokens', icon: ShoppingCart, emoji: '🛒' },
@@ -18,7 +20,7 @@ const tabs = [
 ];
 
 const AppDashboard = () => {
-  const [activeTab, setActiveTab] = useState('join');
+  const [activeTab, setActiveTab] = useState('myboo');
   const [isJoined, setIsJoined] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const navigate = useNavigate();
@@ -84,7 +86,7 @@ const AppDashboard = () => {
         >
           {tabs.map((tab, index) => {
             const isActive = activeTab === tab.id;
-            const isLocked = !isJoined && tab.id !== 'join';
+            const isLocked = !isJoined && tab.id !== 'join' && tab.id !== 'myboo';
             
             return (
               <motion.button
@@ -132,6 +134,9 @@ const AppDashboard = () => {
             transition={{ duration: 0.3 }}
             className="max-w-2xl mx-auto"
           >
+            {activeTab === 'myboo' && (
+              <MyBooPanel walletConnected={walletConnected} />
+            )}
             {activeTab === 'join' && (
               <JoinPanel
                 isJoined={isJoined}
