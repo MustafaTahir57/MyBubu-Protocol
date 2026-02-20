@@ -1,13 +1,13 @@
 export const CONTRACT_ADDRESSES = {
   97: {
-    MYBUBU_TOKEN: "0x2e6b906a36e75d610e49b729a550a1dfa9741d33",
-    MYBUBU_PRESALE: "0x9a313297fccd1dd68c88310a1536896ee270f93f",
+    MYBOO_TOKEN: "0x2e6b906a36e75d610e49b729a550a1dfa9741d33",
+    MYBOO_PRESALE: "0x9a313297fccd1dd68c88310a1536896ee270f93f",
     USDT: "0x3f34F38c202A73fEFeDef2C202F36D5a28dA271C",
   },
 };
 
-// Paste your ABIs below
-export const MYBUBU_TOKEN_ABI = [
+// Paste your ABIs below just for MyBOO
+export const MYBOO_TOKEN_ABI = [
   {
     inputs: [
       { internalType: "address", name: "initialOwner", type: "address" },
@@ -328,43 +328,35 @@ export const MYBUBU_TOKEN_ABI = [
   },
 ];
 
-export const MYBUBU_PRESALE_ABI = [
+export const MYBOO_PRESALE_ABI = [
   {
-    inputs: [
-      { internalType: "address", name: "implementation", type: "address" },
-      { internalType: "bytes", name: "_data", type: "bytes" },
-    ],
+    inputs: [{ internalType: "uint256", name: "usdtAmount", type: "uint256" }],
+    name: "getTokensForUSDT",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "bnbAmount", type: "uint256" }],
+    name: "getTokensForBNB",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "usdtAmount", type: "uint256" }],
+    name: "buyWithUSDT",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "buyWithBNB",
+    outputs: [],
     stateMutability: "payable",
-    type: "constructor",
+    type: "function",
   },
-  {
-    inputs: [{ internalType: "address", name: "target", type: "address" }],
-    name: "AddressEmptyCode",
-    type: "error",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "implementation", type: "address" },
-    ],
-    name: "ERC1967InvalidImplementation",
-    type: "error",
-  },
-  { inputs: [], name: "ERC1967NonPayable", type: "error" },
-  { inputs: [], name: "FailedInnerCall", type: "error" },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "implementation",
-        type: "address",
-      },
-    ],
-    name: "Upgraded",
-    type: "event",
-  },
-  { stateMutability: "payable", type: "fallback" },
 ];
 
 export const USDT_ABI = [
