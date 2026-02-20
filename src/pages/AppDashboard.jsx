@@ -102,7 +102,7 @@ const AppDashboard = () => {
       </motion.header>
 
       {/* Stats Bar */}
-      <UserStatsBar isJoined={isJoined} walletConnected={walletConnected} />
+      <UserStatsBar isJoined={isJoined} walletConnected={walletConnected} address={address} />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 relative z-10">
