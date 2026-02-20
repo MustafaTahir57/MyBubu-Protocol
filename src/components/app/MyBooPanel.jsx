@@ -16,8 +16,8 @@ export const MyBooPanel = ({ walletConnected }) => {
 
   const numAmount = parseFloat(amount) || 0;
   const minAmount = payMethod === 'usdt' ? 100 : 0.1;
-  const maxAmount = payMethod === 'usdt' ? 10000 : 2;
-  const isValid = numAmount >= minAmount && numAmount <= maxAmount;
+  // const maxAmount = payMethod === 'usdt' ? 10000 : 2;
+  const isValid = numAmount >= minAmount; // && numAmount <= maxAmount;
 
   const quickAmounts = payMethod === 'usdt' ? [100, 250, 500, 1000] : [0.1, 0.25, 0.5, 1];
 
@@ -246,7 +246,7 @@ export const MyBooPanel = ({ walletConnected }) => {
           </div>
           <div className="relative bg-background/50 border border-border rounded-xl p-4">
             <input
-              type="number"
+              type="text"
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
