@@ -186,7 +186,7 @@ export const HeroSection = () => {
           working together for sustainable rewards and passive income. 🐾
         </motion.p>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -196,7 +196,7 @@ export const HeroSection = () => {
             Presale ends in
           </p>
           <CountdownTimer />
-        </motion.div>
+        </motion.div> */}
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
