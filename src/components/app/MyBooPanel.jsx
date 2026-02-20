@@ -7,7 +7,7 @@ import { useUSDTApproval } from '@/hooks/dataSender/useUSDTApproval';
 import { useBuyWithUSDT } from '@/hooks/dataSender/useBuyWithUSDT';
 import { useBuyWithBNB } from '@/hooks/dataSender/useBuyWithBNB';
 import {useUserInfo} from '@/hooks/dataFetcher/useUserInfo';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'react-toastify';
 
 export const MyBooPanel = ({ walletConnected }) => {
   const { address } = useAccount();
@@ -76,7 +76,7 @@ export const MyBooPanel = ({ walletConnected }) => {
       usdtBuy.reset();
       approval.resetApprove();
       refetchUserInfo();
-      toast({ title: '🎉 Purchase Successful!', description: 'Your MyBoo tokens have been purchased.' });
+      toast.success('🎉 Purchase Successful! Your MyBoo tokens have been purchased.');
     }
   }, [usdtBuy.isConfirmed, buyStep]);
 
@@ -87,7 +87,7 @@ export const MyBooPanel = ({ walletConnected }) => {
       setAmount('');
       bnbBuy.reset();
       refetchUserInfo();
-      toast({ title: '🎉 Purchase Successful!', description: 'Your MyBoo tokens have been purchased.' });
+      toast.success('🎉 Purchase Successful! Your MyBoo tokens have been purchased.');
     }
   }, [bnbBuy.isConfirmed, buyStep]);
 
@@ -96,7 +96,7 @@ export const MyBooPanel = ({ walletConnected }) => {
     const err = approval.approveError || usdtBuy.error || bnbBuy.error;
     if (err && buyStep !== 'idle') {
       setBuyStep('idle');
-      toast({ title: 'Transaction Failed', description: err.shortMessage || err.message, variant: 'destructive' });
+      toast.error(err.shortMessage || err.message || 'Transaction Failed');
     }
   }, [approval.approveError, usdtBuy.error, bnbBuy.error]);
 
