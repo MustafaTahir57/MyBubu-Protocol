@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Coins, ShoppingCart, Crown, Wallet, Copy, Check, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Users, Coins, ShoppingCart, Crown, Wallet } from 'lucide-react';
+import { useAccount, useDisconnect, useSwitchChain } from 'wagmi';
 import mybubuLogo from '@/assets/mybubu-logo.png';
 import { JoinPanel } from '@/components/app/JoinPanel';
 import { DepositBNBPanel } from '@/components/app/DepositBNBPanel';
@@ -9,7 +10,8 @@ import { BuyTokensPanel } from '@/components/app/BuyTokensPanel';
 import { NFTNodePanel } from '@/components/app/NFTNodePanel';
 import { MyBooPanel } from '@/components/app/MyBooPanel';
 import { UserStatsBar } from '@/components/app/UserStatsBar';
-import { FloatingOrbs } from '@/components/FloatingOrbs';
+import { WalletModal } from '@/components/app/WalletModal';
+import { bscTestnet } from '@/config/wagmi';
 
 const tabs = [
   { id: 'myboo', label: 'MyBoo Token', icon: ShoppingCart, emoji: '🚀' },
@@ -22,12 +24,36 @@ const tabs = [
 const AppDashboard = () => {
   const [activeTab, setActiveTab] = useState('myboo');
   const [isJoined, setIsJoined] = useState(false);
-  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletModalOpen, setWalletModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const { address, isConnected, chain } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { switchChain } = useSwitchChain();
+
+  // Auto-switch to BSC Testnet if wrong chain
+  useEffect(() => {
+    if (isConnected && chain && chain.id !== bscTestnet.id) {
+      switchChain?.({ chainId: bscTestnet.id });
+    }
+  }, [isConnected, chain, switchChain]);
+
+  const walletConnected = isConnected;
+  const shortAddress = address
+    ? `${address.slice(0, 6)}...${address.slice(-4)}`
+    : '';
 
   const handleJoinSuccess = () => {
     setIsJoined(true);
     setActiveTab('deposit');
+  };
+
+  const handleWalletClick = () => {
+    if (isConnected) {
+      disconnect();
+    } else {
+      setWalletModalOpen(true);
+    }
   };
 
   return (
@@ -59,15 +85,18 @@ const AppDashboard = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setWalletConnected(!walletConnected)}
+            onClick={handleWalletClick}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all ${
-              walletConnected
+              isConnected
                 ? 'glass-card border-primary/50 text-primary'
                 : 'bg-gradient-to-r from-primary to-secondary text-primary-foreground'
             }`}
           >
             <Wallet size={16} />
-            {walletConnected ? '0x1a2b...9f8e' : 'Connect Wallet'}
+            {isConnected ? shortAddress : 'Connect Wallet'}
+            {isConnected && chain && chain.id !== bscTestnet.id && (
+              <span className="text-xs text-destructive ml-1">⚠️ Wrong Network</span>
+            )}
           </motion.button>
         </div>
       </motion.header>
@@ -156,6 +185,12 @@ const AppDashboard = () => {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      {/* Wallet Modal */}
+      <WalletModal
+        isOpen={walletModalOpen}
+        onClose={() => setWalletModalOpen(false)}
+      />
     </div>
   );
 };
