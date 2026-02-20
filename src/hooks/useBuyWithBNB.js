@@ -28,7 +28,7 @@ export const useBuyWithBNB = () => {
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({ hash: txHash });
 
-  const bnbBalance = balanceData ? parseFloat(balanceData.formatted) : 0;
+  const bnbBalance = balanceData ? Number(balanceData.value)/1e18 : 0;
 
   const hasEnoughBNB = (amount) => {
     const num = parseFloat(amount) || 0;

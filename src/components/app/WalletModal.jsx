@@ -24,8 +24,6 @@ export const WalletModal = ({ isOpen, onClose }) => {
   const { isConnected , chainId } = useAccount();
   const [connectingId, setConnectingId] = useState(null);
 
-  console.log('WalletModal - isConnected:', isConnected, 'chainId:', chainId);
-
   const handleConnect = (walletId) => {
     const connector = connectors.find((c) =>
       c.id.toLowerCase().includes(walletId.toLowerCase())
