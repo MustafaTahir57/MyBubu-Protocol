@@ -11,8 +11,8 @@ export const useUserInfo = (address) => {
     query: { enabled: !!address },
   });
 
-  const usdSpent = data ? formatUnits(data[0], 18) : '0.00';
-  const tokensBought = data ? formatUnits(data[1], 18) : '0.00';
+  const usdSpent = data ? formatUnits(data[1], 18) : '0.00';
+  const tokensBought = data ? formatUnits(data[0], 18) : '0.00';
 
   return { usdSpent, tokensBought, isLoading, refetch };
 };
