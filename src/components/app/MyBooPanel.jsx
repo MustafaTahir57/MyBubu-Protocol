@@ -128,6 +128,10 @@ export const MyBooPanel = ({ walletConnected }) => {
       return 'Insufficient USDT Balance';
     }
 
+    if (payMethod === 'bnb' && isValid && !bnbBuy.hasEnoughBNB(amount)) {
+      return 'Insufficient BNB Balance';
+    }
+
     return (
       <span className="flex items-center justify-center gap-2">
         <Rocket size={18} />
@@ -137,7 +141,8 @@ export const MyBooPanel = ({ walletConnected }) => {
   };
 
   const isButtonDisabled = !walletConnected || !isValid || isProcessing ||
-    (payMethod === 'usdt' && isValid && !approval.hasEnoughBalance);
+    (payMethod === 'usdt' && isValid && !approval.hasEnoughBalance) ||
+    (payMethod === 'bnb' && isValid && !bnbBuy.hasEnoughBNB(amount));
 
   return (
     <div className="space-y-6">
