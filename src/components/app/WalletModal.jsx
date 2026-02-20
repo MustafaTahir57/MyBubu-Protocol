@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2 } from 'lucide-react';
 import { useConnect } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 const walletOptions = [
   {
@@ -10,17 +11,20 @@ const walletOptions = [
     icon: '🦊',
     description: 'Connect using MetaMask browser extension',
   },
-  {
-    id: 'walletConnect',
-    name: 'WalletConnect',
-    icon: '🔗',
-    description: 'Scan QR code with your mobile wallet',
-  },
+  // {
+  //   id: 'walletConnect',
+  //   name: 'WalletConnect',
+  //   icon: '🔗',
+  //   description: 'Scan QR code with your mobile wallet',
+  // },
 ];
 
 export const WalletModal = ({ isOpen, onClose }) => {
   const { connectors, connect, isPending } = useConnect();
+  const { isConnected , chainId } = useAccount();
   const [connectingId, setConnectingId] = useState(null);
+
+  console.log('WalletModal - isConnected:', isConnected, 'chainId:', chainId);
 
   const handleConnect = (walletId) => {
     const connector = connectors.find((c) =>
