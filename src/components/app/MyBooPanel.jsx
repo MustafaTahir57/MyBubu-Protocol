@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { Rocket, ArrowDownUp, Zap, RefreshCw, Info, Gift } from 'lucide-react';
-import { useTokensForUSDT, useTokensForBNB } from '@/hooks/useTokenQuote';
-import { useUSDTApproval } from '@/hooks/useUSDTApproval';
-import { useBuyWithUSDT } from '@/hooks/useBuyWithUSDT';
-import { useBuyWithBNB } from '@/hooks/useBuyWithBNB';
+import { useTokensForUSDT, useTokensForBNB } from '@/hooks/dataFetcher/useTokenQuote';
+import { useUSDTApproval } from '@/hooks/dataSender/useUSDTApproval';
+import { useBuyWithUSDT } from '@/hooks/dataSender/useBuyWithUSDT';
+import { useBuyWithBNB } from '@/hooks/dataSender/useBuyWithBNB';
+import {useUserInfo} from '@/hooks/dataFetcher/useUserInfo';
 import { toast } from '@/hooks/use-toast';
 
 export const MyBooPanel = ({ walletConnected }) => {
@@ -13,6 +14,7 @@ export const MyBooPanel = ({ walletConnected }) => {
   const [payMethod, setPayMethod] = useState('usdt');
   const [amount, setAmount] = useState('');
   const [buyStep, setBuyStep] = useState('idle'); // idle | approving | purchasing
+  const { refetch : refetchUserInfo } = useUserInfo(address);
 
   const numAmount = parseFloat(amount) || 0;
   const minAmount = payMethod === 'usdt' ? 100 : 0.25;
@@ -73,6 +75,7 @@ export const MyBooPanel = ({ walletConnected }) => {
       approval.refetch();
       usdtBuy.reset();
       approval.resetApprove();
+      refetchUserInfo();
       toast({ title: '🎉 Purchase Successful!', description: 'Your MyBoo tokens have been purchased.' });
     }
   }, [usdtBuy.isConfirmed, buyStep]);
@@ -83,6 +86,7 @@ export const MyBooPanel = ({ walletConnected }) => {
       setBuyStep('idle');
       setAmount('');
       bnbBuy.reset();
+      refetchUserInfo();
       toast({ title: '🎉 Purchase Successful!', description: 'Your MyBoo tokens have been purchased.' });
     }
   }, [bnbBuy.isConfirmed, buyStep]);

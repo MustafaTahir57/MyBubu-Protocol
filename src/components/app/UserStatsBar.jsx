@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, Gem, Coins } from 'lucide-react';
-import { useUserInfo } from '@/hooks/useUserInfo';
+import { useUserInfo } from '@/hooks/dataFetcher/useUserInfo';
 
 export const UserStatsBar = ({ isJoined, walletConnected, address }) => {
   const { usdSpent, tokensBought } = useUserInfo(address);
