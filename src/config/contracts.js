@@ -357,6 +357,16 @@ export const MYBOO_PRESALE_ABI = [
     stateMutability: "payable",
     type: "function",
   },
+  {
+    inputs: [{ internalType: "address", name: "user", type: "address" }],
+    name: "getUserInfo",
+    outputs: [
+      { internalType: "uint256", name: "usdSpent", type: "uint256" },
+      { internalType: "uint256", name: "tokensBought", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
 export const USDT_ABI = [

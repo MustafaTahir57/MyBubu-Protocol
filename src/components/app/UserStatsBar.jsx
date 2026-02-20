@@ -1,14 +1,17 @@
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, Gem, Coins } from 'lucide-react';
+import { useUserInfo } from '@/hooks/useUserInfo';
 
-const stats = [
-  { label: 'MYBUBU Balance', value: '0.00', icon: Coins, color: 'text-primary' },
-  { label: 'BNB Deposited', value: '0.00', icon: TrendingUp, color: 'text-secondary' },
-  { label: 'NFTs Owned', value: '0', icon: Gem, color: 'text-primary' },
-  { label: 'Referrals', value: '0', icon: Users, color: 'text-secondary' },
-];
+export const UserStatsBar = ({ isJoined, walletConnected, address }) => {
+  const { usdSpent, tokensBought } = useUserInfo(address);
 
-export const UserStatsBar = ({ isJoined, walletConnected }) => {
+  const stats = [
+    { label: 'MyBoo Balance', value: parseFloat(tokensBought).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: Coins, color: 'text-primary' },
+    { label: 'USD Deposited', value: parseFloat(usdSpent).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: TrendingUp, color: 'text-secondary' },
+    { label: 'NFTs Owned', value: '0', icon: Gem, color: 'text-primary' },
+    { label: 'Referrals', value: '0', icon: Users, color: 'text-secondary' },
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
