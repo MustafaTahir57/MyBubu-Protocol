@@ -330,33 +330,41 @@ export const MYBUBU_TOKEN_ABI = [
 
 export const MYBUBU_PRESALE_ABI = [
   {
-    inputs: [{ internalType: "uint256", name: "usdtAmount", type: "uint256" }],
-    name: "getTokensForUSDT",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "bnbAmount", type: "uint256" }],
-    name: "getTokensForBNB",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "usdtAmount", type: "uint256" }],
-    name: "buyWithUSDT",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "buyWithBNB",
-    outputs: [],
+    inputs: [
+      { internalType: "address", name: "implementation", type: "address" },
+      { internalType: "bytes", name: "_data", type: "bytes" },
+    ],
     stateMutability: "payable",
-    type: "function",
+    type: "constructor",
   },
+  {
+    inputs: [{ internalType: "address", name: "target", type: "address" }],
+    name: "AddressEmptyCode",
+    type: "error",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "implementation", type: "address" },
+    ],
+    name: "ERC1967InvalidImplementation",
+    type: "error",
+  },
+  { inputs: [], name: "ERC1967NonPayable", type: "error" },
+  { inputs: [], name: "FailedInnerCall", type: "error" },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "implementation",
+        type: "address",
+      },
+    ],
+    name: "Upgraded",
+    type: "event",
+  },
+  { stateMutability: "payable", type: "fallback" },
 ];
 
 export const USDT_ABI = [

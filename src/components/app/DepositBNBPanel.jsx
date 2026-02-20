@@ -1,66 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Coins, ArrowDown, TrendingUp, Info, Zap } from 'lucide-react';
-import { formatUnits } from 'viem';
-import { useGetTokensForBNB } from '@/hooks/useGetTokensForBNB';
-import { useBuyWithBNB } from '@/hooks/useBuyWithBNB';
 
 const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const numAmount = parseFloat(amount) || 0;
+  const isValid = numAmount >= 0.1 && numAmount <= 2;
 
-  // Read: how many tokens for this BNB amount
-  const { tokensOut, isLoading: isLoadingQuote } = useGetTokensForBNB(
-    numAmount > 0 ? amount : undefined
-  );
-
-  // Buy hook
-  const {
-    buyWithBNB,
-    isPending,
-    isConfirming,
-    isConfirmed,
-    reset,
-  } = useBuyWithBNB();
-
-  useEffect(() => {
-    if (isConfirmed) {
-      setAmount('');
-      reset();
-    }
-  }, [isConfirmed]);
-
-  const tokensDisplay = tokensOut
-    ? parseFloat(formatUnits(tokensOut, 18)).toLocaleString()
-    : '0.00';
-
-  const isProcessing = isPending || isConfirming;
-  const isValid = numAmount > 0;
-  const canBuy = walletConnected && isValid && !isProcessing;
-
-  const handleDeposit = () => {
-    buyWithBNB(amount);
+  const lpBreakdown = {
+    lp: (numAmount * 0.7).toFixed(4),
+    labubu: (numAmount * 0.35).toFixed(4),
+    bnb: (numAmount * 0.35).toFixed(4),
+    referral: (numAmount * 0.2).toFixed(4),
+    globalPool: (numAmount * 0.1).toFixed(4),
   };
 
-  const getButtonText = () => {
-    if (!walletConnected) return 'Connect Wallet First';
-    if (isPending) return (
-      <span className="flex items-center justify-center gap-2">
-        <Spinner /> Wallet Opening...
-      </span>
-    );
-    if (isConfirming) return (
-      <span className="flex items-center justify-center gap-2">
-        <Spinner /> Purchasing...
-      </span>
-    );
-    return (
-      <span className="flex items-center justify-center gap-2">
-        <Zap size={18} /> Buy with {amount || '0'} BNB
-      </span>
-    );
+  const handleDeposit = async () => {
+    setIsProcessing(true);
+    await new Promise((r) => setTimeout(r, 2500));
+    setIsProcessing(false);
+    setAmount('');
   };
 
   return (
@@ -79,10 +42,10 @@ export const DepositBNBPanel = ({ walletConnected }) => {
           <Coins size={48} className="mx-auto text-secondary mb-4" />
         </motion.div>
         <h2 className="font-display text-2xl font-bold gradient-text mb-2">
-          Buy with BNB
+          Deposit BNB for LP
         </h2>
         <p className="text-muted-foreground text-sm">
-          Purchase MYBUBU tokens with BNB
+          Deposit BNB to receive LP tokens • Min: 0.1 BNB • Max: 2 BNB
         </p>
       </motion.div>
 
@@ -94,7 +57,8 @@ export const DepositBNBPanel = ({ walletConnected }) => {
         className="glass-card p-6 space-y-4"
       >
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-muted-foreground">You Pay</span>
+          <span className="text-sm text-muted-foreground">Deposit Amount</span>
+          <span className="text-xs text-muted-foreground">Balance: {walletConnected ? '5.24 BNB' : '—'}</span>
         </div>
 
         <div className="relative">
@@ -103,7 +67,9 @@ export const DepositBNBPanel = ({ walletConnected }) => {
             placeholder="0.0"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            step="0.01"
+            min="0.1"
+            max="2"
+            step="0.1"
             className="w-full bg-background/50 border border-border rounded-xl px-4 py-4 text-2xl font-display font-bold text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
           />
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary font-bold text-sm">
@@ -130,42 +96,74 @@ export const DepositBNBPanel = ({ walletConnected }) => {
           ))}
         </div>
 
-        {/* You Receive */}
-        <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">You Receive</span>
-          </div>
-          <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
-            <p className="text-2xl font-display font-bold text-primary">
-              {isLoadingQuote ? '...' : tokensDisplay}
-            </p>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <span className="text-lg">🐱</span>
-              <span className="font-bold text-sm text-foreground">MYBUBU</span>
-            </div>
-          </div>
-        </div>
+        {numAmount > 0 && !isValid && (
+          <p className="text-xs text-destructive flex items-center gap-1">
+            <Info size={12} /> Amount must be between 0.1 and 2 BNB
+          </p>
+        )}
       </motion.div>
 
-      {/* Buy Button */}
+      {/* LP Breakdown */}
+      {numAmount > 0 && isValid && (
+        <motion.div
+          initial={{ opacity: 0, y: 20, height: 0 }}
+          animate={{ opacity: 1, y: 0, height: 'auto' }}
+          className="glass-card p-6 space-y-3"
+        >
+          <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-3">
+            <TrendingUp size={18} className="text-primary" />
+            Distribution Breakdown
+          </h3>
+
+          {[
+            { label: 'LP (70%)', sub: `${lpBreakdown.labubu} Labubu + ${lpBreakdown.bnb} BNB`, value: `${lpBreakdown.lp} BNB`, color: 'text-primary' },
+            { label: 'Referral & Rewards (20%)', value: `${lpBreakdown.referral} BNB`, color: 'text-secondary' },
+            { label: 'Global Pool (10%)', value: `${lpBreakdown.globalPool} BNB`, color: 'text-primary' },
+          ].map((item, i) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex justify-between items-center py-2 border-b border-border/50 last:border-0"
+            >
+              <div>
+                <p className="text-sm text-foreground">{item.label}</p>
+                {item.sub && <p className="text-xs text-muted-foreground">{item.sub}</p>}
+              </div>
+              <span className={`font-mono font-bold text-sm ${item.color}`}>{item.value}</span>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+
+      {/* Deposit Button */}
       <motion.button
-        whileHover={canBuy ? { scale: 1.02 } : {}}
-        whileTap={canBuy ? { scale: 0.98 } : {}}
+        whileHover={isValid ? { scale: 1.02 } : {}}
+        whileTap={isValid ? { scale: 0.98 } : {}}
         onClick={handleDeposit}
-        disabled={!canBuy}
+        disabled={!walletConnected || !isValid || isProcessing}
         className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-secondary to-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
-        style={canBuy ? { boxShadow: '0 0 30px hsl(30 80% 60% / 0.3)' } : {}}
+        style={isValid ? { boxShadow: '0 0 30px hsl(30 80% 60% / 0.3)' } : {}}
       >
-        {getButtonText()}
+        {isProcessing ? (
+          <span className="flex items-center justify-center gap-2">
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+            />
+            Processing...
+          </span>
+        ) : !walletConnected ? (
+          'Connect Wallet First'
+        ) : (
+          <span className="flex items-center justify-center gap-2">
+            <Zap size={18} />
+            Deposit {amount || '0'} BNB
+          </span>
+        )}
       </motion.button>
     </div>
   );
 };
-
-const Spinner = () => (
-  <motion.span
-    animate={{ rotate: 360 }}
-    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-    className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
-  />
-);

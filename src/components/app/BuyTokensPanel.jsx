@@ -1,101 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingCart, ArrowDownUp, Wallet } from 'lucide-react';
-import { useAccount } from 'wagmi';
-import { formatUnits } from 'viem';
-import { useGetTokensForUSDT } from '@/hooks/useGetTokensForUSDT';
-import { useUSDTApproval } from '@/hooks/useUSDTApproval';
-import { useBuyWithUSDT } from '@/hooks/useBuyWithUSDT';
 
 export const BuyTokensPanel = ({ walletConnected }) => {
   const [usdtAmount, setUsdtAmount] = useState('');
-  const { address } = useAccount();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const tokenRate = 0.05; // 1 MYBUBU = $0.05
+  const tokensReceived = usdtAmount ? (parseFloat(usdtAmount) / tokenRate).toFixed(2) : '0.00';
   const numAmount = parseFloat(usdtAmount) || 0;
 
-  // Read: how many tokens for this USDT amount
-  const { tokensOut, isLoading: isLoadingQuote } = useGetTokensForUSDT(
-    numAmount >= 100 ? usdtAmount : undefined
-  );
-
-  // Approval hook
-  const {
-    hasEnoughBalance,
-    needsApproval,
-    approveUSDT,
-    isApproving,
-    approvalConfirmed,
-    refetch: refetchApproval,
-  } = useUSDTApproval(address, numAmount >= 100 ? usdtAmount : undefined);
-
-  // Buy hook
-  const {
-    buyWithUSDT,
-    isPending: isBuyPending,
-    isConfirming: isBuyConfirming,
-    isConfirmed: isBuyConfirmed,
-    reset: resetBuy,
-  } = useBuyWithUSDT();
-
-  // After approval confirmed, refetch allowance
-  useEffect(() => {
-    if (approvalConfirmed) {
-      refetchApproval();
-    }
-  }, [approvalConfirmed]);
-
-  // After buy confirmed, reset
-  useEffect(() => {
-    if (isBuyConfirmed) {
-      setUsdtAmount('');
-      resetBuy();
-      refetchApproval();
-    }
-  }, [isBuyConfirmed]);
-
-  const tokensDisplay = tokensOut
-    ? parseFloat(formatUnits(tokensOut, 18)).toLocaleString()
-    : '0.00';
-
-  const isProcessing = isApproving || isBuyPending || isBuyConfirming;
-  const canBuy = walletConnected && numAmount >= 100 && hasEnoughBalance && !isProcessing;
-
-  const handleBuy = () => {
-    if (needsApproval) {
-      approveUSDT();
-    } else {
-      buyWithUSDT(usdtAmount);
-    }
-  };
-
-  const getButtonText = () => {
-    if (!walletConnected) return 'Connect Wallet First';
-    if (numAmount > 0 && numAmount < 100) return 'Minimum 100 USDT';
-    if (numAmount >= 100 && !hasEnoughBalance) return 'Insufficient USDT Balance';
-    if (isApproving) return (
-      <span className="flex items-center justify-center gap-2">
-        <Spinner /> Approving USDT...
-      </span>
-    );
-    if (isBuyPending) return (
-      <span className="flex items-center justify-center gap-2">
-        <Spinner /> Wallet Opening...
-      </span>
-    );
-    if (isBuyConfirming) return (
-      <span className="flex items-center justify-center gap-2">
-        <Spinner /> Purchasing...
-      </span>
-    );
-    if (needsApproval) return (
-      <span className="flex items-center justify-center gap-2">
-        <Wallet size={18} /> Approve USDT
-      </span>
-    );
-    return (
-      <span className="flex items-center justify-center gap-2">
-        <Wallet size={18} /> Buy MYBUBU
-      </span>
-    );
+  const handleBuy = async () => {
+    setIsProcessing(true);
+    await new Promise((r) => setTimeout(r, 2500));
+    setIsProcessing(false);
+    setUsdtAmount('');
   };
 
   return (
@@ -117,7 +36,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
           Buy MYBUBU Tokens
         </h2>
         <p className="text-muted-foreground text-sm">
-          Purchase MYBUBU tokens with USDT on BSC (Min: 100 USDT)
+          Purchase MYBUBU tokens with USDT on BSC
         </p>
       </motion.div>
 
@@ -132,6 +51,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">You Pay</span>
+            <span className="text-xs text-muted-foreground">Balance: {walletConnected ? '1,250.00 USDT' : '—'}</span>
           </div>
           <div className="relative bg-background/50 border border-border rounded-xl p-4">
             <input
@@ -148,7 +68,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
           </div>
           {/* Quick amounts */}
           <div className="flex gap-2 mt-2">
-            {[100, 250, 500, 1000].map((v) => (
+            {[50, 100, 250, 500].map((v) => (
               <motion.button
                 key={v}
                 whileHover={{ scale: 1.05 }}
@@ -177,10 +97,11 @@ export const BuyTokensPanel = ({ walletConnected }) => {
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">You Receive</span>
+            <span className="text-xs text-muted-foreground">Rate: 1 MYBUBU = $0.05</span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
             <p className="text-2xl font-display font-bold text-primary">
-              {isLoadingQuote ? '...' : tokensDisplay}
+              {parseFloat(tokensReceived).toLocaleString()} 
             </p>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
               <span className="text-lg">🐱</span>
@@ -192,8 +113,12 @@ export const BuyTokensPanel = ({ walletConnected }) => {
         {/* Rate info */}
         <div className="glass-card p-3 space-y-2">
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">Min Purchase</span>
-            <span className="text-foreground">100 USDT</span>
+            <span className="text-muted-foreground">Price Impact</span>
+            <span className="text-primary">{'<0.01%'}</span>
+          </div>
+          <div className="flex justify-between text-xs">
+            <span className="text-muted-foreground">Max Wallet Limit</span>
+            <span className="text-foreground">20,000 MYBUBU</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Tax (Buy)</span>
@@ -204,23 +129,31 @@ export const BuyTokensPanel = ({ walletConnected }) => {
 
       {/* Buy Button */}
       <motion.button
-        whileHover={canBuy ? { scale: 1.02 } : {}}
-        whileTap={canBuy ? { scale: 0.98 } : {}}
+        whileHover={numAmount > 0 ? { scale: 1.02 } : {}}
+        whileTap={numAmount > 0 ? { scale: 0.98 } : {}}
         onClick={handleBuy}
-        disabled={!canBuy}
+        disabled={!walletConnected || numAmount <= 0 || isProcessing}
         className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-        style={canBuy ? { boxShadow: 'var(--shadow-glow)' } : {}}
+        style={numAmount > 0 ? { boxShadow: 'var(--shadow-glow)' } : {}}
       >
-        {getButtonText()}
+        {isProcessing ? (
+          <span className="flex items-center justify-center gap-2">
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+            />
+            Swapping...
+          </span>
+        ) : !walletConnected ? (
+          'Connect Wallet First'
+        ) : (
+          <span className="flex items-center justify-center gap-2">
+            <Wallet size={18} />
+            Buy MYBUBU
+          </span>
+        )}
       </motion.button>
     </div>
   );
 };
-
-const Spinner = () => (
-  <motion.span
-    animate={{ rotate: 360 }}
-    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-    className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
-  />
-);
