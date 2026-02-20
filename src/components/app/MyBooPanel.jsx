@@ -1,39 +1,143 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Rocket, ArrowDownUp, Wallet, Zap, RefreshCw, Info, Gift } from 'lucide-react';
-
-const PRICE_USDT = 0.05; // 10k tokens for 500 USDT
-const PRICE_BNB_RATE = 5000; // estimated tokens per 0.1 BNB (adjustable)
+import { useAccount } from 'wagmi';
+import { Rocket, ArrowDownUp, Zap, RefreshCw, Info, Gift } from 'lucide-react';
+import { useTokensForUSDT, useTokensForBNB } from '@/hooks/useTokenQuote';
+import { useUSDTApproval } from '@/hooks/useUSDTApproval';
+import { useBuyWithUSDT } from '@/hooks/useBuyWithUSDT';
+import { useBuyWithBNB } from '@/hooks/useBuyWithBNB';
+import { toast } from '@/hooks/use-toast';
 
 export const MyBooPanel = ({ walletConnected }) => {
-  const [payMethod, setPayMethod] = useState('usdt'); // 'usdt' | 'bnb'
+  const { address } = useAccount();
+  const [payMethod, setPayMethod] = useState('usdt');
   const [amount, setAmount] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [buyStep, setBuyStep] = useState('idle'); // idle | approving | purchasing
 
   const numAmount = parseFloat(amount) || 0;
-
   const minAmount = payMethod === 'usdt' ? 100 : 0.1;
   const maxAmount = payMethod === 'usdt' ? 10000 : 2;
-
-  const tokensReceived =
-    payMethod === 'usdt'
-      ? (numAmount / PRICE_USDT).toFixed(0)
-      : (numAmount * (PRICE_BNB_RATE / 0.1)).toFixed(0);
-
   const isValid = numAmount >= minAmount && numAmount <= maxAmount;
 
-  const quickAmounts =
-    payMethod === 'usdt'
-      ? [100, 250, 500, 1000]
-      : [0.1, 0.25, 0.5, 1];
+  const quickAmounts = payMethod === 'usdt' ? [100, 250, 500, 1000] : [0.1, 0.25, 0.5, 1];
 
-  const handleBuy = async () => {
-    if (!isValid) return;
-    setIsProcessing(true);
-    await new Promise((r) => setTimeout(r, 2500));
-    setIsProcessing(false);
-    setAmount('');
+  // Read hooks
+  const usdtQuote = useTokensForUSDT(payMethod === 'usdt' && numAmount > 0 ? amount : '0');
+  const bnbQuote = useTokensForBNB(payMethod === 'bnb' && numAmount > 0 ? amount : '0');
+  const tokensReceived = payMethod === 'usdt' ? usdtQuote.tokensOut : bnbQuote.tokensOut;
+  const quoteLoading = payMethod === 'usdt' ? usdtQuote.isLoading : bnbQuote.isLoading;
+
+  // Approval hook (USDT only)
+  const approval = useUSDTApproval(address, payMethod === 'usdt' ? amount : '0');
+
+  // Write hooks
+  const usdtBuy = useBuyWithUSDT();
+  const bnbBuy = useBuyWithBNB();
+
+  const isProcessing = buyStep !== 'idle';
+
+  // Handle USDT purchase flow: approve → buy
+  const handleBuyUSDT = async () => {
+    if (!isValid || !walletConnected) return;
+
+    if (approval.needsApproval) {
+      setBuyStep('approving');
+      approval.handleApprove();
+    } else {
+      setBuyStep('purchasing');
+      usdtBuy.buyWithUSDT(amount);
+    }
   };
+
+  // Handle BNB purchase
+  const handleBuyBNB = () => {
+    if (!isValid || !walletConnected) return;
+    setBuyStep('purchasing');
+    bnbBuy.buyWithBNB(amount);
+  };
+
+  // After USDT approval confirms → trigger buy
+  useEffect(() => {
+    if (approval.approveConfirmed && buyStep === 'approving') {
+      approval.refetch();
+      setBuyStep('purchasing');
+      usdtBuy.buyWithUSDT(amount);
+    }
+  }, [approval.approveConfirmed, buyStep]);
+
+  // After USDT buy confirms → success
+  useEffect(() => {
+    if (usdtBuy.isConfirmed && buyStep === 'purchasing') {
+      setBuyStep('idle');
+      setAmount('');
+      approval.refetch();
+      usdtBuy.reset();
+      approval.resetApprove();
+      toast({ title: '🎉 Purchase Successful!', description: 'Your MyBoo tokens have been purchased.' });
+    }
+  }, [usdtBuy.isConfirmed, buyStep]);
+
+  // After BNB buy confirms → success
+  useEffect(() => {
+    if (bnbBuy.isConfirmed && buyStep === 'purchasing') {
+      setBuyStep('idle');
+      setAmount('');
+      bnbBuy.reset();
+      toast({ title: '🎉 Purchase Successful!', description: 'Your MyBoo tokens have been purchased.' });
+    }
+  }, [bnbBuy.isConfirmed, buyStep]);
+
+  // Handle errors
+  useEffect(() => {
+    const err = approval.approveError || usdtBuy.error || bnbBuy.error;
+    if (err && buyStep !== 'idle') {
+      setBuyStep('idle');
+      toast({ title: 'Transaction Failed', description: err.shortMessage || err.message, variant: 'destructive' });
+    }
+  }, [approval.approveError, usdtBuy.error, bnbBuy.error]);
+
+  const handleBuy = () => {
+    if (payMethod === 'usdt') handleBuyUSDT();
+    else handleBuyBNB();
+  };
+
+  // Button text based on state
+  const getButtonContent = () => {
+    if (isProcessing) {
+      const stepText = buyStep === 'approving'
+        ? (approval.isApproving ? 'Approving USDT...' : 'Wallet Opening...')
+        : (payMethod === 'usdt'
+          ? (usdtBuy.isPending ? 'Wallet Opening...' : 'Purchasing...')
+          : (bnbBuy.isPending ? 'Wallet Opening...' : 'Purchasing...'));
+
+      return (
+        <span className="flex items-center justify-center gap-2">
+          <motion.span
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+          />
+          {stepText}
+        </span>
+      );
+    }
+
+    if (!walletConnected) return 'Connect Wallet First';
+
+    if (payMethod === 'usdt' && isValid && !approval.hasEnoughBalance) {
+      return 'Insufficient USDT Balance';
+    }
+
+    return (
+      <span className="flex items-center justify-center gap-2">
+        <Rocket size={18} />
+        Buy MyBoo Tokens
+      </span>
+    );
+  };
+
+  const isButtonDisabled = !walletConnected || !isValid || isProcessing ||
+    (payMethod === 'usdt' && isValid && !approval.hasEnoughBalance);
 
   return (
     <div className="space-y-6">
@@ -44,7 +148,6 @@ export const MyBooPanel = ({ walletConnected }) => {
         className="glass-card p-6 text-center relative overflow-hidden"
         style={{ boxShadow: '0 0 60px hsl(280 80% 65% / 0.15)' }}
       >
-        {/* Animated sparkles */}
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(6)].map((_, i) => (
             <motion.div
@@ -67,14 +170,9 @@ export const MyBooPanel = ({ walletConnected }) => {
           </div>
         </motion.div>
 
-        <h2 className="font-display text-2xl font-bold gradient-text mb-1">
-          Buy MyBoo Tokens
-        </h2>
-        <p className="text-muted-foreground text-sm mb-3">
-          Early-access pre-launch token — swap for MYBUBU later!
-        </p>
+        <h2 className="font-display text-2xl font-bold gradient-text mb-1">Buy MyBoo Tokens</h2>
+        <p className="text-muted-foreground text-sm mb-3">Early-access pre-launch token — swap for MYBUBU later!</p>
 
-        {/* Badge */}
         <motion.div
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -115,7 +213,8 @@ export const MyBooPanel = ({ walletConnected }) => {
             key={m.id}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => { setPayMethod(m.id); setAmount(''); }}
+            onClick={() => { setPayMethod(m.id); setAmount(''); setBuyStep('idle'); }}
+            disabled={isProcessing}
             className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium text-sm transition-all ${
               payMethod === m.id
                 ? 'bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-lg'
@@ -151,7 +250,8 @@ export const MyBooPanel = ({ walletConnected }) => {
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full bg-transparent text-2xl font-display font-bold text-foreground placeholder:text-muted-foreground/30 focus:outline-none"
+              disabled={isProcessing}
+              className="w-full bg-transparent text-2xl font-display font-bold text-foreground placeholder:text-muted-foreground/30 focus:outline-none disabled:opacity-50"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
               {payMethod === 'usdt' ? (
@@ -176,7 +276,8 @@ export const MyBooPanel = ({ walletConnected }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setAmount(v.toString())}
-                className="flex-1 py-1.5 rounded-lg text-xs font-medium glass-card text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all"
+                disabled={isProcessing}
+                className="flex-1 py-1.5 rounded-lg text-xs font-medium glass-card text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all disabled:opacity-50"
               >
                 {payMethod === 'usdt' ? `$${v}` : `${v} BNB`}
               </motion.button>
@@ -195,17 +296,28 @@ export const MyBooPanel = ({ walletConnected }) => {
           </motion.div>
         </div>
 
-        {/* Output */}
+        {/* Output (read-only) */}
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">You Receive</span>
             <span className="text-xs text-muted-foreground">
-              Rate: 10,000 MyBoo = 500 USDT
+              Fetched from contract
             </span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
             <p className="text-2xl font-display font-bold text-primary">
-              {numAmount > 0 ? parseFloat(tokensReceived).toLocaleString() : '0'}
+              {quoteLoading ? (
+                <motion.span
+                  animate={{ opacity: [0.3, 1, 0.3] }}
+                  transition={{ duration: 1.2, repeat: Infinity }}
+                >
+                  Loading...
+                </motion.span>
+              ) : numAmount > 0 ? (
+                parseFloat(tokensReceived).toLocaleString(undefined, { maximumFractionDigits: 2 })
+              ) : (
+                '0'
+              )}
             </p>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
               <span className="text-lg">🚀</span>
@@ -253,30 +365,14 @@ export const MyBooPanel = ({ walletConnected }) => {
 
       {/* Buy button */}
       <motion.button
-        whileHover={isValid ? { scale: 1.02 } : {}}
-        whileTap={isValid ? { scale: 0.98 } : {}}
+        whileHover={!isButtonDisabled ? { scale: 1.02 } : {}}
+        whileTap={!isButtonDisabled ? { scale: 0.98 } : {}}
         onClick={handleBuy}
-        disabled={!walletConnected || !isValid || isProcessing}
+        disabled={isButtonDisabled}
         className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-        style={isValid ? { boxShadow: 'var(--shadow-glow)' } : {}}
+        style={isValid && !isButtonDisabled ? { boxShadow: 'var(--shadow-glow)' } : {}}
       >
-        {isProcessing ? (
-          <span className="flex items-center justify-center gap-2">
-            <motion.span
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
-            />
-            Processing...
-          </span>
-        ) : !walletConnected ? (
-          'Connect Wallet First'
-        ) : (
-          <span className="flex items-center justify-center gap-2">
-            <Rocket size={18} />
-            Buy MyBoo Tokens
-          </span>
-        )}
+        {getButtonContent()}
       </motion.button>
     </div>
   );
