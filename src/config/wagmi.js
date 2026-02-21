@@ -35,7 +35,15 @@ export const wagmiConfig = createConfig({
         url: window.location.origin,
       },
     }),
-    walletConnect({ projectId: "18e5dbfec5539cf4cd18f5ecdf94eb6a" }),
+   walletConnect({
+  projectId: "299d3861cbb9c565794a7c343d2ed767",
+  metadata: {
+    name: "MYBUBU",
+    description: "MYBUBU dApp",
+    url: window.location.origin,
+    icons: [],
+  },
+})
   ],
   transports: {
     [bscTestnet.id]: http(bscTestnetTransports[0], {

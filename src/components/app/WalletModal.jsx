@@ -6,17 +6,17 @@ import { useAccount } from 'wagmi';
 
 const walletOptions = [
   {
-    id: 'metaMask',
+    id: 'metaMaskSDK',
     name: 'MetaMask',
     icon: '🦊',
     description: 'Connect using MetaMask browser extension',
   },
-  // {
-  //   id: 'walletConnect',
-  //   name: 'WalletConnect',
-  //   icon: '🔗',
-  //   description: 'Scan QR code with your mobile wallet',
-  // },
+  {
+    id: 'walletConnect',
+    name: 'WalletConnect',
+    icon: '🔗',
+    description: 'Scan QR code with your mobile wallet',
+  },
 ];
 
 export const WalletModal = ({ isOpen, onClose }) => {
@@ -24,24 +24,25 @@ export const WalletModal = ({ isOpen, onClose }) => {
   const { isConnected , chainId } = useAccount();
   const [connectingId, setConnectingId] = useState(null);
 
+  console.log("connectingId", connectingId , connectors)
+
   const handleConnect = (walletId) => {
-    const connector = connectors.find((c) =>
-      c.id.toLowerCase().includes(walletId.toLowerCase())
-    );
+const connector = connectors.find(c => c.id === walletId);
     if (!connector) return;
 
     setConnectingId(walletId);
+    console.log("Connector", connector)
     connect(
       { connector },
-      {
-        onSuccess: () => {
-          setConnectingId(null);
-          onClose();
-        },
-        onError: () => {
-          setConnectingId(null);
-        },
-      }
+      // {
+      //   onSuccess: () => {
+      //     setConnectingId(null);
+      //     onClose();
+      //   },
+      //   onError: () => {
+      //     setConnectingId(null);
+      //   },
+      // }
     );
   };
 
@@ -102,7 +103,7 @@ export const WalletModal = ({ isOpen, onClose }) => {
                     key={wallet.id}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => handleConnect(wallet.id)}
+                    onClick={() => {handleConnect(wallet.id)}}
                     disabled={isPending}
                     className="w-full flex items-center gap-4 p-4 rounded-xl glass-card hover:border-primary/40 transition-all text-left disabled:opacity-50"
                   >
