@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2 } from 'lucide-react';
-import { useConnect } from 'wagmi';
-import { useAccount } from 'wagmi';
+import { useConnect, useAccount } from 'wagmi';
+import { WalletConnectModal } from '@walletconnect/modal';
+
+const wcModal = new WalletConnectModal({
+  projectId: '299d3861cbb9c565794a7c343d2ed767',
+  chains: ['eip155:97'],
+});
 
 const walletOptions = [
   {
@@ -21,28 +26,50 @@ const walletOptions = [
 
 export const WalletModal = ({ isOpen, onClose }) => {
   const { connectors, connect, isPending } = useConnect();
-  const { isConnected , chainId } = useAccount();
+  const { isConnected } = useAccount();
   const [connectingId, setConnectingId] = useState(null);
+  const unsubRef = useRef(null);
 
-  console.log("connectingId", connectingId , connectors)
+  // Close modal on successful connection
+  useEffect(() => {
+    if (isConnected && connectingId) {
+      setConnectingId(null);
+      wcModal.closeModal();
+      onClose();
+    }
+  }, [isConnected, connectingId, onClose]);
 
-  const handleConnect = (walletId) => {
-const connector = connectors.find(c => c.id === walletId);
+  const handleConnect = async (walletId) => {
+    const connector = connectors.find(c => c.id === walletId);
     if (!connector) return;
 
     setConnectingId(walletId);
-    console.log("Connector", connector)
+
+    // For WalletConnect, listen for display_uri to open QR modal
+    if (walletId === 'walletConnect') {
+      // Clean up previous listener
+      if (unsubRef.current) unsubRef.current();
+      
+      unsubRef.current = connector.emitter.on('message', ({ type, data }) => {
+        if (type === 'display_uri') {
+          wcModal.openModal({ uri: data });
+        }
+      });
+    }
+
     connect(
       { connector },
-      // {
-      //   onSuccess: () => {
-      //     setConnectingId(null);
-      //     onClose();
-      //   },
-      //   onError: () => {
-      //     setConnectingId(null);
-      //   },
-      // }
+      {
+        onSuccess: () => {
+          setConnectingId(null);
+          wcModal.closeModal();
+          onClose();
+        },
+        onError: () => {
+          setConnectingId(null);
+          wcModal.closeModal();
+        },
+      }
     );
   };
 
