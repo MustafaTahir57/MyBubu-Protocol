@@ -1,48 +1,48 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Loader2 } from 'lucide-react';
-import { useConnect } from 'wagmi';
-import { useAccount } from 'wagmi';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Loader2 } from "lucide-react";
+import { useConnect } from "wagmi";
+import { useAccount } from "wagmi";
+import { toast } from "react-toastify";
 
 const walletOptions = [
   {
-    id: 'metaMaskSDK',
-    name: 'MetaMask',
-    icon: '🦊',
-    description: 'Connect using MetaMask browser extension',
+    id: "metaMaskSDK",
+    name: "MetaMask",
+    icon: "🦊",
+    description: "Connect using MetaMask browser extension",
   },
   {
-    id: 'walletConnect',
-    name: 'WalletConnect',
-    icon: '🔗',
-    description: 'Scan QR code with your mobile wallet',
+    id: "walletConnect",
+    name: "WalletConnect",
+    icon: "🔗",
+    description: "Scan QR code with your mobile wallet",
   },
 ];
 
 export const WalletModal = ({ isOpen, onClose }) => {
   const { connectors, connect, isPending } = useConnect();
-  const { isConnected , chainId } = useAccount();
+  const { isConnected, chainId } = useAccount();
   const [connectingId, setConnectingId] = useState(null);
 
-  console.log("connectingId", connectingId , connectors)
-
   const handleConnect = (walletId) => {
-const connector = connectors.find(c => c.id === walletId);
+    const connector = connectors.find((c) => c.id === walletId);
     if (!connector) return;
 
     setConnectingId(walletId);
-    console.log("Connector", connector)
     connect(
       { connector },
-      // {
-      //   onSuccess: () => {
-      //     setConnectingId(null);
-      //     onClose();
-      //   },
-      //   onError: () => {
-      //     setConnectingId(null);
-      //   },
-      // }
+      {
+        onSuccess: () => {
+          toast.success("Wallet connected successfully!");
+          setConnectingId(null);
+          onClose();
+        },
+        onError: () => {
+          toast.error("Failed to connect wallet. Please try again.");
+          setConnectingId(null);
+        },
+      },
     );
   };
 
@@ -71,9 +71,9 @@ const connector = connectors.find(c => c.id === walletId);
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="relative w-full max-w-md glass-card p-6 rounded-2xl border border-border/50 z-10"
-            style={{ boxShadow: '0 0 80px hsl(340 80% 65% / 0.15)' }}
+            style={{ boxShadow: "0 0 80px hsl(340 80% 65% / 0.15)" }}
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
@@ -103,7 +103,7 @@ const connector = connectors.find(c => c.id === walletId);
                     key={wallet.id}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => {handleConnect(wallet.id)}}
+                    onClick={() => handleConnect(wallet.id)}
                     disabled={isPending}
                     className="w-full flex items-center gap-4 p-4 rounded-xl glass-card hover:border-primary/40 transition-all text-left disabled:opacity-50"
                   >
@@ -117,7 +117,10 @@ const connector = connectors.find(c => c.id === walletId);
                       </p>
                     </div>
                     {isConnecting && (
-                      <Loader2 size={18} className="text-primary animate-spin" />
+                      <Loader2
+                        size={18}
+                        className="text-primary animate-spin"
+                      />
                     )}
                   </motion.button>
                 );
