@@ -36,15 +36,14 @@ export const wagmiConfig = createConfig({
       },
     }),
    walletConnect({
-      projectId: "299d3861cbb9c565794a7c343d2ed767",
-      showQrModal: true,
-      metadata: {
-        name: "MYBUBU",
-        description: "MYBUBU dApp",
-        url: window.location.origin,
-        icons: [],
-      },
-    })
+  projectId: "299d3861cbb9c565794a7c343d2ed767",
+  metadata: {
+    name: "MYBUBU",
+    description: "MYBUBU dApp",
+    url: window.location.origin,
+    icons: [],
+  },
+})
   ],
   transports: {
     [bscTestnet.id]: http(bscTestnetTransports[0], {
