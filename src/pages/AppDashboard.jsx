@@ -31,12 +31,18 @@ const AppDashboard = () => {
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
 
+  const isWrongChain = isConnected && chain && chain.id !== bscTestnet.id;
+
+  const handleSwitchChain = () => {
+    switchChain?.({ chainId: bscTestnet.id });
+  };
+
   // Auto-switch to BSC Testnet if wrong chain
   useEffect(() => {
-    if (isConnected && chain && chain.id !== bscTestnet.id) {
-      switchChain?.({ chainId: bscTestnet.id });
+    if (isWrongChain) {
+      handleSwitchChain();
     }
-  }, [isConnected, chain, switchChain]);
+  }, [isConnected, chain]);
 
   const walletConnected = isConnected;
   const shortAddress = address
@@ -94,12 +100,33 @@ const AppDashboard = () => {
           >
             <Wallet size={16} />
             {isConnected ? shortAddress : 'Connect Wallet'}
-            {isConnected && chain && chain.id !== bscTestnet.id && (
+            {isWrongChain && (
               <span className="text-xs text-destructive ml-1">⚠️ Wrong Network</span>
             )}
           </motion.button>
         </div>
       </motion.header>
+
+      {/* Wrong Network Banner */}
+      {isWrongChain && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-destructive/10 border-b border-destructive/30 py-3"
+        >
+          <div className="container mx-auto px-4 flex items-center justify-center gap-3 text-sm">
+            <span className="text-destructive font-medium">⚠️ You're connected to the wrong network</span>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleSwitchChain}
+              className="px-4 py-1.5 rounded-lg bg-destructive text-destructive-foreground font-medium text-xs"
+            >
+              Switch to BSC Testnet
+            </motion.button>
+          </div>
+        </motion.div>
+      )}
 
       {/* Stats Bar */}
       <UserStatsBar isJoined={isJoined} walletConnected={walletConnected} address={address} />

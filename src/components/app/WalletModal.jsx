@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
-import { useConnect } from "wagmi";
+import { useConnect, useSwitchChain } from "wagmi";
 import { useAccount } from "wagmi";
 import { toast } from "react-toastify";
+import { bscTestnet } from "@/config/wagmi";
 
 const walletOptions = [
   {
@@ -23,6 +24,7 @@ const walletOptions = [
 export const WalletModal = ({ isOpen, onClose }) => {
   const { connectors, connect, isPending } = useConnect();
   const { isConnected, chainId } = useAccount();
+  const { switchChain } = useSwitchChain();
   const [connectingId, setConnectingId] = useState(null);
 
   const handleConnect = (walletId) => {
@@ -37,6 +39,10 @@ export const WalletModal = ({ isOpen, onClose }) => {
           toast.success("Wallet connected successfully!");
           setConnectingId(null);
           onClose();
+          // Switch to BSC Testnet after connection
+          setTimeout(() => {
+            switchChain?.({ chainId: bscTestnet.id });
+          }, 500);
         },
         onError: () => {
           toast.error("Failed to connect wallet. Please try again.");
