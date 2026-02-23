@@ -42,7 +42,7 @@ const AppDashboard = () => {
     if (isWrongChain) {
       handleSwitchChain();
     }
-  }, [isConnected, chain]);
+  }, [isConnected, activeChain.id, chain]);
 
   const walletConnected = isConnected;
   const shortAddress = address
