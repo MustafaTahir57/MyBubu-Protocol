@@ -1,9 +1,8 @@
 import { useReadContract } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
-import { CONTRACT_ADDRESSES, MYBOO_PRESALE_ABI } from '@/config/contracts';
-import { bscTestnet } from '@/config/wagmi';
+import { CONTRACT_ADDRESSES, MYBOO_PRESALE_ABI, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
-const presaleAddress = CONTRACT_ADDRESSES[bscTestnet.id].MYBOO_PRESALE;
+const presaleAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
 
 /**
  * Fetches how many MyBoo tokens the user will receive for a given USDT amount.

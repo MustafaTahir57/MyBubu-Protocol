@@ -1,4 +1,14 @@
+// Active chain ID — change this to switch between mainnet and testnet
+export const ACTIVE_CHAIN_ID = 56;
+
 export const CONTRACT_ADDRESSES = {
+  // BSC Mainnet
+  56: {
+    MYBOO_TOKEN: "0x165ddbf120910074a3b748a7fc9c1ecdb513fc09",
+    MYBOO_PRESALE: "0x35e6d1184f38f5bb29cf69ef72be68ebbf02ba63",
+    USDT: "0x55d398326f99059fF775485246999027B3197955",
+  },
+  // BSC Testnet (kept for development)
   97: {
     MYBOO_TOKEN: "0x2e6b906a36e75d610e49b729a550a1dfa9741d33",
     MYBOO_PRESALE: "0x9a313297fccd1dd68c88310a1536896ee270f93f",

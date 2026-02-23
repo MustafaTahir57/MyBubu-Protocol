@@ -11,7 +11,7 @@ import { NFTNodePanel } from '@/components/app/NFTNodePanel';
 import { MyBooPanel } from '@/components/app/MyBooPanel';
 import { UserStatsBar } from '@/components/app/UserStatsBar';
 import { WalletModal } from '@/components/app/WalletModal';
-import { bscTestnet } from '@/config/wagmi';
+import { activeChain } from '@/config/wagmi';
 
 const tabs = [
   { id: 'myboo', label: 'MyBoo Token', icon: ShoppingCart, emoji: '🚀' },
@@ -31,13 +31,13 @@ const AppDashboard = () => {
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
 
-  const isWrongChain = isConnected && chain && chain.id !== bscTestnet.id;
+  const isWrongChain = isConnected && chain && chain.id !== activeChain.id;
 
   const handleSwitchChain = () => {
-    switchChain?.({ chainId: bscTestnet.id });
+    switchChain?.({ chainId: activeChain.id });
   };
 
-  // Auto-switch to BSC Testnet if wrong chain
+  // Auto-switch to active chain if wrong chain
   useEffect(() => {
     if (isWrongChain) {
       handleSwitchChain();
@@ -122,7 +122,7 @@ const AppDashboard = () => {
               onClick={handleSwitchChain}
               className="px-4 py-1.5 rounded-lg bg-destructive text-destructive-foreground font-medium text-xs"
             >
-              Switch to BSC Testnet
+              Switch to {activeChain.name}
             </motion.button>
           </div>
         </motion.div>

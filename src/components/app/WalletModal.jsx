@@ -4,7 +4,7 @@ import { X, Loader2 } from "lucide-react";
 import { useConnect, useSwitchChain } from "wagmi";
 import { useAccount } from "wagmi";
 import { toast } from "react-toastify";
-import { bscTestnet } from "@/config/wagmi";
+import { activeChain } from "@/config/wagmi";
 
 const walletOptions = [
   {
@@ -39,9 +39,9 @@ export const WalletModal = ({ isOpen, onClose }) => {
           toast.success("Wallet connected successfully!");
           setConnectingId(null);
           onClose();
-          // Switch to BSC Testnet after connection
+          // Switch to active chain after connection
           setTimeout(() => {
-            switchChain?.({ chainId: bscTestnet.id });
+            switchChain?.({ chainId: activeChain.id });
           }, 500);
         },
         onError: () => {
@@ -97,7 +97,7 @@ export const WalletModal = ({ isOpen, onClose }) => {
             </div>
 
             <p className="text-sm text-muted-foreground mb-6">
-              Choose your preferred wallet to connect to BSC Testnet
+              Choose your preferred wallet to connect to BNB Smart Chain
             </p>
 
             {/* Wallet Options */}
