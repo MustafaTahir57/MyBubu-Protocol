@@ -1,7 +1,25 @@
 import { createConfig, http } from "wagmi";
 import { defineChain } from "viem";
 import { metaMask, walletConnect } from "wagmi/connectors";
+import { ACTIVE_CHAIN_ID } from "./contracts";
 
+// BSC Mainnet
+export const bscMainnet = defineChain({
+  id: 56,
+  name: "BNB Smart Chain",
+  nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ["https://bsc-dataseed.binance.org"],
+    },
+  },
+  blockExplorers: {
+    default: { name: "BscScan", url: "https://bscscan.com" },
+  },
+  testnet: false,
+});
+
+// BSC Testnet (kept for development)
 export const bscTestnet = defineChain({
   id: 97,
   name: "BSC Testnet",
@@ -17,17 +35,30 @@ export const bscTestnet = defineChain({
   testnet: true,
 });
 
-const bscTestnetTransports = [
+// Pick active chain based on config
+export const activeChain = ACTIVE_CHAIN_ID === 56 ? bscMainnet : bscTestnet;
+
+const bscMainnetRpcs = [
+  "https://bsc-dataseed.binance.org",
+  "https://bsc-dataseed1.defibit.io",
+  "https://bsc-dataseed1.ninicoin.io",
+  "https://bsc.publicnode.com",
+  "https://bsc-dataseed2.binance.org",
+  "https://bsc-dataseed3.binance.org",
+];
+
+const bscTestnetRpcs = [
   "https://data-seed-prebsc-1-s1.binance.org:8545",
   "https://data-seed-prebsc-2-s1.binance.org:8545",
-  "https://data-seed-prebsc-1-s2.binance.org:8545",
-  "https://data-seed-prebsc-2-s2.binance.org:8545",
-  "https://data-seed-prebsc-1-s3.binance.org:8545",
   "https://bsc-testnet-rpc.publicnode.com",
 ];
 
+const transports = ACTIVE_CHAIN_ID === 56
+  ? { [bscMainnet.id]: http(bscMainnetRpcs[0], { batch: true, retryCount: 3, retryDelay: 1000 }) }
+  : { [bscTestnet.id]: http(bscTestnetRpcs[0], { batch: true, retryCount: 3, retryDelay: 1000 }) };
+
 export const wagmiConfig = createConfig({
-  chains: [bscTestnet],
+  chains: [activeChain],
   connectors: [
     metaMask({
       dappMetadata: {
@@ -35,21 +66,15 @@ export const wagmiConfig = createConfig({
         url: window.location.origin,
       },
     }),
-   walletConnect({
-  projectId: "299d3861cbb9c565794a7c343d2ed767",
-  metadata: {
-    name: "MYBUBU",
-    description: "MYBUBU dApp",
-    url: window.location.origin,
-    icons: [],
-  },
-})
-  ],
-  transports: {
-    [bscTestnet.id]: http(bscTestnetTransports[0], {
-      batch: true,
-      retryCount: 3,
-      retryDelay: 1000,
+    walletConnect({
+      projectId: "299d3861cbb9c565794a7c343d2ed767",
+      metadata: {
+        name: "MYBUBU",
+        description: "MYBUBU dApp",
+        url: window.location.origin,
+        icons: [],
+      },
     }),
-  },
+  ],
+  transports,
 });
