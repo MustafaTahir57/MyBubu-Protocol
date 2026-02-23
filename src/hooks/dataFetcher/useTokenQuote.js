@@ -47,7 +47,7 @@ export const useTokensForBNB = (bnbAmount) => {
   });
 
   return {
-    tokensOut: data ? formatUnits(data, 18) : '0',
+    tokensOut: data?.[0] ? formatUnits(data[0], 18) : '0',
     tokensOutRaw: data,
     isLoading,
     error,
