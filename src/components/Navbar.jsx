@@ -6,7 +6,7 @@ import { GlowButton } from './GlowButton';
 import mybubuLogo from '@/assets/mybubu-logo.png';
 
 const navLinks = [
-  { label: 'About', href: '#about' },
+  { label: 'About Main', href: '#about' },
   { label: 'Mechanism', href: '#mechanism' },
   { label: 'Tokenomics', href: '#tokenomics' },
   { label: 'NFT Nodes', href: '#nft-nodes' },
