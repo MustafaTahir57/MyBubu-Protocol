@@ -193,7 +193,7 @@ export const HeroSection = () => {
           className="mb-12"
         >
           <p className="text-muted-foreground mb-4 uppercase tracking-widest text-sm">
-            Presale ends in
+            🐱 MYBUBU Token Launches In
           </p>
           <CountdownTimer />
         </motion.div>
