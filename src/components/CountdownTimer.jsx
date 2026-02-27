@@ -15,7 +15,7 @@ const getTimeLeft = () => {
   };
 };
 
-export const CountdownTimer = memo(() => {
+export const CountdownTimer = () => {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft);
 
   useEffect(() => {
