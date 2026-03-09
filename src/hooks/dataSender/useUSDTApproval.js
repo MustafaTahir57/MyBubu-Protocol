@@ -11,7 +11,7 @@ const defaultSpender = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
  * @param {string} userAddress - Connected wallet address
  * @param {string} usdtAmount - Human-readable USDT amount to approve (e.g. "100")
  */
-export const useUSDTApproval = (userAddress, usdtAmount) => {
+export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaultSpender) => {
   const amountParsed = usdtAmount && parseFloat(usdtAmount) > 0
     ? parseUnits(usdtAmount, 18)
     : 0n;
