@@ -19,6 +19,13 @@ const DEPOSIT_ABI = [
 ];
 
 export const useDepositBNB = () => {
+  const { address } = useAccount();
+
+  const { data: balanceData } = useBalance({
+    address,
+    query: { enabled: !!address },
+  });
+
   const {
     writeContract,
     data: txHash,
