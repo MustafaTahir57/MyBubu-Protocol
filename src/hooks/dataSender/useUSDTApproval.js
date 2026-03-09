@@ -30,7 +30,7 @@ export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaul
     address: usdtAddress,
     abi: USDT_ABI,
     functionName: 'allowance',
-    args: userAddress ? [userAddress, presaleAddress] : undefined,
+    args: userAddress ? [userAddress, spenderAddress] : undefined,
     query: { enabled: !!userAddress },
   });
 
