@@ -15,9 +15,9 @@ import { activeChain } from '@/config/wagmi';
 
 const tabs = [
   { id: 'myboo', label: 'MyBoo Token', icon: ShoppingCart, emoji: '🚀' },
+  { id: 'buy', label: 'Swap', icon: ShoppingCart, emoji: '🔄' },
   { id: 'join', label: 'Join', icon: Users, emoji: '🤝' },
   { id: 'deposit', label: 'Deposit BNB', icon: Coins, emoji: '💰' },
-  { id: 'buy', label: 'Buy Tokens', icon: ShoppingCart, emoji: '🛒' },
   { id: 'nft', label: 'NFT Nodes', icon: Crown, emoji: '👑' },
 ];
 
