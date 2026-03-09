@@ -159,6 +159,27 @@ export const NFTNodePanel = ({ walletConnected }) => {
         </p>
       </motion.div>
 
+      {/* User Stats */}
+      {walletConnected && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="glass-card p-4 grid grid-cols-2 gap-4"
+        >
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground mb-1">Your NFT Nodes</p>
+            <p className="font-display font-bold text-2xl gradient-text">{nftBalance}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground mb-1">Lifetime Claimed</p>
+            <p className="font-display font-bold text-2xl gradient-text">
+              {parseFloat(lifetimeClaimed).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </p>
+          </div>
+        </motion.div>
+      )}
+
       {/* Mint Controls */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
