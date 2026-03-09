@@ -8,6 +8,7 @@ import { useUSDTApproval } from '@/hooks/dataSender/useUSDTApproval';
 import { useNFTNodeMint } from '@/hooks/dataSender/useNFTNodeMint';
 import { useClaimTokenRewards } from '@/hooks/dataSender/useClaimTokenRewards';
 import { usePendingTokenRewards } from '@/hooks/dataFetcher/usePendingTokenRewards';
+import { useTokenRewardInfo } from '@/hooks/dataFetcher/useTokenRewardInfo';
 import { CONTRACT_ADDRESSES, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
 const nftNodeAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].NFT_NODE;
