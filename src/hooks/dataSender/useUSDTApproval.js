@@ -58,7 +58,7 @@ export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaul
       address: usdtAddress,
       abi: USDT_ABI,
       functionName: 'approve',
-      args: [presaleAddress, amountParsed],
+      args: [spenderAddress, amountParsed],
     });
   };
 
