@@ -82,7 +82,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-muted-foreground">Deposit Amount</span>
-          <span className="text-xs text-muted-foreground">Balance: {walletConnected ? '—' : '—'}</span>
+          <span className="text-xs text-muted-foreground">Balance: {walletConnected ? `${bnbBalance.toFixed(4)} BNB` : '—'}</span>
         </div>
 
         <div className="relative">
