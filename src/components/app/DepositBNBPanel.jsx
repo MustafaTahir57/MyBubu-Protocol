@@ -174,10 +174,10 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
       {/* Deposit Button */}
       <motion.button
-        whileHover={isInRange && !isProcessing ? { scale: 1.02 } : {}}
-        whileTap={isInRange && !isProcessing ? { scale: 0.98 } : {}}
+        whileHover={canDeposit && !isProcessing ? { scale: 1.02 } : {}}
+        whileTap={canDeposit && !isProcessing ? { scale: 0.98 } : {}}
         onClick={handleDeposit}
-        disabled={!walletConnected || !isInRange || isProcessing}
+        disabled={!walletConnected || !canDeposit || isProcessing}
         className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-secondary to-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
         style={isInRange ? { boxShadow: '0 0 30px hsl(30 80% 60% / 0.3)' } : {}}
       >
