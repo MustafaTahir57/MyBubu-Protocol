@@ -131,6 +131,11 @@ export const DepositBNBPanel = ({ walletConnected }) => {
             <Info size={12} /> Amount must be between 0.1 and 2 BNB
           </p>
         )}
+        {isInRange && insufficientBalance && (
+          <p className="text-xs text-destructive flex items-center gap-1">
+            <Info size={12} /> Insufficient BNB balance
+          </p>
+        )}
       </motion.div>
 
       {/* LP Breakdown */}
