@@ -8,8 +8,8 @@ const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
-  const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB } = useDepositBNB();
-
+  const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB , refetch: refetchBnbBalance } = useDepositBNB();
+  
   const numAmount = parseFloat(amount);
   const isValidNumber = amount !== '' && !isNaN(numAmount) && isFinite(numAmount) && numAmount > 0;
   const isInRange = isValidNumber && numAmount >= 0.1 && numAmount <= 2;
@@ -27,6 +27,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
   useEffect(() => {
     if (isConfirmed) {
       toast.success('🎉 BNB deposited successfully!');
+      refetchBnbBalance();
       setAmount('');
       reset();
     }

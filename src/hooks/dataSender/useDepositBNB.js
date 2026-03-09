@@ -2,12 +2,12 @@ import { useSendTransaction, useWaitForTransactionReceipt, useBalance, useAccoun
 import { parseEther } from 'viem';
 import { CONTRACT_ADDRESSES, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
-const depositAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].DEPOSIT_BNB;
+const depositAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBUBU_TOKEN;
 
 export const useDepositBNB = () => {
   const { address } = useAccount();
 
-  const { data: balanceData } = useBalance({
+  const { data: balanceData , refetch } = useBalance({
     address,
     query: { enabled: !!address },
   });
@@ -47,5 +47,6 @@ export const useDepositBNB = () => {
     reset,
     bnbBalance,
     hasEnoughBNB,
+    refetch
   };
 };
