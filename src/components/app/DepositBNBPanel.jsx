@@ -1,30 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Coins, ArrowDown, TrendingUp, Info, Zap } from 'lucide-react';
+import { useDepositBNB } from '@/hooks/dataSender/useDepositBNB';
+import { toast } from 'react-toastify';
 
 const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { deposit, isPending, isConfirming, isConfirmed, error, reset } = useDepositBNB();
 
-  const numAmount = parseFloat(amount) || 0;
-  const isValid = numAmount >= 0.1 && numAmount <= 2;
+  const numAmount = parseFloat(amount);
+  const isValidNumber = amount !== '' && !isNaN(numAmount) && isFinite(numAmount) && numAmount > 0;
+  const isInRange = isValidNumber && numAmount >= 0.1 && numAmount <= 2;
+  const isProcessing = isPending || isConfirming;
 
   const lpBreakdown = {
-    lp: (numAmount * 0.7).toFixed(4),
-    labubu: (numAmount * 0.35).toFixed(4),
-    bnb: (numAmount * 0.35).toFixed(4),
-    referral: (numAmount * 0.2).toFixed(4),
-    globalPool: (numAmount * 0.1).toFixed(4),
+    lp: ((isValidNumber ? numAmount : 0) * 0.7).toFixed(4),
+    labubu: ((isValidNumber ? numAmount : 0) * 0.35).toFixed(4),
+    bnb: ((isValidNumber ? numAmount : 0) * 0.35).toFixed(4),
+    referral: ((isValidNumber ? numAmount : 0) * 0.2).toFixed(4),
+    globalPool: ((isValidNumber ? numAmount : 0) * 0.1).toFixed(4),
   };
 
-  const handleDeposit = async () => {
-    setIsProcessing(true);
-    await new Promise((r) => setTimeout(r, 2500));
-    setIsProcessing(false);
-    setAmount('');
+  useEffect(() => {
+    if (isConfirmed) {
+      toast.success('🎉 BNB deposited successfully!');
+      setAmount('');
+      reset();
+    }
+  }, [isConfirmed]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.shortMessage || 'Deposit failed');
+      reset();
+    }
+  }, [error]);
+
+  const handleDeposit = () => {
+    if (!isInRange) return;
+    deposit(amount);
   };
+
+  const hasInput = amount.trim() !== '';
+  const isInvalidInput = hasInput && !isValidNumber;
+  const isOutOfRange = isValidNumber && !isInRange;
 
   return (
     <div className="space-y-6">
@@ -58,7 +79,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-muted-foreground">Deposit Amount</span>
-          <span className="text-xs text-muted-foreground">Balance: {walletConnected ? '5.24 BNB' : '—'}</span>
+          <span className="text-xs text-muted-foreground">Balance: {walletConnected ? '—' : '—'}</span>
         </div>
 
         <div className="relative">
@@ -67,10 +88,11 @@ export const DepositBNBPanel = ({ walletConnected }) => {
             placeholder="0.0"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            min="0.1"
-            max="2"
-            step="0.1"
-            className="w-full bg-background/50 border border-border rounded-xl px-4 py-4 text-2xl font-display font-bold text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
+            className={`w-full bg-background/50 border rounded-xl px-4 py-4 text-2xl font-display font-bold text-foreground placeholder:text-muted-foreground/30 focus:outline-none transition-all ${
+              isInvalidInput
+                ? 'border-destructive focus:border-destructive focus:ring-1 focus:ring-destructive/30'
+                : 'border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/30'
+            }`}
           />
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary font-bold text-sm">
             BNB
@@ -96,7 +118,12 @@ export const DepositBNBPanel = ({ walletConnected }) => {
           ))}
         </div>
 
-        {numAmount > 0 && !isValid && (
+        {isInvalidInput && (
+          <p className="text-xs text-destructive flex items-center gap-1">
+            <Info size={12} /> Please enter a valid number
+          </p>
+        )}
+        {isOutOfRange && (
           <p className="text-xs text-destructive flex items-center gap-1">
             <Info size={12} /> Amount must be between 0.1 and 2 BNB
           </p>
@@ -104,7 +131,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
       </motion.div>
 
       {/* LP Breakdown */}
-      {numAmount > 0 && isValid && (
+      {isInRange && (
         <motion.div
           initial={{ opacity: 0, y: 20, height: 0 }}
           animate={{ opacity: 1, y: 0, height: 'auto' }}
@@ -139,12 +166,12 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
       {/* Deposit Button */}
       <motion.button
-        whileHover={isValid ? { scale: 1.02 } : {}}
-        whileTap={isValid ? { scale: 0.98 } : {}}
+        whileHover={isInRange && !isProcessing ? { scale: 1.02 } : {}}
+        whileTap={isInRange && !isProcessing ? { scale: 0.98 } : {}}
         onClick={handleDeposit}
-        disabled={!walletConnected || !isValid || isProcessing}
+        disabled={!walletConnected || !isInRange || isProcessing}
         className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-secondary to-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
-        style={isValid ? { boxShadow: '0 0 30px hsl(30 80% 60% / 0.3)' } : {}}
+        style={isInRange ? { boxShadow: '0 0 30px hsl(30 80% 60% / 0.3)' } : {}}
       >
         {isProcessing ? (
           <span className="flex items-center justify-center gap-2">
@@ -153,14 +180,14 @@ export const DepositBNBPanel = ({ walletConnected }) => {
               transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
               className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
             />
-            Processing...
+            {isPending ? 'Confirm in Wallet...' : 'Processing...'}
           </span>
         ) : !walletConnected ? (
           'Connect Wallet First'
         ) : (
           <span className="flex items-center justify-center gap-2">
             <Zap size={18} />
-            Deposit {amount || '0'} BNB
+            Deposit {isValidNumber ? amount : '0'} BNB
           </span>
         )}
       </motion.button>
