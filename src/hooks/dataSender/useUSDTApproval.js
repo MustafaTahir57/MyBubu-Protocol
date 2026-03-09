@@ -3,7 +3,7 @@ import { parseUnits } from 'viem';
 import { CONTRACT_ADDRESSES, USDT_ABI, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
 const usdtAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].USDT;
-const presaleAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
+const defaultSpender = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
 
 /**
  * Manages USDT approval for the presale contract.
