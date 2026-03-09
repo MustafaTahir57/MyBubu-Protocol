@@ -3,7 +3,7 @@ import { parseUnits } from 'viem';
 import { CONTRACT_ADDRESSES, USDT_ABI, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
 const usdtAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].USDT;
-const presaleAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
+const defaultSpender = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
 
 /**
  * Manages USDT approval for the presale contract.
@@ -11,7 +11,7 @@ const presaleAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
  * @param {string} userAddress - Connected wallet address
  * @param {string} usdtAmount - Human-readable USDT amount to approve (e.g. "100")
  */
-export const useUSDTApproval = (userAddress, usdtAmount) => {
+export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaultSpender) => {
   const amountParsed = usdtAmount && parseFloat(usdtAmount) > 0
     ? parseUnits(usdtAmount, 18)
     : 0n;
@@ -30,7 +30,7 @@ export const useUSDTApproval = (userAddress, usdtAmount) => {
     address: usdtAddress,
     abi: USDT_ABI,
     functionName: 'allowance',
-    args: userAddress ? [userAddress, presaleAddress] : undefined,
+    args: userAddress ? [userAddress, spenderAddress] : undefined,
     query: { enabled: !!userAddress },
   });
 
@@ -58,7 +58,7 @@ export const useUSDTApproval = (userAddress, usdtAmount) => {
       address: usdtAddress,
       abi: USDT_ABI,
       functionName: 'approve',
-      args: [presaleAddress, amountParsed],
+      args: [spenderAddress, amountParsed],
     });
   };
 
