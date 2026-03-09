@@ -1,4 +1,4 @@
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useBalance, useAccount } from 'wagmi';
 import { parseEther } from 'viem';
 import { CONTRACT_ADDRESSES, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
@@ -19,6 +19,13 @@ const DEPOSIT_ABI = [
 ];
 
 export const useDepositBNB = () => {
+  const { address } = useAccount();
+
+  const { data: balanceData } = useBalance({
+    address,
+    query: { enabled: !!address },
+  });
+
   const {
     writeContract,
     data: txHash,
@@ -40,6 +47,13 @@ export const useDepositBNB = () => {
     });
   };
 
+  const bnbBalance = balanceData ? Number(balanceData.value) / 1e18 : 0;
+
+  const hasEnoughBNB = (amount) => {
+    const num = parseFloat(amount) || 0;
+    return num > 0 && bnbBalance >= num;
+  };
+
   return {
     deposit,
     txHash,
@@ -48,5 +62,7 @@ export const useDepositBNB = () => {
     isConfirmed,
     error,
     reset,
+    bnbBalance,
+    hasEnoughBNB,
   };
 };

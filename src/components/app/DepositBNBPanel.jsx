@@ -8,11 +8,12 @@ const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
-  const { deposit, isPending, isConfirming, isConfirmed, error, reset } = useDepositBNB();
+  const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB } = useDepositBNB();
 
   const numAmount = parseFloat(amount);
   const isValidNumber = amount !== '' && !isNaN(numAmount) && isFinite(numAmount) && numAmount > 0;
   const isInRange = isValidNumber && numAmount >= 0.1 && numAmount <= 2;
+  const insufficientBalance = isValidNumber && !hasEnoughBNB(amount);
   const isProcessing = isPending || isConfirming;
 
   const lpBreakdown = {
@@ -39,9 +40,11 @@ export const DepositBNBPanel = ({ walletConnected }) => {
   }, [error]);
 
   const handleDeposit = () => {
-    if (!isInRange) return;
+    if (!isInRange || insufficientBalance) return;
     deposit(amount);
   };
+
+  const canDeposit = isInRange && !insufficientBalance;
 
   const hasInput = amount.trim() !== '';
   const isInvalidInput = hasInput && !isValidNumber;
@@ -79,7 +82,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-muted-foreground">Deposit Amount</span>
-          <span className="text-xs text-muted-foreground">Balance: {walletConnected ? '—' : '—'}</span>
+          <span className="text-xs text-muted-foreground">Balance: {walletConnected ? `${bnbBalance.toFixed(4)} BNB` : '—'}</span>
         </div>
 
         <div className="relative">
@@ -128,6 +131,11 @@ export const DepositBNBPanel = ({ walletConnected }) => {
             <Info size={12} /> Amount must be between 0.1 and 2 BNB
           </p>
         )}
+        {isInRange && insufficientBalance && (
+          <p className="text-xs text-destructive flex items-center gap-1">
+            <Info size={12} /> Insufficient BNB balance
+          </p>
+        )}
       </motion.div>
 
       {/* LP Breakdown */}
@@ -166,10 +174,10 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
       {/* Deposit Button */}
       <motion.button
-        whileHover={isInRange && !isProcessing ? { scale: 1.02 } : {}}
-        whileTap={isInRange && !isProcessing ? { scale: 0.98 } : {}}
+        whileHover={canDeposit && !isProcessing ? { scale: 1.02 } : {}}
+        whileTap={canDeposit && !isProcessing ? { scale: 0.98 } : {}}
         onClick={handleDeposit}
-        disabled={!walletConnected || !isInRange || isProcessing}
+        disabled={!walletConnected || !canDeposit || isProcessing}
         className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-secondary to-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
         style={isInRange ? { boxShadow: '0 0 30px hsl(30 80% 60% / 0.3)' } : {}}
       >
