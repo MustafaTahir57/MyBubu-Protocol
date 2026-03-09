@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Coins, ShoppingCart, Crown, Wallet } from 'lucide-react';
+import { ArrowLeft, Users, Coins, ShoppingCart, Crown, Wallet, Repeat } from 'lucide-react';
 import { useAccount, useDisconnect, useSwitchChain } from 'wagmi';
 import mybubuLogo from '@/assets/mybubu-logo.png';
 import { JoinPanel } from '@/components/app/JoinPanel';
 import { DepositBNBPanel } from '@/components/app/DepositBNBPanel';
 import { BuyTokensPanel } from '@/components/app/BuyTokensPanel';
+import { MyMomoPanel } from '@/components/app/MyMomoPanel';
 import { NFTNodePanel } from '@/components/app/NFTNodePanel';
 import { MyBooPanel } from '@/components/app/MyBooPanel';
 import { UserStatsBar } from '@/components/app/UserStatsBar';
@@ -16,6 +17,7 @@ import { activeChain } from '@/config/wagmi';
 const tabs = [
   { id: 'myboo', label: 'MyBoo Token', icon: ShoppingCart, emoji: '🚀' },
   { id: 'buy', label: 'Swap', icon: ShoppingCart, emoji: '🔄' },
+  { id: 'mymomo', label: 'MyMomo', icon: Repeat, emoji: '🐵' },
   { id: 'join', label: 'Join', icon: Users, emoji: '🤝' },
   { id: 'deposit', label: 'Deposit BNB', icon: Coins, emoji: '💰' },
   { id: 'nft', label: 'NFT Nodes', icon: Crown, emoji: '👑' },
@@ -142,7 +144,7 @@ const AppDashboard = () => {
         >
           {tabs.map((tab, index) => {
             const isActive = activeTab === tab.id;
-            const isLocked = tab.id !== 'myboo';
+            const isLocked = false;
             
             return (
               <motion.button
@@ -205,6 +207,9 @@ const AppDashboard = () => {
             )}
             {activeTab === 'buy' && (
               <BuyTokensPanel walletConnected={walletConnected} />
+            )}
+            {activeTab === 'mymomo' && (
+              <MyMomoPanel walletConnected={walletConnected} />
             )}
             {activeTab === 'nft' && (
               <NFTNodePanel walletConnected={walletConnected} />
