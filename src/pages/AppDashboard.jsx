@@ -208,6 +208,9 @@ const AppDashboard = () => {
             {activeTab === 'buy' && (
               <BuyTokensPanel walletConnected={walletConnected} />
             )}
+            {activeTab === 'mymomo' && (
+              <MyMomoPanel walletConnected={walletConnected} />
+            )}
             {activeTab === 'nft' && (
               <NFTNodePanel walletConnected={walletConnected} />
             )}
