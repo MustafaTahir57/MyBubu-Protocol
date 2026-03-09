@@ -13,6 +13,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
   const numAmount = parseFloat(amount);
   const isValidNumber = amount !== '' && !isNaN(numAmount) && isFinite(numAmount) && numAmount > 0;
   const isInRange = isValidNumber && numAmount >= 0.1 && numAmount <= 2;
+  const insufficientBalance = isValidNumber && !hasEnoughBNB(amount);
   const isProcessing = isPending || isConfirming;
 
   const lpBreakdown = {
