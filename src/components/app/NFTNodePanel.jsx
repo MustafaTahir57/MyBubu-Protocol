@@ -58,6 +58,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
 
   // Claim hooks
   const { pending, hasPending, refetch: refetchPending } = usePendingTokenRewards(address);
+  const { nftBalance, lifetimeClaimed, refetch: refetchRewardInfo } = useTokenRewardInfo(address);
   const {
     claim,
     isPending: isClaiming,
