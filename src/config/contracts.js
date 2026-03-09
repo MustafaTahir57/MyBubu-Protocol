@@ -7,6 +7,7 @@ export const CONTRACT_ADDRESSES = {
     MYBOO_TOKEN: "0x165ddbf120910074a3b748a7fc9c1ecdb513fc09",
     MYBOO_PRESALE: "0x35e6d1184f38f5bb29cf69ef72be68ebbf02ba63",
     USDT: "0x55d398326f99059fF775485246999027B3197955",
+    SWAP: "0x0000000000000000000000000000000000000000", // TODO: Replace with mainnet SWAP contract address
   },
   // BSC Testnet (kept for development)
   97: {
