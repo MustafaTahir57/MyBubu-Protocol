@@ -39,14 +39,17 @@ export const MyMomoPanel = ({ walletConnected }) => {
   const {
     claimable,
     hasClaimable,
+    refetch: refetchClaimable,
+  } = useGetTotalClaimable(address);
+
+  const {
     claim,
     isPending: isClaiming,
     isConfirming: isClaimConfirming,
     isConfirmed: claimConfirmed,
     error: claimError,
     reset: resetClaim,
-    refetchClaimable,
-  } = useMymomoClaim(address);
+  } = useMymomoClaim();
 
   const numAmount = parseFloat(mybubuAmount) || 0;
   const monthlyRelease = numAmount > 0 ? (numAmount * 0.1).toFixed(2) : '0.00';
