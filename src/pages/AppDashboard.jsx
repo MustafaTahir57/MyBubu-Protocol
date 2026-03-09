@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Coins, ShoppingCart, Crown, Wallet } from 'lucide-react';
+import { ArrowLeft, Users, Coins, ShoppingCart, Crown, Wallet, Repeat } from 'lucide-react';
 import { useAccount, useDisconnect, useSwitchChain } from 'wagmi';
 import mybubuLogo from '@/assets/mybubu-logo.png';
 import { JoinPanel } from '@/components/app/JoinPanel';
