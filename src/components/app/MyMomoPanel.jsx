@@ -5,6 +5,7 @@ import { useAccount } from 'wagmi';
 import { useMybubuApproval } from '@/hooks/dataSender/useMybubuApproval';
 import { useMymomoDeposit } from '@/hooks/dataSender/useMymomoDeposit';
 import { useMymomoClaim } from '@/hooks/dataSender/useMymomoClaim';
+import { useGetTotalClaimable } from '@/hooks/dataFetcher/useGetTotalClaimable';
 import { toast } from 'sonner';
 
 export const MyMomoPanel = ({ walletConnected }) => {
