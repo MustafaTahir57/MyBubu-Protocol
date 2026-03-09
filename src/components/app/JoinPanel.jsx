@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import { UserPlus, CheckCircle2, Copy, Check, ArrowRight, Shield, Sparkles, Send, Users } from 'lucide-react';
 import { useMybubuTransfer } from '@/hooks/dataSender/useMybubuTransfer';
 import { useUserInfo } from '@/hooks/dataFetcher/useUserInfo';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 
 export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
   const [mode, setMode] = useState('join'); // 'join' or 'invite'
