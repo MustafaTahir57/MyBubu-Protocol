@@ -1,4 +1,4 @@
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useBalance, useAccount } from 'wagmi';
 import { parseEther } from 'viem';
 import { CONTRACT_ADDRESSES, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
