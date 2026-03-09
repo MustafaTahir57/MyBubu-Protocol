@@ -94,6 +94,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
     if (claimConfirmed) {
       toast.success('🎉 MYBUBU rewards claimed!');
       refetchPending();
+      refetchRewardInfo();
       resetClaim();
     }
   }, [claimConfirmed]);
