@@ -40,9 +40,11 @@ export const DepositBNBPanel = ({ walletConnected }) => {
   }, [error]);
 
   const handleDeposit = () => {
-    if (!isInRange) return;
+    if (!isInRange || insufficientBalance) return;
     deposit(amount);
   };
+
+  const canDeposit = isInRange && !insufficientBalance;
 
   const hasInput = amount.trim() !== '';
   const isInvalidInput = hasInput && !isValidNumber;
