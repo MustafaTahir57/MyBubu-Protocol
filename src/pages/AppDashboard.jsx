@@ -7,6 +7,7 @@ import mybubuLogo from '@/assets/mybubu-logo.png';
 import { JoinPanel } from '@/components/app/JoinPanel';
 import { DepositBNBPanel } from '@/components/app/DepositBNBPanel';
 import { BuyTokensPanel } from '@/components/app/BuyTokensPanel';
+import { MyMomoPanel } from '@/components/app/MyMomoPanel';
 import { NFTNodePanel } from '@/components/app/NFTNodePanel';
 import { MyBooPanel } from '@/components/app/MyBooPanel';
 import { UserStatsBar } from '@/components/app/UserStatsBar';
