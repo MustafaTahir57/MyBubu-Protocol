@@ -47,6 +47,13 @@ export const useDepositBNB = () => {
     });
   };
 
+  const bnbBalance = balanceData ? Number(balanceData.value) / 1e18 : 0;
+
+  const hasEnoughBNB = (amount) => {
+    const num = parseFloat(amount) || 0;
+    return num > 0 && bnbBalance >= num;
+  };
+
   return {
     deposit,
     txHash,
@@ -55,5 +62,7 @@ export const useDepositBNB = () => {
     isConfirmed,
     error,
     reset,
+    bnbBalance,
+    hasEnoughBNB,
   };
 };
