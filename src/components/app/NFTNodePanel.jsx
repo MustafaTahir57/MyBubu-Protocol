@@ -8,6 +8,7 @@ import { useUSDTApproval } from '@/hooks/dataSender/useUSDTApproval';
 import { useNFTNodeMint } from '@/hooks/dataSender/useNFTNodeMint';
 import { useClaimTokenRewards } from '@/hooks/dataSender/useClaimTokenRewards';
 import { usePendingTokenRewards } from '@/hooks/dataFetcher/usePendingTokenRewards';
+import { useTokenRewardInfo } from '@/hooks/dataFetcher/useTokenRewardInfo';
 import { CONTRACT_ADDRESSES, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
 const nftNodeAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].NFT_NODE;
@@ -57,6 +58,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
 
   // Claim hooks
   const { pending, hasPending, refetch: refetchPending } = usePendingTokenRewards(address);
+  const { nftBalance, lifetimeClaimed, refetch: refetchRewardInfo } = useTokenRewardInfo(address);
   const {
     claim,
     isPending: isClaiming,
@@ -82,6 +84,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
       toast.success(`🎉 Successfully minted ${mintCount} NFT Node(s)!`);
       refetchApproval();
       refetchPending();
+      refetchRewardInfo();
       resetMint();
     }
   }, [mintConfirmed]);
@@ -91,6 +94,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
     if (claimConfirmed) {
       toast.success('🎉 MYBUBU rewards claimed!');
       refetchPending();
+      refetchRewardInfo();
       resetClaim();
     }
   }, [claimConfirmed]);
@@ -154,6 +158,27 @@ export const NFTNodePanel = ({ walletConnected }) => {
           500 USDT per Node • 10,000 MYBUBU per Node • 10% monthly release
         </p>
       </motion.div>
+
+      {/* User Stats */}
+      {walletConnected && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="glass-card p-4 grid grid-cols-2 gap-4"
+        >
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground mb-1">Your NFT Nodes</p>
+            <p className="font-display font-bold text-2xl gradient-text">{nftBalance}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground mb-1">Lifetime Claimed</p>
+            <p className="font-display font-bold text-2xl gradient-text">
+              {parseFloat(lifetimeClaimed).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </p>
+          </div>
+        </motion.div>
+      )}
 
       {/* Mint Controls */}
       <motion.div
