@@ -1,26 +1,12 @@
-import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { formatUnits } from 'viem';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { CONTRACT_ADDRESSES, MYMOMO_ABI, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
 const mymomoAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYMOMO_Token;
 
 /**
- * Reads getTotalClaimable(address) and calls claimMymomo() on the MYMOMO contract.
+ * Calls claimMymomo() on the MYMOMO contract.
  */
-export const useMymomoClaim = (userAddress) => {
-  // Read claimable amount
-  const { data: claimableRaw, refetch: refetchClaimable } = useReadContract({
-    address: mymomoAddress,
-    abi: MYMOMO_ABI,
-    functionName: 'getTotalClaimable',
-    args: userAddress ? [userAddress] : undefined,
-    query: { enabled: !!userAddress },
-  });
-
-  const claimable = claimableRaw !== undefined ? formatUnits(claimableRaw, 18) : '0';
-  const hasClaimable = claimableRaw !== undefined && claimableRaw > 0n;
-
-  // Write: claimMymomo
+export const useMymomoClaim = () => {
   const {
     writeContract,
     data: txHash,
@@ -42,8 +28,6 @@ export const useMymomoClaim = (userAddress) => {
   };
 
   return {
-    claimable,
-    hasClaimable,
     claim,
     txHash,
     isPending,
@@ -51,6 +35,5 @@ export const useMymomoClaim = (userAddress) => {
     isConfirmed,
     error,
     reset,
-    refetchClaimable,
   };
 };
