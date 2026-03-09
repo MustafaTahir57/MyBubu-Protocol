@@ -55,7 +55,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
           </div>
           <div className="relative bg-background/50 border border-border rounded-xl p-4">
             <input
-              type="number"
+              type="text"
               placeholder="0.00"
               value={mybooAmount}
               onChange={(e) => setMybooAmount(e.target.value)}

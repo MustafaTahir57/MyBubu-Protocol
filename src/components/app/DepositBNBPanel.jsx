@@ -63,7 +63,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
         <div className="relative">
           <input
-            type="number"
+            type="text"
             placeholder="0.0"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
