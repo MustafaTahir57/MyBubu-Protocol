@@ -8,7 +8,7 @@ const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
-  const { deposit, isPending, isConfirming, isConfirmed, error, reset } = useDepositBNB();
+  const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB } = useDepositBNB();
 
   const numAmount = parseFloat(amount);
   const isValidNumber = amount !== '' && !isNaN(numAmount) && isFinite(numAmount) && numAmount > 0;
