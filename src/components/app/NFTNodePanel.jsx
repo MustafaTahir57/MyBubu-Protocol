@@ -84,6 +84,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
       toast.success(`🎉 Successfully minted ${mintCount} NFT Node(s)!`);
       refetchApproval();
       refetchPending();
+      refetchRewardInfo();
       resetMint();
     }
   }, [mintConfirmed]);
