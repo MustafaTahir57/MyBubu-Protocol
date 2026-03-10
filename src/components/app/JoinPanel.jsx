@@ -1,20 +1,31 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useAccount } from 'wagmi';
-import { UserPlus, CheckCircle2, Copy, Check, ArrowRight, Shield, Sparkles, Send, Users } from 'lucide-react';
-import { useMybubuTransfer } from '@/hooks/dataSender/useMybubuTransfer';
-import { useUserInfo } from '@/hooks/dataFetcher/useUserInfo';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useAccount } from "wagmi";
+import {
+  UserPlus,
+  CheckCircle2,
+  Copy,
+  Check,
+  ArrowRight,
+  Shield,
+  Sparkles,
+  Send,
+  Users,
+} from "lucide-react";
+import { useMybubuTransfer } from "@/hooks/dataSender/useMybubuTransfer";
+import { useUserInfo } from "@/hooks/dataFetcher/useUserInfo";
+import { useMyBubuBalance } from "@/hooks/dataFetcher/useMyBubuBalance";
+import { toast } from "react-toastify";
 
 export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
-  const [mode, setMode] = useState('join'); // 'join' or 'invite'
-  const [referrerAddress, setReferrerAddress] = useState('');
-  const [inviteAddress, setInviteAddress] = useState('');
+  const [mode, setMode] = useState("join"); // 'join' or 'invite'
+  const [referrerAddress, setReferrerAddress] = useState("");
+  const [inviteAddress, setInviteAddress] = useState("");
   const [copied, setCopied] = useState(false);
   const [step, setStep] = useState(1);
 
   const { address } = useAccount();
-  const { tokensBought: mybubuBalance } = useUserInfo(address);
+  const { mybubuBalance } = useMyBubuBalance(address);
 
   // Join transfer (1 MYBUBU)
   const {
@@ -39,7 +50,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
   // Join success
   useEffect(() => {
     if (joinConfirmed) {
-      toast.success('🎉 Successfully joined MYBUBU!');
+      toast.success("🎉 Successfully joined MYBUBU!");
       onJoinSuccess();
       joinReset();
     }
@@ -48,8 +59,8 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
   // Invite success
   useEffect(() => {
     if (inviteConfirmed) {
-      toast.success('🎉 Invite sent! 2 MYBUBU transferred.');
-      setInviteAddress('');
+      toast.success("🎉 Invite sent! 2 MYBUBU transferred.");
+      setInviteAddress("");
       inviteReset();
     }
   }, [inviteConfirmed]);
@@ -57,14 +68,14 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
   // Error handling
   useEffect(() => {
     if (joinError) {
-      toast.error(joinError.shortMessage || 'Join transaction failed');
+      toast.error(joinError.shortMessage || "Join transaction failed");
       joinReset();
     }
   }, [joinError]);
 
   useEffect(() => {
     if (inviteError) {
-      toast.error(inviteError.shortMessage || 'Invite transaction failed');
+      toast.error(inviteError.shortMessage || "Invite transaction failed");
       inviteReset();
     }
   }, [inviteError]);
@@ -78,42 +89,50 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
   };
 
   const handleJoin = () => {
-    if (!referrerAddress || !referrerAddress.startsWith('0x') || referrerAddress.length !== 42) {
-      toast.error('Please enter a valid upline wallet address');
+    if (
+      !referrerAddress ||
+      !referrerAddress.startsWith("0x") ||
+      referrerAddress.length !== 42
+    ) {
+      toast.error("Please enter a valid upline wallet address");
       return;
     }
     if (parseFloat(mybubuBalance) < 1) {
-      toast.error('Insufficient MYBUBU balance. You need at least 1 MYBUBU.');
+      toast.error("Insufficient MYBUBU balance. You need at least 1 MYBUBU.");
       return;
     }
-    joinTransfer(referrerAddress, '1');
+    joinTransfer(referrerAddress, "1");
   };
 
   const handleInvite = () => {
-    if (!inviteAddress || !inviteAddress.startsWith('0x') || inviteAddress.length !== 42) {
-      toast.error('Please enter a valid wallet address to invite');
+    if (
+      !inviteAddress ||
+      !inviteAddress.startsWith("0x") ||
+      inviteAddress.length !== 42
+    ) {
+      toast.error("Please enter a valid wallet address to invite");
       return;
     }
     if (parseFloat(mybubuBalance) < 2) {
-      toast.error('Insufficient MYBUBU balance. You need at least 2 MYBUBU.');
+      toast.error("Insufficient MYBUBU balance. You need at least 2 MYBUBU.");
       return;
     }
-    inviteTransfer(inviteAddress, '2');
+    inviteTransfer(inviteAddress, "2");
   };
 
   const joinIsProcessing = joinPending || joinConfirming;
   const inviteIsProcessing = invitePending || inviteConfirming;
 
   const getJoinButtonText = () => {
-    if (joinPending) return 'Opening Wallet...';
-    if (joinConfirming) return 'Confirming...';
-    return '🤝 Join & Send 1 MYBUBU';
+    if (joinPending) return "Opening Wallet...";
+    if (joinConfirming) return "Confirming...";
+    return "🤝 Join & Send 1 MYBUBU";
   };
 
   const getInviteButtonText = () => {
-    if (invitePending) return 'Opening Wallet...';
-    if (inviteConfirming) return 'Confirming...';
-    return '📨 Send Invite (2 MYBUBU)';
+    if (invitePending) return "Opening Wallet...";
+    if (inviteConfirming) return "Confirming...";
+    return "📨 Send Invite (2 MYBUBU)";
   };
 
   // --- Already joined view: show Invite + Referral ---
@@ -125,12 +144,12 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="glass-card p-8 text-center"
-          style={{ boxShadow: '0 0 60px hsl(340 80% 65% / 0.15)' }}
+          style={{ boxShadow: "0 0 60px hsl(340 80% 65% / 0.15)" }}
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: 'spring', stiffness: 200 }}
+            transition={{ type: "spring", stiffness: 200 }}
           >
             <CheckCircle2 size={64} className="mx-auto text-primary mb-4" />
           </motion.div>
@@ -138,13 +157,18 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
             Welcome to MYBUBU! 🎉
           </h2>
           <p className="text-muted-foreground mb-4">
-            You've joined the ecosystem. Invite others and earn referral rewards!
+            You've joined the ecosystem. Invite others and earn referral
+            rewards!
           </p>
 
           {/* Balance */}
           <div className="glass-card p-3 inline-flex items-center gap-2 rounded-xl mb-4">
-            <span className="text-xs text-muted-foreground">Your MYBUBU:</span>
-            <span className="text-sm font-bold text-primary">{parseFloat(mybubuBalance).toFixed(2)}</span>
+            <span className="text-xs text-muted-foreground">
+              Your MYBUBU:
+            </span>
+            <span className="text-sm font-bold text-primary">
+              {parseFloat(mybubuBalance).toFixed(2)}
+            </span>
           </div>
         </motion.div>
 
@@ -157,21 +181,30 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         >
           <div className="flex items-center gap-3 mb-2">
             <Users size={20} className="text-primary" />
-            <h3 className="font-display font-semibold text-foreground">Your Referral Link</h3>
+            <h3 className="font-display font-semibold text-foreground">
+              Your Referral Link
+            </h3>
           </div>
           <div className="glass-card p-4 flex items-center gap-2">
             <code className="text-xs text-primary flex-1 truncate">
-              {address ? `https://mybubu.io/ref/${address.slice(0, 10)}...${address.slice(-8)}` : '---'}
+              {address
+                ? `https://mybubu.io/ref/${address.slice(0, 10)}...${address.slice(-8)}`
+                : "---"}
             </code>
             <button
               onClick={handleCopyReferral}
               className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
             >
-              {copied ? <Check size={16} className="text-primary" /> : <Copy size={16} className="text-muted-foreground" />}
+              {copied ? (
+                <Check size={16} className="text-primary" />
+              ) : (
+                <Copy size={16} className="text-muted-foreground" />
+              )}
             </button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Share this link. When someone joins using your address, you earn referral rewards!
+            Share this link. When someone joins using your address, you earn
+            referral rewards!
           </p>
         </motion.div>
 
@@ -184,7 +217,9 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         >
           <div className="flex items-center gap-3 mb-2">
             <Send size={20} className="text-secondary" />
-            <h3 className="font-display font-semibold text-foreground">Invite a Friend</h3>
+            <h3 className="font-display font-semibold text-foreground">
+              Invite a Friend
+            </h3>
           </div>
           <p className="text-xs text-muted-foreground">
             Send 2 MYBUBU tokens to invite someone into the ecosystem directly.
@@ -206,13 +241,13 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
             onClick={handleInvite}
             disabled={inviteIsProcessing || !walletConnected}
             className="w-full py-3 rounded-xl font-display font-semibold text-sm bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
-            style={{ boxShadow: 'var(--shadow-glow-sm)' }}
+            style={{ boxShadow: "var(--shadow-glow-sm)" }}
           >
             {inviteIsProcessing ? (
               <span className="flex items-center justify-center gap-2">
                 <motion.span
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
                 />
                 {getInviteButtonText()}
@@ -231,13 +266,26 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
           className="grid grid-cols-1 sm:grid-cols-2 gap-3"
         >
           {[
-            { emoji: '🔗', title: '10-Level Referrals', desc: 'Earn up to 5% on referrals' },
-            { emoji: '💎', title: 'NFT Boost', desc: 'Up to 18x reward multiplier' },
+            {
+              emoji: "🔗",
+              title: "10-Level Referrals",
+              desc: "Earn up to 5% on referrals",
+            },
+            {
+              emoji: "💎",
+              title: "NFT Boost",
+              desc: "Up to 18x reward multiplier",
+            },
           ].map((item) => (
-            <div key={item.title} className="glass-card p-4 flex items-start gap-3 hover:border-primary/30 transition-all">
+            <div
+              key={item.title}
+              className="glass-card p-4 flex items-start gap-3 hover:border-primary/30 transition-all"
+            >
               <span className="text-2xl">{item.emoji}</span>
               <div>
-                <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
+                <h4 className="text-sm font-semibold text-foreground">
+                  {item.title}
+                </h4>
                 <p className="text-xs text-muted-foreground">{item.desc}</p>
               </div>
             </div>
@@ -255,7 +303,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6 text-center"
-        style={{ boxShadow: '0 0 60px hsl(340 80% 65% / 0.1)' }}
+        style={{ boxShadow: "0 0 60px hsl(340 80% 65% / 0.1)" }}
       >
         <motion.div
           animate={{ y: [0, -8, 0] }}
@@ -271,8 +319,12 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         </p>
         {/* Balance */}
         <div className="glass-card p-3 inline-flex items-center gap-2 rounded-xl mt-4">
-          <span className="text-xs text-muted-foreground">Your MYBUBU:</span>
-          <span className="text-sm font-bold text-primary">{parseFloat(mybubuBalance).toFixed(2)}</span>
+          <span className="text-xs text-muted-foreground">
+            Your MYBUBU:
+          </span>
+          <span className="text-sm font-bold text-primary">
+            {parseFloat(mybubuBalance).toFixed(2)}
+          </span>
         </div>
       </motion.div>
 
@@ -281,23 +333,25 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         {[1, 2].map((s) => (
           <motion.div
             key={s}
-            className={`flex items-center gap-2 ${s <= step ? 'text-primary' : 'text-muted-foreground/40'}`}
+            className={`flex items-center gap-2 ${s <= step ? "text-primary" : "text-muted-foreground/40"}`}
           >
             <motion.div
               animate={s === step ? { scale: [1, 1.15, 1] } : {}}
               transition={{ duration: 1.5, repeat: Infinity }}
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
                 s < step
-                  ? 'bg-primary border-primary text-primary-foreground'
+                  ? "bg-primary border-primary text-primary-foreground"
                   : s === step
-                  ? 'border-primary text-primary'
-                  : 'border-muted text-muted-foreground/40'
+                    ? "border-primary text-primary"
+                    : "border-muted text-muted-foreground/40"
               }`}
             >
               {s < step ? <Check size={14} /> : s}
             </motion.div>
             {s < 2 && (
-              <div className={`w-12 h-0.5 ${s < step ? 'bg-primary' : 'bg-muted'}`} />
+              <div
+                className={`w-12 h-0.5 ${s < step ? "bg-primary" : "bg-muted"}`}
+              />
             )}
           </motion.div>
         ))}
@@ -313,10 +367,13 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         >
           <div className="flex items-center gap-3 mb-2">
             <Shield size={20} className="text-primary" />
-            <h3 className="font-display font-semibold text-foreground">Upline Address</h3>
+            <h3 className="font-display font-semibold text-foreground">
+              Upline Address
+            </h3>
           </div>
           <p className="text-xs text-muted-foreground">
-            Enter the wallet address of the person who invited you. 1 MYBUBU will be sent to them.
+            Enter the wallet address of the person who invited you. 1 MYBUBU
+            will be sent to them.
           </p>
           <input
             type="text"
@@ -329,17 +386,23 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
-              if (!referrerAddress || !referrerAddress.startsWith('0x') || referrerAddress.length !== 42) {
-                toast.error('Please enter a valid upline wallet address');
+              if (
+                !referrerAddress ||
+                !referrerAddress.startsWith("0x") ||
+                referrerAddress.length !== 42
+              ) {
+                toast.error("Please enter a valid upline wallet address");
                 return;
               }
               setStep(2);
             }}
             disabled={!walletConnected}
             className="w-full py-3 rounded-xl font-display font-semibold text-sm flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-            style={{ boxShadow: walletConnected ? 'var(--shadow-glow-sm)' : 'none' }}
+            style={{
+              boxShadow: walletConnected ? "var(--shadow-glow-sm)" : "none",
+            }}
           >
-            {!walletConnected ? 'Connect Wallet First' : 'Continue'}
+            {!walletConnected ? "Connect Wallet First" : "Continue"}
             {walletConnected && <ArrowRight size={16} />}
           </motion.button>
         </motion.div>
@@ -354,7 +417,9 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         >
           <div className="flex items-center gap-3 mb-2">
             <Sparkles size={20} className="text-secondary" />
-            <h3 className="font-display font-semibold text-foreground">Confirm Membership</h3>
+            <h3 className="font-display font-semibold text-foreground">
+              Confirm Membership
+            </h3>
           </div>
 
           <div className="glass-card p-4 space-y-3">
@@ -392,13 +457,17 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
               onClick={handleJoin}
               disabled={joinIsProcessing}
               className="flex-[2] py-3 rounded-xl font-display font-semibold text-sm bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-70 transition-all relative overflow-hidden"
-              style={{ boxShadow: 'var(--shadow-glow-sm)' }}
+              style={{ boxShadow: "var(--shadow-glow-sm)" }}
             >
               {joinIsProcessing ? (
                 <span className="flex items-center justify-center gap-2">
                   <motion.span
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                     className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
                   />
                   {getJoinButtonText()}
@@ -419,13 +488,26 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         className="grid grid-cols-1 sm:grid-cols-2 gap-3"
       >
         {[
-          { emoji: '🔗', title: '10-Level Referrals', desc: 'Earn up to 5% on referrals' },
-          { emoji: '💎', title: 'NFT Boost', desc: 'Up to 18x reward multiplier' },
+          {
+            emoji: "🔗",
+            title: "10-Level Referrals",
+            desc: "Earn up to 5% on referrals",
+          },
+          {
+            emoji: "💎",
+            title: "NFT Boost",
+            desc: "Up to 18x reward multiplier",
+          },
         ].map((item) => (
-          <div key={item.title} className="glass-card p-4 flex items-start gap-3 hover:border-primary/30 transition-all">
+          <div
+            key={item.title}
+            className="glass-card p-4 flex items-start gap-3 hover:border-primary/30 transition-all"
+          >
             <span className="text-2xl">{item.emoji}</span>
             <div>
-              <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
+              <h4 className="text-sm font-semibold text-foreground">
+                {item.title}
+              </h4>
               <p className="text-xs text-muted-foreground">{item.desc}</p>
             </div>
           </div>
