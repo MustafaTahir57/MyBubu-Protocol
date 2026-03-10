@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
+import { useSearchParams } from "react-router-dom";
 import {
   UserPlus,
   CheckCircle2,
