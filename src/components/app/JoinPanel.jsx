@@ -18,12 +18,20 @@ import { useUserInfo } from "@/hooks/dataFetcher/useUserInfo";
 import { useMyBubuBalance } from "@/hooks/dataFetcher/useMyBubuBalance";
 import { toast } from "react-toastify";
 
+const DEFAULT_UPLINE = "0x0000000000000000000000000000000000000000";
+
 export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
-  const [mode, setMode] = useState("join"); // 'join' or 'invite'
-  const [referrerAddress, setReferrerAddress] = useState("");
+  const [searchParams] = useSearchParams();
   const [inviteAddress, setInviteAddress] = useState("");
   const [copied, setCopied] = useState(false);
-  const [step, setStep] = useState(1);
+
+  const referrerAddress = useMemo(() => {
+    const refFromUrl = searchParams.get("ref");
+    if (refFromUrl && refFromUrl.startsWith("0x") && refFromUrl.length === 42) {
+      return refFromUrl;
+    }
+    return DEFAULT_UPLINE;
+  }, [searchParams]);
 
   const { address } = useAccount();
   const { mybubuBalance } = useMyBubuBalance(address);
