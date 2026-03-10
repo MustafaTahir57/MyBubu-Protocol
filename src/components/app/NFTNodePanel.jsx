@@ -9,6 +9,8 @@ import { useNFTNodeMint } from '@/hooks/dataSender/useNFTNodeMint';
 import { useClaimTokenRewards } from '@/hooks/dataSender/useClaimTokenRewards';
 import { usePendingTokenRewards } from '@/hooks/dataFetcher/usePendingTokenRewards';
 import { useTokenRewardInfo } from '@/hooks/dataFetcher/useTokenRewardInfo';
+import { useClaimableBNB } from '@/hooks/dataFetcher/useClaimableBNB';
+import { useClaimDividends } from '@/hooks/dataSender/useClaimDividends';
 import { CONTRACT_ADDRESSES, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
 const nftNodeAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].NFT_NODE;
