@@ -15,7 +15,7 @@ import { useMybubuTransfer } from "@/hooks/dataSender/useMybubuTransfer";
 import { useMyBubuBalance } from "@/hooks/dataFetcher/useMyBubuBalance";
 import { toast } from "react-toastify";
 
-const DEFAULT_UPLINE = "0x0000000000000000000000000000000000000000";
+const DEFAULT_UPLINE = "0x682c5aFeD8cd7f22B1b7Bd30Aa9f16bFd58C255F";
 
 export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
   const [searchParams] = useSearchParams();
@@ -83,7 +83,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
 
   const handleCopyReferral = () => {
     if (address) {
-      navigator.clipboard.writeText(`https://mybubu.io/ref/${address}`);
+      navigator.clipboard.writeText(`https://my-bubu-protocol.vercel.app/app?ref=${address}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -264,7 +264,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         <div className="glass-card p-4 flex items-center gap-2">
           <code className="text-xs text-primary flex-1 truncate">
             {address
-              ? `https://mybubu.io/ref/${address.slice(0, 10)}...${address.slice(-8)}`
+              ? `https://my-bubu-protocol.vercel.app/app?ref=${address.slice(0, 10)}...${address.slice(-8)}`
               : "---"}
           </code>
           <button
