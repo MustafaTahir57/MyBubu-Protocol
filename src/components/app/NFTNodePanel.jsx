@@ -70,6 +70,17 @@ export const NFTNodePanel = ({ walletConnected }) => {
     reset: resetClaim,
   } = useClaimTokenRewards();
 
+  // BNB Dividend hooks
+  const { claimable: claimableBNB, hasClaimable: hasClaimableBNB, refetch: refetchBNB } = useClaimableBNB(address);
+  const {
+    claim: claimBNB,
+    isPending: isBNBClaiming,
+    isConfirming: isBNBClaimConfirming,
+    isConfirmed: bnbClaimConfirmed,
+    error: bnbClaimError,
+    reset: resetBNBClaim,
+  } = useClaimDividends();
+
   // After approval confirmed → auto-mint
   useEffect(() => {
     if (approveConfirmed) {
