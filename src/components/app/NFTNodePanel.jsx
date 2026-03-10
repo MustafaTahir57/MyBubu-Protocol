@@ -112,6 +112,16 @@ export const NFTNodePanel = ({ walletConnected }) => {
     }
   }, [claimConfirmed]);
 
+  // After BNB claim confirmed
+  useEffect(() => {
+    if (bnbClaimConfirmed) {
+      toast.success('🎉 BNB dividends claimed!');
+      refetchBNB();
+      refetchRewardInfo();
+      resetBNBClaim();
+    }
+  }, [bnbClaimConfirmed]);
+
   // Error toasts
   useEffect(() => {
     if (approveError) toast.error('Approval failed: ' + (approveError.shortMessage || approveError.message));
