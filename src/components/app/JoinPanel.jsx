@@ -296,7 +296,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
     );
   }
 
-  // --- Not joined: Join flow ---
+  // --- Not joined: Show Join + Invite together ---
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -318,168 +318,133 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         <p className="text-muted-foreground text-sm">
           Send 1 MYBUBU token to your upline to activate your membership
         </p>
-        {/* Balance */}
         <div className="glass-card p-3 inline-flex items-center gap-2 rounded-xl mt-4">
-          <span className="text-xs text-muted-foreground">
-            Your MYBUBU:
-          </span>
+          <span className="text-xs text-muted-foreground">Your MYBUBU:</span>
           <span className="text-sm font-bold text-primary">
             {parseFloat(mybubuBalance).toFixed(2)}
           </span>
         </div>
       </motion.div>
 
-      {/* Step indicators */}
-      <div className="flex items-center justify-center gap-2 mb-4">
-        {[1, 2].map((s) => (
-          <motion.div
-            key={s}
-            className={`flex items-center gap-2 ${s <= step ? "text-primary" : "text-muted-foreground/40"}`}
-          >
-            <motion.div
-              animate={s === step ? { scale: [1, 1.15, 1] } : {}}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
-                s < step
-                  ? "bg-primary border-primary text-primary-foreground"
-                  : s === step
-                    ? "border-primary text-primary"
-                    : "border-muted text-muted-foreground/40"
-              }`}
-            >
-              {s < step ? <Check size={14} /> : s}
-            </motion.div>
-            {s < 2 && (
-              <div
-                className={`w-12 h-0.5 ${s < step ? "bg-primary" : "bg-muted"}`}
-              />
-            )}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Step 1: Upline Address */}
-      {step === 1 && (
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          className="glass-card p-6 space-y-4"
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <Shield size={20} className="text-primary" />
-            <h3 className="font-display font-semibold text-foreground">
-              Upline Address
-            </h3>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Enter the wallet address of the person who invited you. 1 MYBUBU
-            will be sent to them.
+      {/* Join Section - Upline Address (read-only) + Confirm */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="glass-card p-6 space-y-4"
+      >
+        <div className="flex items-center gap-3 mb-2">
+          <Shield size={20} className="text-primary" />
+          <h3 className="font-display font-semibold text-foreground">
+            Join via Upline
+          </h3>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Your upline address is set from your referral link. 1 MYBUBU will be sent to them.
+        </p>
+        <input
+          type="text"
+          value={referrerAddress}
+          readOnly
+          className="w-full bg-background/30 border border-border rounded-xl px-4 py-3 text-sm text-muted-foreground font-mono cursor-not-allowed opacity-70"
+        />
+        {referrerAddress === DEFAULT_UPLINE && (
+          <p className="text-xs text-secondary">
+            ⚠️ No referral link detected — using default address. Join via a referral link for better rewards.
           </p>
-          <input
-            type="text"
-            placeholder="0x... (Upline wallet address)"
-            value={referrerAddress}
-            onChange={(e) => setReferrerAddress(e.target.value)}
-            className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
-          />
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => {
-              if (
-                !referrerAddress ||
-                !referrerAddress.startsWith("0x") ||
-                referrerAddress.length !== 42
-              ) {
-                toast.error("Please enter a valid upline wallet address");
-                return;
-              }
-              setStep(2);
-            }}
-            disabled={!walletConnected}
-            className="w-full py-3 rounded-xl font-display font-semibold text-sm flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-            style={{
-              boxShadow: walletConnected ? "var(--shadow-glow-sm)" : "none",
-            }}
-          >
-            {!walletConnected ? "Connect Wallet First" : "Continue"}
-            {walletConnected && <ArrowRight size={16} />}
-          </motion.button>
-        </motion.div>
-      )}
+        )}
 
-      {/* Step 2: Confirm & Send */}
-      {step === 2 && (
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="glass-card p-6 space-y-4"
+        <div className="glass-card p-4 space-y-3">
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Upline</span>
+            <span className="text-primary font-mono text-xs">
+              {`${referrerAddress.slice(0, 8)}...${referrerAddress.slice(-6)}`}
+            </span>
+          </div>
+          <div className="h-px bg-border" />
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Join Fee</span>
+            <span className="text-foreground font-bold">1 MYBUBU</span>
+          </div>
+          <div className="h-px bg-border" />
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Network</span>
+            <span className="text-secondary font-medium">BSC</span>
+          </div>
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleJoin}
+          disabled={joinIsProcessing || !walletConnected}
+          className="w-full py-3 rounded-xl font-display font-semibold text-sm bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
+          style={{ boxShadow: "var(--shadow-glow-sm)" }}
         >
-          <div className="flex items-center gap-3 mb-2">
-            <Sparkles size={20} className="text-secondary" />
-            <h3 className="font-display font-semibold text-foreground">
-              Confirm Membership
-            </h3>
-          </div>
+          {joinIsProcessing ? (
+            <span className="flex items-center justify-center gap-2">
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+              />
+              {getJoinButtonText()}
+            </span>
+          ) : (
+            getJoinButtonText()
+          )}
+        </motion.button>
+      </motion.div>
 
-          <div className="glass-card p-4 space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Upline</span>
-              <span className="text-primary font-mono text-xs">
-                {`${referrerAddress.slice(0, 8)}...${referrerAddress.slice(-6)}`}
-              </span>
-            </div>
-            <div className="h-px bg-border" />
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Join Fee</span>
-              <span className="text-foreground font-bold">1 MYBUBU</span>
-            </div>
-            <div className="h-px bg-border" />
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Network</span>
-              <span className="text-secondary font-medium">BSC</span>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setStep(1)}
-              disabled={joinIsProcessing}
-              className="flex-1 py-3 rounded-xl font-medium text-sm glass-card text-muted-foreground hover:text-foreground transition-all"
-            >
-              Back
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleJoin}
-              disabled={joinIsProcessing}
-              className="flex-[2] py-3 rounded-xl font-display font-semibold text-sm bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-70 transition-all relative overflow-hidden"
-              style={{ boxShadow: "var(--shadow-glow-sm)" }}
-            >
-              {joinIsProcessing ? (
-                <span className="flex items-center justify-center gap-2">
-                  <motion.span
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
-                  />
-                  {getJoinButtonText()}
-                </span>
-              ) : (
-                getJoinButtonText()
-              )}
-            </motion.button>
-          </div>
-        </motion.div>
-      )}
+      {/* Invite Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="glass-card p-6 space-y-4"
+      >
+        <div className="flex items-center gap-3 mb-2">
+          <Send size={20} className="text-secondary" />
+          <h3 className="font-display font-semibold text-foreground">
+            Invite a Friend
+          </h3>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Send 2 MYBUBU tokens to invite someone into the ecosystem directly.
+        </p>
+        <input
+          type="text"
+          placeholder="0x... (Friend's wallet address)"
+          value={inviteAddress}
+          onChange={(e) => setInviteAddress(e.target.value)}
+          className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
+        />
+        <div className="glass-card p-3 flex justify-between text-sm">
+          <span className="text-muted-foreground">Cost</span>
+          <span className="text-foreground font-bold">2 MYBUBU</span>
+        </div>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleInvite}
+          disabled={inviteIsProcessing || !walletConnected}
+          className="w-full py-3 rounded-xl font-display font-semibold text-sm bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
+          style={{ boxShadow: "var(--shadow-glow-sm)" }}
+        >
+          {inviteIsProcessing ? (
+            <span className="flex items-center justify-center gap-2">
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+              />
+              {getInviteButtonText()}
+            </span>
+          ) : (
+            getInviteButtonText()
+          )}
+        </motion.button>
+      </motion.div>
 
       {/* Info cards */}
       <motion.div
@@ -489,16 +454,8 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         className="grid grid-cols-1 sm:grid-cols-2 gap-3"
       >
         {[
-          {
-            emoji: "🔗",
-            title: "10-Level Referrals",
-            desc: "Earn up to 5% on referrals",
-          },
-          {
-            emoji: "💎",
-            title: "NFT Boost",
-            desc: "Up to 18x reward multiplier",
-          },
+          { emoji: "🔗", title: "10-Level Referrals", desc: "Earn up to 5% on referrals" },
+          { emoji: "💎", title: "NFT Boost", desc: "Up to 18x reward multiplier" },
         ].map((item) => (
           <div
             key={item.title}
@@ -506,9 +463,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
           >
             <span className="text-2xl">{item.emoji}</span>
             <div>
-              <h4 className="text-sm font-semibold text-foreground">
-                {item.title}
-              </h4>
+              <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
               <p className="text-xs text-muted-foreground">{item.desc}</p>
             </div>
           </div>
