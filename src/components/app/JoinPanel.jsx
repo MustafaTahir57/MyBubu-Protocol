@@ -98,14 +98,6 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
   };
 
   const handleJoin = () => {
-    if (
-      !referrerAddress ||
-      !referrerAddress.startsWith("0x") ||
-      referrerAddress.length !== 42
-    ) {
-      toast.error("Please enter a valid upline wallet address");
-      return;
-    }
     if (parseFloat(mybubuBalance) < 1) {
       toast.error("Insufficient MYBUBU balance. You need at least 1 MYBUBU.");
       return;
