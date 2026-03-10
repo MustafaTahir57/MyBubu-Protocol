@@ -132,6 +132,9 @@ export const NFTNodePanel = ({ walletConnected }) => {
   useEffect(() => {
     if (claimError) toast.error('Claim failed: ' + (claimError.shortMessage || claimError.message));
   }, [claimError]);
+  useEffect(() => {
+    if (bnbClaimError) toast.error('BNB claim failed: ' + (bnbClaimError.shortMessage || bnbClaimError.message));
+  }, [bnbClaimError]);
 
   const handleMintClick = () => {
     if (needsApproval) {
