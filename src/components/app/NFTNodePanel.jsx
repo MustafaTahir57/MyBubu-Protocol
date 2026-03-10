@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crown, Gem, Plus, Minus, Gift } from 'lucide-react';
+import { Crown, Gem, Plus, Minus, Gift, Coins } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { formatUnits } from 'viem';
 import { toast } from 'react-toastify';
