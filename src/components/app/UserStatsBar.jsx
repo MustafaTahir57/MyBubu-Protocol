@@ -7,6 +7,7 @@ import { useInviterChildList } from '@/hooks/dataFetcher/useInviterChildList';
 export const UserStatsBar = ({ isJoined, walletConnected, address }) => {
   const { usdSpent, tokensBought } = useUserInfo(address);
   const { nftBalance } = useTokenRewardInfo(address);
+  const { referralCount } = useInviterChildList(address);
 
   const stats = [
     { label: 'MyBoo Balance', value: parseFloat(tokensBought).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: Coins, color: 'text-primary' },
