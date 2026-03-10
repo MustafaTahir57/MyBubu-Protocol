@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crown, Gem, Plus, Minus, Gift } from 'lucide-react';
+import { Crown, Gem, Plus, Minus, Gift, Coins } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { formatUnits } from 'viem';
 import { toast } from 'react-toastify';
@@ -9,6 +9,8 @@ import { useNFTNodeMint } from '@/hooks/dataSender/useNFTNodeMint';
 import { useClaimTokenRewards } from '@/hooks/dataSender/useClaimTokenRewards';
 import { usePendingTokenRewards } from '@/hooks/dataFetcher/usePendingTokenRewards';
 import { useTokenRewardInfo } from '@/hooks/dataFetcher/useTokenRewardInfo';
+import { useClaimableBNB } from '@/hooks/dataFetcher/useClaimableBNB';
+import { useClaimDividends } from '@/hooks/dataSender/useClaimDividends';
 import { CONTRACT_ADDRESSES, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
 const nftNodeAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].NFT_NODE;
@@ -68,6 +70,17 @@ export const NFTNodePanel = ({ walletConnected }) => {
     reset: resetClaim,
   } = useClaimTokenRewards();
 
+  // BNB Dividend hooks
+  const { claimable: claimableBNB, hasClaimable: hasClaimableBNB, refetch: refetchBNB } = useClaimableBNB(address);
+  const {
+    claim: claimBNB,
+    isPending: isBNBClaiming,
+    isConfirming: isBNBClaimConfirming,
+    isConfirmed: bnbClaimConfirmed,
+    error: bnbClaimError,
+    reset: resetBNBClaim,
+  } = useClaimDividends();
+
   // After approval confirmed → auto-mint
   useEffect(() => {
     if (approveConfirmed) {
@@ -99,6 +112,16 @@ export const NFTNodePanel = ({ walletConnected }) => {
     }
   }, [claimConfirmed]);
 
+  // After BNB claim confirmed
+  useEffect(() => {
+    if (bnbClaimConfirmed) {
+      toast.success('🎉 BNB dividends claimed!');
+      refetchBNB();
+      refetchRewardInfo();
+      resetBNBClaim();
+    }
+  }, [bnbClaimConfirmed]);
+
   // Error toasts
   useEffect(() => {
     if (approveError) toast.error('Approval failed: ' + (approveError.shortMessage || approveError.message));
@@ -109,6 +132,9 @@ export const NFTNodePanel = ({ walletConnected }) => {
   useEffect(() => {
     if (claimError) toast.error('Claim failed: ' + (claimError.shortMessage || claimError.message));
   }, [claimError]);
+  useEffect(() => {
+    if (bnbClaimError) toast.error('BNB claim failed: ' + (bnbClaimError.shortMessage || bnbClaimError.message));
+  }, [bnbClaimError]);
 
   const handleMintClick = () => {
     if (needsApproval) {
@@ -335,6 +361,48 @@ export const NFTNodePanel = ({ walletConnected }) => {
             </span>
           ) : (
             `Claim ${parseFloat(pending).toLocaleString(undefined, { maximumFractionDigits: 4 })} MYBUBU`
+          )}
+        </motion.button>
+      </motion.div>
+
+      {/* Claimable BNB Dividends */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="glass-card p-6 space-y-4"
+      >
+        <h3 className="font-display font-bold text-lg text-foreground flex items-center gap-2">
+          <Coins size={20} className="text-secondary" />
+          Claimable BNB Dividends
+        </h3>
+        <p className="text-xs text-muted-foreground">
+          NFT Node holders share 10% of daily BNB distributions equally.
+        </p>
+        <div className="flex justify-between items-center">
+          <span className="text-muted-foreground text-sm">Pending BNB</span>
+          <span className="font-display font-bold text-xl gradient-text">
+            {parseFloat(claimableBNB).toLocaleString(undefined, { maximumFractionDigits: 6 })} BNB
+          </span>
+        </div>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={claimBNB}
+          disabled={!walletConnected || !hasClaimableBNB || isBNBClaiming || isBNBClaimConfirming}
+          className="w-full py-3 rounded-xl font-display font-bold text-sm bg-gradient-to-r from-amber-500 to-yellow-500 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          {isBNBClaiming || isBNBClaimConfirming ? (
+            <span className="flex items-center justify-center gap-2">
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+              />
+              Claiming BNB...
+            </span>
+          ) : (
+            `Claim ${parseFloat(claimableBNB).toLocaleString(undefined, { maximumFractionDigits: 6 })} BNB`
           )}
         </motion.button>
       </motion.div>
