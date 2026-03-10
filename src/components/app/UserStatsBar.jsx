@@ -13,7 +13,7 @@ export const UserStatsBar = ({ isJoined, walletConnected, address }) => {
     { label: 'MyBoo Balance', value: parseFloat(tokensBought).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: Coins, color: 'text-primary' },
     { label: 'USD Deposited', value: parseFloat(usdSpent).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: TrendingUp, color: 'text-secondary' },
     { label: 'NFTs Owned', value: nftBalance, icon: Gem, color: 'text-primary' },
-    { label: 'Referrals', value: '0', icon: Users, color: 'text-secondary' },
+    { label: 'Referrals', value: referralCount, icon: Users, color: 'text-secondary' },
   ];
 
   return (
