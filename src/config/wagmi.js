@@ -39,6 +39,7 @@ export const bscTestnet = defineChain({
 export const activeChain = ACTIVE_CHAIN_ID === 56 ? bscMainnet : bscTestnet;
 
 const bscMainnetRpcs = [
+  `https://bnb-mainnet.g.alchemy.com/v2/${import.meta.env.VITE_RPC_KEY}`,
   "https://bsc-dataseed.binance.org",
   "https://bsc-dataseed1.defibit.io",
   "https://bsc-dataseed1.ninicoin.io",
@@ -48,6 +49,7 @@ const bscMainnetRpcs = [
 ];
 
 const bscTestnetRpcs = [
+  `https://bnb-testnet.g.alchemy.com/v2/${import.meta.env.VITE_RPC_KEY}`,
   "https://data-seed-prebsc-1-s1.binance.org:8545",
   "https://data-seed-prebsc-2-s1.binance.org:8545",
   "https://bsc-testnet-rpc.publicnode.com",
