@@ -1,5 +1,5 @@
 // Active chain ID — change this to switch between mainnet and testnet
-export const ACTIVE_CHAIN_ID = 97;
+export const ACTIVE_CHAIN_ID = Number(import.meta.env.VITE_ACTIVE_CHAIN_ID) || 56;
 
 export const CONTRACT_ADDRESSES = {
   // BSC Mainnet
