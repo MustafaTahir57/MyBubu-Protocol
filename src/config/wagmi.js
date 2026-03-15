@@ -1,7 +1,7 @@
-import { createConfig, http } from "wagmi";
 import { defineChain } from "viem";
 import { metaMask, walletConnect } from "wagmi/connectors";
 import { ACTIVE_CHAIN_ID } from "./contracts";
+import { createConfig, http, fallback } from "wagmi";
 
 // BSC Mainnet
 export const bscMainnet = defineChain({
@@ -56,8 +56,16 @@ const bscTestnetRpcs = [
 ];
 
 const transports = ACTIVE_CHAIN_ID === 56
-  ? { [bscMainnet.id]: http(bscMainnetRpcs[0], { batch: true, retryCount: 3, retryDelay: 1000 }) }
-  : { [bscTestnet.id]: http(bscTestnetRpcs[0], { batch: true, retryCount: 3, retryDelay: 1000 }) };
+  ? {
+      [bscMainnet.id]: fallback(
+        bscMainnetRpcs.map(rpc => http(rpc, { batch: true, retryCount: 2, retryDelay: 500 }))
+      )
+    }
+  : {
+      [bscTestnet.id]: fallback(
+        bscTestnetRpcs.map(rpc => http(rpc, { batch: true, retryCount: 2, retryDelay: 500 }))
+      )
+    };
 
 export const wagmiConfig = createConfig({
   chains: [activeChain],
