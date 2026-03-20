@@ -1,5 +1,6 @@
 // Active chain ID — change this to switch between mainnet and testnet
-export const ACTIVE_CHAIN_ID = Number(import.meta.env.VITE_ACTIVE_CHAIN_ID) || 56;
+export const ACTIVE_CHAIN_ID =
+  Number(import.meta.env.VITE_ACTIVE_CHAIN_ID) || 56;
 
 export const CONTRACT_ADDRESSES = {
   // BSC Mainnet
@@ -7,6 +8,10 @@ export const CONTRACT_ADDRESSES = {
     MYBOO_TOKEN: "0x165ddbf120910074a3b748a7fc9c1ecdb513fc09",
     MYBOO_PRESALE: "0x35e6d1184f38f5bb29cf69ef72be68ebbf02ba63",
     USDT: "0x55d398326f99059fF775485246999027B3197955",
+    SWAP: "0xAA9a7c934BBA1Fc00930d93648147a1a6eff2b98",
+    NFT_NODE: "0x25A06113EBC51208c7CA4391DC5087c6f096248A",
+    MYMOMO_Token: "0xCC33DCE45D3cb490172fB114ffa7Fe4616A64F3C",
+    MYBUBU_TOKEN: "0x90E4701982bdDf853309bA847b6E96B87E941638",
   },
   // BSC Testnet (kept for development)
   97: {
@@ -1274,7 +1279,7 @@ export const SWAP_ABI = [
     type: "error",
   },
   { inputs: [], name: "ERC1967NonPayable", type: "error" },
-  { inputs: [], name: "FailedCall", type: "error" },
+  { inputs: [], name: "FailedInnerCall", type: "error" },
   { inputs: [], name: "InvalidInitialization", type: "error" },
   { inputs: [], name: "NotInitializing", type: "error" },
   {
@@ -2037,31 +2042,6 @@ export const NFT_NODE_ABI = [
       {
         indexed: true,
         internalType: "address",
-        name: "recipient",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "tier",
-        type: "uint256",
-      },
-    ],
-    name: "RewardShared",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
         name: "depositor",
         type: "address",
       },
@@ -2073,6 +2053,31 @@ export const NFT_NODE_ABI = [
       },
     ],
     name: "RewardTokenDeposited",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "holder",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "SettledRewardsClaimed",
     type: "event",
   },
   {
@@ -2112,6 +2117,31 @@ export const NFT_NODE_ABI = [
       },
     ],
     name: "TokenRewardsClaimed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "holder",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "TokenRewardsSettled",
     type: "event",
   },
   {
@@ -2236,6 +2266,13 @@ export const NFT_NODE_ABI = [
       { internalType: "uint256[]", name: "tokenIds", type: "uint256[]" },
     ],
     name: "claimDividendsForTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "claimSettledRewards",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -2449,7 +2486,7 @@ export const NFT_NODE_ABI = [
       { internalType: "uint256", name: "bnbClaimable", type: "uint256" },
       { internalType: "uint256", name: "bnbTotalClaimed", type: "uint256" },
       { internalType: "uint256", name: "lastBNBDistIndex", type: "uint256" },
-      { internalType: "uint256", name: "tokenRewardSnap", type: "uint256" },
+      { internalType: "uint256", name: "nftMintTimestamp", type: "uint256" },
       { internalType: "uint256", name: "pendingMybubuTokens", type: "uint256" },
     ],
     stateMutability: "view",
@@ -2460,7 +2497,17 @@ export const NFT_NODE_ABI = [
     name: "getTokenRewardInfo",
     outputs: [
       { internalType: "uint256", name: "nftBalance", type: "uint256" },
-      { internalType: "uint256", name: "pendingClaimable", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "pendingFromOwnedNFTs",
+        type: "uint256",
+      },
+      { internalType: "uint256", name: "pendingFromSettled", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "totalPendingClaimable",
+        type: "uint256",
+      },
       { internalType: "uint256", name: "lifetimeClaimed", type: "uint256" },
       {
         internalType: "uint256",
@@ -2486,6 +2533,17 @@ export const NFT_NODE_ABI = [
       { internalType: "uint256", name: "tier", type: "uint256" },
       { internalType: "uint256", name: "minNFTs", type: "uint256" },
       { internalType: "uint256", name: "multiplier", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getWithdrawableBNB",
+    outputs: [
+      { internalType: "uint256", name: "contractBalance", type: "uint256" },
+      { internalType: "uint256", name: "unclaimedDividends", type: "uint256" },
+      { internalType: "uint256", name: "withdrawable", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
@@ -2531,13 +2589,6 @@ export const NFT_NODE_ABI = [
     name: "lastRewardDistribution",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "manualDistribute",
-    outputs: [],
-    stateMutability: "payable",
     type: "function",
   },
   {
@@ -2641,6 +2692,13 @@ export const NFT_NODE_ABI = [
   {
     inputs: [],
     name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "rescueBNB",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -2782,10 +2840,10 @@ export const NFT_NODE_ABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "shareReward",
-    outputs: [],
-    stateMutability: "payable",
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "settledTokenRewards",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -3823,10 +3881,33 @@ export const MYMOMO_ABI = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "address", name: "tokeAddr", type: "address" }],
+    name: "rescueToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "routerContractAddress",
     outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_buyTaxPercent", type: "uint256" },
+    ],
+    name: "setBuyTaxPercent",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_cooldown", type: "uint256" }],
+    name: "setCooldown",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -3867,6 +3948,40 @@ export const MYMOMO_ABI = [
       { internalType: "address", name: "_mybubuToken", type: "address" },
     ],
     name: "setMybubuToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_sellTaxPercent", type: "uint256" },
+    ],
+    name: "setSellTaxPercent",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_stakeDuration", type: "uint256" },
+    ],
+    name: "setStakeDuration",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_stakeMonths", type: "uint256" },
+    ],
+    name: "setStakeMonths",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_stakeUnit", type: "uint256" }],
+    name: "setStakeUnit",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
