@@ -1,42 +1,41 @@
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { parseUnits } from 'viem';
-import { CONTRACT_ADDRESSES, USDT_ABI, ACTIVE_CHAIN_ID } from '@/config/contracts';
+import { parseUnits, formatUnits } from 'viem';
+import { CONTRACT_ADDRESSES, MYBUBU_ABI, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
-const usdtAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].USDT;
-const defaultSpender = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
+const mybubuAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBUBU_TOKEN;
+const mymomoAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYMOMO_Token;
 
 /**
- * Manages USDT approval for the presale contract.
+ * Manages MYBUBU token approval for the MYMOMO contract.
  * Checks balance, allowance, and provides an approve function.
- * @param {string} userAddress - Connected wallet address
- * @param {string} usdtAmount - Human-readable USDT amount to approve (e.g. "100")
  */
-export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaultSpender) => {
-  const amountParsed = usdtAmount && parseFloat(usdtAmount) > 0
-    ? parseUnits(usdtAmount, 18)
+export const useMybubuApproval = (userAddress, amount) => {
+  const amountParsed = amount && parseFloat(amount) > 0
+    ? parseUnits(amount, 18)
     : 0n;
 
-  // Read USDT balance
+  // Read MYBUBU balance
   const { data: balance, refetch: refetchBalance } = useReadContract({
-    address: usdtAddress,
-    abi: USDT_ABI,
+    address: mybubuAddress,
+    abi: MYBUBU_ABI,
     functionName: 'balanceOf',
     args: userAddress ? [userAddress] : undefined,
     query: { enabled: !!userAddress },
   });
 
-  // Read current allowance
+  // Read current allowance to MYMOMO contract
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
-    address: usdtAddress,
-    abi: USDT_ABI,
+    address: mybubuAddress,
+    abi: MYBUBU_ABI,
     functionName: 'allowance',
-    args: userAddress ? [userAddress, spenderAddress] : undefined,
+    args: userAddress ? [userAddress, mymomoAddress] : undefined,
     query: { enabled: !!userAddress },
   });
 
+  const formattedBalance = balance !== undefined ? formatUnits(balance, 18) : '0';
   const hasEnoughBalance = balance !== undefined && balance >= amountParsed;
   const hasEnoughAllowance = allowance !== undefined && allowance >= amountParsed;
-  const needsApproval = hasEnoughBalance && !hasEnoughAllowance;
+  const needsApproval = hasEnoughBalance && !hasEnoughAllowance && amountParsed > 0n;
 
   // Write: approve
   const {
@@ -47,18 +46,15 @@ export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaul
     reset: resetApprove,
   } = useWriteContract();
 
-  // Wait for approval tx
   const { isLoading: isWaitingApproval, isSuccess: approveConfirmed } =
-    useWaitForTransactionReceipt({
-      hash: approveTxHash,
-    });
+    useWaitForTransactionReceipt({ hash: approveTxHash });
 
   const handleApprove = () => {
     approve({
-      address: usdtAddress,
-      abi: USDT_ABI,
+      address: mybubuAddress,
+      abi: MYBUBU_ABI,
       functionName: 'approve',
-      args: [spenderAddress, amountParsed],
+      args: [mymomoAddress, amountParsed],
     });
   };
 
@@ -69,6 +65,7 @@ export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaul
 
   return {
     balance,
+    formattedBalance,
     allowance,
     hasEnoughBalance,
     hasEnoughAllowance,

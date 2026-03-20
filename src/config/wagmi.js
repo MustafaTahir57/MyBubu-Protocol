@@ -49,7 +49,7 @@ const bscMainnetRpcs = [
 ];
 
 const bscTestnetRpcs = [
-  `https://bnb-testnet.g.alchemy.com/v2/${import.meta.env.VITE_RPC_KEY}`,
+ `https://bnb-testnet.g.alchemy.com/v2/${import.meta.env.VITE_RPC_KEY}`,
   "https://data-seed-prebsc-1-s1.binance.org:8545",
   "https://data-seed-prebsc-2-s1.binance.org:8545",
   "https://bsc-testnet-rpc.publicnode.com",

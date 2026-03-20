@@ -1,36 +1,34 @@
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
-import { CONTRACT_ADDRESSES, USDT_ABI, ACTIVE_CHAIN_ID } from '@/config/contracts';
+import { CONTRACT_ADDRESSES, MYBOO_TOKEN_ABI, ACTIVE_CHAIN_ID } from '@/config/contracts';
 
-const usdtAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].USDT;
-const defaultSpender = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_PRESALE;
+const mybooAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].MYBOO_TOKEN;
+const swapAddress = CONTRACT_ADDRESSES[ACTIVE_CHAIN_ID].SWAP;
 
 /**
- * Manages USDT approval for the presale contract.
+ * Manages MyBoo token approval for the SWAP contract.
  * Checks balance, allowance, and provides an approve function.
- * @param {string} userAddress - Connected wallet address
- * @param {string} usdtAmount - Human-readable USDT amount to approve (e.g. "100")
  */
-export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaultSpender) => {
-  const amountParsed = usdtAmount && parseFloat(usdtAmount) > 0
-    ? parseUnits(usdtAmount, 18)
+export const useMyBooApproval = (userAddress, mybooAmount) => {
+  const amountParsed = mybooAmount && parseFloat(mybooAmount) > 0
+    ? parseUnits(mybooAmount, 18)
     : 0n;
 
-  // Read USDT balance
+  // Read MyBoo balance
   const { data: balance, refetch: refetchBalance } = useReadContract({
-    address: usdtAddress,
-    abi: USDT_ABI,
+    address: mybooAddress,
+    abi: MYBOO_TOKEN_ABI,
     functionName: 'balanceOf',
     args: userAddress ? [userAddress] : undefined,
     query: { enabled: !!userAddress },
   });
 
-  // Read current allowance
+  // Read current allowance to SWAP contract
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
-    address: usdtAddress,
-    abi: USDT_ABI,
+    address: mybooAddress,
+    abi: MYBOO_TOKEN_ABI,
     functionName: 'allowance',
-    args: userAddress ? [userAddress, spenderAddress] : undefined,
+    args: userAddress ? [userAddress, swapAddress] : undefined,
     query: { enabled: !!userAddress },
   });
 
@@ -49,16 +47,14 @@ export const useUSDTApproval = (userAddress, usdtAmount, spenderAddress = defaul
 
   // Wait for approval tx
   const { isLoading: isWaitingApproval, isSuccess: approveConfirmed } =
-    useWaitForTransactionReceipt({
-      hash: approveTxHash,
-    });
+    useWaitForTransactionReceipt({ hash: approveTxHash });
 
   const handleApprove = () => {
     approve({
-      address: usdtAddress,
-      abi: USDT_ABI,
+      address: mybooAddress,
+      abi: MYBOO_TOKEN_ABI,
       functionName: 'approve',
-      args: [spenderAddress, amountParsed],
+      args: [swapAddress, amountParsed],
     });
   };
 
