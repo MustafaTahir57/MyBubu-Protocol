@@ -264,7 +264,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         <div className="glass-card p-4 flex items-center gap-2">
           <code className="text-xs text-primary flex-1 truncate">
             {address
-              ? `https://my-bubu-protocol.vercel.app/app?ref=${address.slice(0, 10)}...${address.slice(-8)}`
+              ? `https://www.mybubu.io/app?ref=${address.slice(0, 10)}...${address.slice(-8)}`
               : "---"}
           </code>
           <button
