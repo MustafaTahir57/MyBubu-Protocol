@@ -83,7 +83,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
 
   const handleCopyReferral = () => {
     if (address) {
-      navigator.clipboard.writeText(`https://my-bubu-protocol.vercel.app/app?ref=${address}`);
+      navigator.clipboard.writeText(`https://www.mybubu.io/app?ref=${address}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
