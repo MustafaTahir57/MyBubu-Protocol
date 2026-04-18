@@ -3,6 +3,7 @@ import { Wallet, CreditCard, ShoppingCart, PartyPopper, Rocket, RefreshCw, Arrow
 import { HowToBuyStep } from './HowToBuyStep';
 import { PresaleProgress } from './PresaleProgress';
 import { useNavigate } from 'react-router-dom';
+import { usePresaleInfo } from '@/hooks/dataFetcher/usePresaleInfo';
 
 const steps = [
   {
