@@ -144,7 +144,7 @@ const AppDashboard = () => {
         >
           {tabs.map((tab, index) => {
             const isActive = activeTab === tab.id;
-            const isLocked = false;
+            const isLocked = !!tab.locked;
             
             return (
               <motion.button
