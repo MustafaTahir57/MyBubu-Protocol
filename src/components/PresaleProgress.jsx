@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
-export const PresaleProgress = ({ raised, goal }) => {
-  const percentage = (raised / goal) * 100;
+export const PresaleProgress = ({ raised, goal, isLoading }) => {
+  const percentage = goal > 0 ? Math.min((raised / goal) * 100, 100) : 0;
 
   return (
     <motion.div
@@ -22,7 +22,7 @@ export const PresaleProgress = ({ raised, goal }) => {
           transition={{ delay: 0.3 }}
           className="text-2xl md:text-3xl font-display font-bold text-primary"
         >
-          ${raised.toLocaleString()}
+          {isLoading ? '...' : `$${raised.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
         </motion.span>
         <span className="text-2xl md:text-3xl font-display font-bold text-foreground">
           ${goal.toLocaleString()}

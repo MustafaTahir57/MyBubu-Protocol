@@ -3,6 +3,7 @@ import { Wallet, CreditCard, ShoppingCart, PartyPopper, Rocket, RefreshCw, Arrow
 import { HowToBuyStep } from './HowToBuyStep';
 import { PresaleProgress } from './PresaleProgress';
 import { useNavigate } from 'react-router-dom';
+import { usePresaleInfo } from '@/hooks/dataFetcher/usePresaleInfo';
 
 const steps = [
   {
@@ -33,6 +34,7 @@ const steps = [
 
 export const HowToBuySection = () => {
   const navigate = useNavigate();
+  const { totalRaisedUSD, isLoading } = usePresaleInfo();
 
   return (
     <section id="how-to-buy" className="relative py-24 overflow-hidden">
@@ -133,7 +135,7 @@ export const HowToBuySection = () => {
 
         {/* Progress Bar */}
         <div className="mb-16">
-          <PresaleProgress raised={2450000} goal={5000000} />
+          <PresaleProgress raised={totalRaisedUSD} goal={1000000} isLoading={isLoading} />
         </div>
 
         {/* Steps */}
