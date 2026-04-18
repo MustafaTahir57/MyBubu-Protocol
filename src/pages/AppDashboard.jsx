@@ -19,8 +19,8 @@ const tabs = [
   { id: 'buy', label: 'Swap', icon: ShoppingCart, emoji: '🔄' },
   { id: 'join', label: 'Join', icon: Users, emoji: '🤝' },
   { id: 'deposit', label: 'Deposit BNB', icon: Coins, emoji: '💰' },
-   { id: 'mymomo', label: 'MyMomo', icon: Repeat, emoji: '🐵' },
   { id: 'nft', label: 'NFT Nodes', icon: Crown, emoji: '👑' },
+  { id: 'mymomo', label: 'MyMomo', icon: Repeat, emoji: '🐵', locked: true },
 ];
 
 const AppDashboard = () => {
