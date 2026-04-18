@@ -135,7 +135,7 @@ export const HowToBuySection = () => {
 
         {/* Progress Bar */}
         <div className="mb-16">
-          <PresaleProgress raised={totalRaisedUSD} goal={5000000} isLoading={isLoading} />
+          <PresaleProgress raised={totalRaisedUSD} goal={1000000} isLoading={isLoading} />
         </div>
 
         {/* Steps */}
