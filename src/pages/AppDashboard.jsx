@@ -19,8 +19,8 @@ const tabs = [
   { id: 'buy', label: 'Swap', icon: ShoppingCart, emoji: '🔄' },
   { id: 'join', label: 'Join', icon: Users, emoji: '🤝' },
   { id: 'deposit', label: 'Deposit BNB', icon: Coins, emoji: '💰' },
-   { id: 'mymomo', label: 'MyMomo', icon: Repeat, emoji: '🐵' },
   { id: 'nft', label: 'NFT Nodes', icon: Crown, emoji: '👑' },
+  { id: 'mymomo', label: 'MyMomo', icon: Repeat, emoji: '🐵', locked: true },
 ];
 
 const AppDashboard = () => {
@@ -144,7 +144,7 @@ const AppDashboard = () => {
         >
           {tabs.map((tab, index) => {
             const isActive = activeTab === tab.id;
-            const isLocked = false;
+            const isLocked = !!tab.locked;
             
             return (
               <motion.button
