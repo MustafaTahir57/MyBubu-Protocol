@@ -9,9 +9,10 @@ export const usePresaleInfo = () => {
     functionName: 'getPresaleInfo',
   });
 
+  const tokenPriceUSD = data ? parseFloat(formatUnits(data[0], 18)) : 0;
   const totalRaisedUSD = data ? parseFloat(formatUnits(data[2], 18)) : 0;
   const totalTokensSold = data ? parseFloat(formatUnits(data[5], 18)) : 0;
   const presaleActive = data ? data[6] : false;
 
-  return { totalRaisedUSD, totalTokensSold, presaleActive, isLoading, refetch };
+  return { tokenPriceUSD, totalRaisedUSD, totalTokensSold, presaleActive, isLoading, refetch };
 };
