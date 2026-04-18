@@ -34,6 +34,7 @@ const steps = [
 
 export const HowToBuySection = () => {
   const navigate = useNavigate();
+  const { totalRaisedUSD, isLoading } = usePresaleInfo();
 
   return (
     <section id="how-to-buy" className="relative py-24 overflow-hidden">
