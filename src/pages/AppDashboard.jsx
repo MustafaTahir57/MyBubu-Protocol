@@ -65,7 +65,7 @@ const AppDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="bg-background relative overflow-hidden">
       {/* Animated background */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse-glow" />
@@ -134,7 +134,7 @@ const AppDashboard = () => {
       <UserStatsBar isJoined={isJoined} walletConnected={walletConnected} address={address} />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 relative z-10">
+      <main className="container mx-auto px-4 py-8 pb-16 relative z-10">
         {/* Tab Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
