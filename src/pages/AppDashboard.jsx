@@ -134,7 +134,7 @@ const AppDashboard = () => {
       <UserStatsBar isJoined={isJoined} walletConnected={walletConnected} address={address} />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 relative z-10">
+      <main className="container mx-auto px-4 py-8 pb-16 relative z-10">
         {/* Tab Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
