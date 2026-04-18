@@ -7,6 +7,7 @@ import { useUSDTApproval } from '@/hooks/dataSender/useUSDTApproval';
 import { useBuyWithUSDT } from '@/hooks/dataSender/useBuyWithUSDT';
 import { useBuyWithBNB } from '@/hooks/dataSender/useBuyWithBNB';
 import {useUserInfo} from '@/hooks/dataFetcher/useUserInfo';
+import { usePresaleInfo } from '@/hooks/dataFetcher/usePresaleInfo';
 import { toast } from 'react-toastify';
 
 export const MyBooPanel = ({ walletConnected }) => {
@@ -15,6 +16,7 @@ export const MyBooPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
   const [buyStep, setBuyStep] = useState('idle'); // idle | approving | purchasing
   const { refetch : refetchUserInfo } = useUserInfo(address);
+  const { tokenPriceUSD } = usePresaleInfo();
 
   const numAmount = parseFloat(amount) || 0;
   const minAmount = payMethod === 'usdt' ? 100 : 0.25;
@@ -355,7 +357,11 @@ export const MyBooPanel = ({ walletConnected }) => {
         <div className="glass-card p-3 space-y-2">
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Token Price</span>
-            <span className="text-primary">$0.05 / MyBoo</span>
+            <span className="text-primary">
+              {tokenPriceUSD > 0
+                ? `$${tokenPriceUSD.toLocaleString(undefined, { maximumFractionDigits: 6 })} / MyBoo`
+                : 'Loading...'}
+            </span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Swap to MYBUBU</span>
