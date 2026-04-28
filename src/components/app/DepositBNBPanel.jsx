@@ -1,14 +1,58 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Coins, ArrowDown, TrendingUp, Info, Zap } from 'lucide-react';
+import { Coins, ArrowDown, TrendingUp, Info, Zap, Gift, Sparkles } from 'lucide-react';
+import { useAccount } from 'wagmi';
 import { useDepositBNB } from '@/hooks/dataSender/useDepositBNB';
+import { usePendingLPReward } from '@/hooks/dataFetcher/usePendingLPReward';
+import { useClaimLPReward } from '@/hooks/dataSender/useClaimLPReward';
 import { toast } from 'react-toastify';
 
 const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
+  const { address } = useAccount();
   const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB , refetch: refetchBnbBalance } = useDepositBNB();
+
+  // LP reward claim
+  const {
+    pendingReward,
+    isLoading: isLoadingReward,
+    refetch: refetchPendingReward,
+  } = usePendingLPReward(address);
+
+  const {
+    claimReward,
+    isPending: isClaimPending,
+    isConfirming: isClaimConfirming,
+    isConfirmed: isClaimConfirmed,
+    error: claimError,
+    reset: resetClaim,
+  } = useClaimLPReward();
+
+  const isClaimProcessing = isClaimPending || isClaimConfirming;
+  const pendingRewardNum = parseFloat(pendingReward) || 0;
+  const canClaim = walletConnected && pendingRewardNum > 0 && !isClaimProcessing;
+
+  useEffect(() => {
+    if (isClaimConfirmed) {
+      toast.success('🎉 LP rewards claimed successfully!');
+      refetchPendingReward();
+      resetClaim();
+    }
+  }, [isClaimConfirmed]);
+
+  useEffect(() => {
+    if (claimError) {
+      toast.error(claimError.shortMessage || claimError.message || 'Claim failed');
+      resetClaim();
+    }
+  }, [claimError]);
+
+  const handleClaim = () => {
+    if (!canClaim) return;
+    claimReward();
+  };
   
   const numAmount = parseFloat(amount);
   const isValidNumber = amount !== '' && !isNaN(numAmount) && isFinite(numAmount) && numAmount > 0;
