@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-const TARGET_DATE = new Date('2026-04-28T00:00:00Z').getTime();
+const TARGET_DATE = new Date('2026-04-29T16:00:00Z').getTime();
 
 const getTimeLeft = () => {
   const now = Date.now();
