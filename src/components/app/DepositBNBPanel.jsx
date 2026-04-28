@@ -1,14 +1,58 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Coins, ArrowDown, TrendingUp, Info, Zap } from 'lucide-react';
+import { Coins, ArrowDown, TrendingUp, Info, Zap, Gift, Sparkles } from 'lucide-react';
+import { useAccount } from 'wagmi';
 import { useDepositBNB } from '@/hooks/dataSender/useDepositBNB';
+import { usePendingLPReward } from '@/hooks/dataFetcher/usePendingLPReward';
+import { useClaimLPReward } from '@/hooks/dataSender/useClaimLPReward';
 import { toast } from 'react-toastify';
 
 const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
+  const { address } = useAccount();
   const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB , refetch: refetchBnbBalance } = useDepositBNB();
+
+  // LP reward claim
+  const {
+    pendingReward,
+    isLoading: isLoadingReward,
+    refetch: refetchPendingReward,
+  } = usePendingLPReward(address);
+
+  const {
+    claimReward,
+    isPending: isClaimPending,
+    isConfirming: isClaimConfirming,
+    isConfirmed: isClaimConfirmed,
+    error: claimError,
+    reset: resetClaim,
+  } = useClaimLPReward();
+
+  const isClaimProcessing = isClaimPending || isClaimConfirming;
+  const pendingRewardNum = parseFloat(pendingReward) || 0;
+  const canClaim = walletConnected && pendingRewardNum > 0 && !isClaimProcessing;
+
+  useEffect(() => {
+    if (isClaimConfirmed) {
+      toast.success('🎉 LP rewards claimed successfully!');
+      refetchPendingReward();
+      resetClaim();
+    }
+  }, [isClaimConfirmed]);
+
+  useEffect(() => {
+    if (claimError) {
+      toast.error(claimError.shortMessage || claimError.message || 'Claim failed');
+      resetClaim();
+    }
+  }, [claimError]);
+
+  const handleClaim = () => {
+    if (!canClaim) return;
+    claimReward();
+  };
   
   const numAmount = parseFloat(amount);
   const isValidNumber = amount !== '' && !isNaN(numAmount) && isFinite(numAmount) && numAmount > 0;
@@ -200,6 +244,77 @@ export const DepositBNBPanel = ({ walletConnected }) => {
           </span>
         )}
       </motion.button>
+
+      {/* Claim LP Rewards Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="glass-card p-6 space-y-4 relative overflow-hidden"
+        style={{ boxShadow: '0 0 60px hsl(340 80% 65% / 0.1)' }}
+      >
+        <div className="flex items-center gap-3">
+          <motion.div
+            animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center border border-primary/30"
+          >
+            <Gift size={22} className="text-primary" />
+          </motion.div>
+          <div>
+            <h3 className="font-display text-lg font-bold text-foreground">
+              Claim LP Rewards
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Your pending MYBUBU rewards from LP
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-background/50 border border-border rounded-xl p-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs text-muted-foreground mb-1">Pending Reward</p>
+            <p className="text-2xl font-display font-bold gradient-text">
+              {!walletConnected
+                ? '—'
+                : isLoadingReward
+                  ? '...'
+                  : pendingRewardNum.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+              <span className="text-sm text-muted-foreground font-medium ml-2">MYBUBU</span>
+            </p>
+          </div>
+          <Sparkles size={28} className="text-secondary" />
+        </div>
+
+        <motion.button
+          whileHover={canClaim ? { scale: 1.02 } : {}}
+          whileTap={canClaim ? { scale: 0.98 } : {}}
+          onClick={handleClaim}
+          disabled={!canClaim}
+          className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          style={canClaim ? { boxShadow: '0 0 30px hsl(340 80% 65% / 0.3)' } : {}}
+        >
+          {isClaimProcessing ? (
+            <span className="flex items-center justify-center gap-2">
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+              />
+              {isClaimPending ? 'Confirm in Wallet...' : 'Claiming...'}
+            </span>
+          ) : !walletConnected ? (
+            'Connect Wallet First'
+          ) : pendingRewardNum <= 0 ? (
+            'No Rewards to Claim'
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              <Gift size={18} />
+              Claim {pendingRewardNum.toLocaleString(undefined, { maximumFractionDigits: 4 })} MYBUBU
+            </span>
+          )}
+        </motion.button>
+      </motion.div>
     </div>
   );
 };
