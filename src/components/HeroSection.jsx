@@ -192,6 +192,17 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mb-12"
         >
+          <div className="max-w-3xl mx-auto mb-8 space-y-4 text-left md:text-center">
+            <p className="text-base md:text-lg text-foreground/90 leading-relaxed">
+              We're thrilled to share that our token listing is coming soon! This is a major milestone that brings us closer to expanding our ecosystem and unlocking new opportunities for our community.
+            </p>
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+              None of this would be possible without your incredible support. From early believers to active community members, every contribution has helped us reach this stage.
+            </p>
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+              As we approach the listing, we invite you to stay with us, spread the word, and continue supporting the project. The journey is just getting started — and we're excited to grow together with all of you.
+            </p>
+          </div>
           <p className="text-muted-foreground mb-4 uppercase tracking-widest text-sm">
             🐱 MYBUBU Token Launches In
           </p>
