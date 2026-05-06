@@ -312,10 +312,22 @@ export const DepositBNBPanel = ({ walletConnected }) => {
                 <div>
                   <p className="text-foreground font-semibold mb-1">How to use an EOA instead:</p>
                   <ul className="list-disc list-inside space-y-1 text-xs">
-                    <li>Install <span className="text-primary font-medium">MetaMask</span>, <span className="text-primary font-medium">Trust Wallet</span>, or <span className="text-primary font-medium">Rabby</span> and create a new wallet from a seed phrase.</li>
+                    <li>Use a standard EOA wallet such as <span className="text-primary font-medium">TokenPocket</span>, <span className="text-primary font-medium">MetaMask</span>, <span className="text-primary font-medium">Trust Wallet</span>, or <span className="text-primary font-medium">Rabby</span>.</li>
                     <li>Switch the network to <span className="text-secondary font-medium">BNB Smart Chain (BSC)</span>.</li>
                     <li>Transfer your BNB from the smart account to the new EOA address.</li>
                     <li>Disconnect the current wallet, then reconnect using the EOA.</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="text-foreground font-semibold mb-1">Creating an EOA in TokenPocket:</p>
+                  <ul className="list-disc list-inside space-y-1 text-xs">
+                    <li>Install <span className="text-primary font-medium">TokenPocket</span> from the App Store, Google Play, or <span className="text-primary font-medium">tokenpocket.pro</span>.</li>
+                    <li>Open the app and tap <span className="text-foreground font-medium">"No Wallet Yet"</span> → <span className="text-foreground font-medium">"Create Wallet"</span>.</li>
+                    <li>Select <span className="text-secondary font-medium">BNB Smart Chain (BSC)</span> as the network (do NOT pick "Smart Wallet" / "AA Wallet" — choose the standard wallet option).</li>
+                    <li>Set a wallet name and password, then securely back up the <span className="text-foreground font-medium">12-word seed phrase</span>.</li>
+                    <li>Confirm the seed phrase to finish creating your EOA address (starts with <span className="font-mono">0x...</span>).</li>
+                    <li>Send BNB to this new address, then connect it here via WalletConnect or the in-app DApp browser.</li>
                   </ul>
                 </div>
               </div>
