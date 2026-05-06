@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Coins, ArrowDown, TrendingUp, Info, Zap, Gift, Sparkles } from 'lucide-react';
-import { useAccount } from 'wagmi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Coins, ArrowDown, TrendingUp, Info, Zap, Gift, Sparkles, ShieldAlert, AlertTriangle } from 'lucide-react';
+import { useAccount, useBytecode } from 'wagmi';
 import { useDepositBNB } from '@/hooks/dataSender/useDepositBNB';
 import { usePendingLPReward } from '@/hooks/dataFetcher/usePendingLPReward';
 import { useClaimLPReward } from '@/hooks/dataSender/useClaimLPReward';
@@ -11,7 +11,10 @@ const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
+  const [showSmartAccountInfo, setShowSmartAccountInfo] = useState(false);
   const { address } = useAccount();
+  const { data: bytecode } = useBytecode({ address, query: { enabled: !!address } });
+  const isSmartAccount = !!bytecode && bytecode !== '0x' && bytecode.length > 2;
   const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB , refetch: refetchBnbBalance } = useDepositBNB();
 
   // LP reward claim
@@ -218,32 +221,115 @@ export const DepositBNBPanel = ({ walletConnected }) => {
       )}
 
       {/* Deposit Button */}
-      <motion.button
-        whileHover={canDeposit && !isProcessing ? { scale: 1.02 } : {}}
-        whileTap={canDeposit && !isProcessing ? { scale: 0.98 } : {}}
-        onClick={handleDeposit}
-        disabled={!walletConnected || !canDeposit || isProcessing}
-        className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-secondary to-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
-        style={isInRange ? { boxShadow: '0 0 30px hsl(30 80% 60% / 0.3)' } : {}}
-      >
-        {isProcessing ? (
-          <span className="flex items-center justify-center gap-2">
-            <motion.span
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
-            />
-            {isPending ? 'Confirm in Wallet...' : 'Processing...'}
-          </span>
-        ) : !walletConnected ? (
-          'Connect Wallet First'
-        ) : (
-          <span className="flex items-center justify-center gap-2">
-            <Zap size={18} />
-            Deposit {isValidNumber ? amount : '0'} BNB
-          </span>
+      <div className="space-y-3">
+        <motion.button
+          whileHover={canDeposit && !isProcessing && !isSmartAccount ? { scale: 1.02 } : {}}
+          whileTap={canDeposit && !isProcessing && !isSmartAccount ? { scale: 0.98 } : {}}
+          onClick={isSmartAccount ? () => setShowSmartAccountInfo(true) : handleDeposit}
+          disabled={!walletConnected || (!isSmartAccount && (!canDeposit || isProcessing))}
+          className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-secondary to-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all relative overflow-hidden"
+          style={isInRange && !isSmartAccount ? { boxShadow: '0 0 30px hsl(30 80% 60% / 0.3)' } : {}}
+        >
+          {isSmartAccount && walletConnected ? (
+            <span className="flex items-center justify-center gap-2">
+              <ShieldAlert size={18} />
+              Smart Account Detected — Tap for Info
+            </span>
+          ) : isProcessing ? (
+            <span className="flex items-center justify-center gap-2">
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+              />
+              {isPending ? 'Confirm in Wallet...' : 'Processing...'}
+            </span>
+          ) : !walletConnected ? (
+            'Connect Wallet First'
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              <Zap size={18} />
+              Deposit {isValidNumber ? amount : '0'} BNB
+            </span>
+          )}
+        </motion.button>
+
+        {isSmartAccount && walletConnected && (
+          <motion.button
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            onClick={() => setShowSmartAccountInfo(true)}
+            className="w-full flex items-center justify-center gap-2 text-xs text-destructive hover:text-destructive/80 transition-colors"
+          >
+            <Info size={12} />
+            Why is this disabled?
+          </motion.button>
         )}
-      </motion.button>
+      </div>
+
+      {/* Smart Account Info Modal */}
+      <AnimatePresence>
+        {showSmartAccountInfo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowSmartAccountInfo(false)}
+            className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-card max-w-md w-full p-6 space-y-4 border border-destructive/30"
+              style={{ boxShadow: '0 0 60px hsl(0 80% 60% / 0.2)' }}
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-12 h-12 rounded-xl bg-destructive/15 border border-destructive/30 flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle size={22} className="text-destructive" />
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-bold text-foreground">
+                    Smart Account Not Supported
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    The connected address is a contract wallet (Smart Account / AA wallet), not an EOA.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <div>
+                  <p className="text-foreground font-semibold mb-1">Why deposits may revert:</p>
+                  <ul className="list-disc list-inside space-y-1 text-xs">
+                    <li>The deposit contract binds LP positions and rewards to the sender. Smart accounts route calls through proxies, so accounting may not match your wallet.</li>
+                    <li>Many smart wallets do not accept BNB refunds via plain transfers, causing the receive/fallback to revert.</li>
+                    <li>Referral tracking is bound to EOA addresses; smart accounts will not accrue rewards correctly.</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="text-foreground font-semibold mb-1">How to use an EOA instead:</p>
+                  <ul className="list-disc list-inside space-y-1 text-xs">
+                    <li>Install <span className="text-primary font-medium">MetaMask</span>, <span className="text-primary font-medium">Trust Wallet</span>, or <span className="text-primary font-medium">Rabby</span> and create a new wallet from a seed phrase.</li>
+                    <li>Switch the network to <span className="text-secondary font-medium">BNB Smart Chain (BSC)</span>.</li>
+                    <li>Transfer your BNB from the smart account to the new EOA address.</li>
+                    <li>Disconnect the current wallet, then reconnect using the EOA.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowSmartAccountInfo(false)}
+                className="w-full py-3 rounded-xl font-display font-bold text-sm bg-gradient-to-r from-secondary to-primary text-primary-foreground"
+              >
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Claim LP Rewards Section */}
       <motion.div
