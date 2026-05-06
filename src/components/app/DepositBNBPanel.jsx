@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Coins, ArrowDown, TrendingUp, Info, Zap, Gift, Sparkles } from 'lucide-react';
-import { useAccount } from 'wagmi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Coins, ArrowDown, TrendingUp, Info, Zap, Gift, Sparkles, ShieldAlert, AlertTriangle } from 'lucide-react';
+import { useAccount, useBytecode } from 'wagmi';
 import { useDepositBNB } from '@/hooks/dataSender/useDepositBNB';
 import { usePendingLPReward } from '@/hooks/dataFetcher/usePendingLPReward';
 import { useClaimLPReward } from '@/hooks/dataSender/useClaimLPReward';
