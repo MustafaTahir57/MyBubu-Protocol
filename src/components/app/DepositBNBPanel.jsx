@@ -11,7 +11,10 @@ const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const [amount, setAmount] = useState('');
+  const [showSmartAccountInfo, setShowSmartAccountInfo] = useState(false);
   const { address } = useAccount();
+  const { data: bytecode } = useBytecode({ address, query: { enabled: !!address } });
+  const isSmartAccount = !!bytecode && bytecode !== '0x' && bytecode.length > 2;
   const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB , refetch: refetchBnbBalance } = useDepositBNB();
 
   // LP reward claim
