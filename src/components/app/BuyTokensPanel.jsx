@@ -29,6 +29,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
 
   const isProcessing = swapStep !== "idle";
   const isValid = numAmount > 0;
+  const isPaused = true; // Swap feature paused
 
   // Handle swap: approve → swap
   const handleSwap = () => {
@@ -78,6 +79,13 @@ export const BuyTokensPanel = ({ walletConnected }) => {
 
   // Button text
   const getButtonContent = () => {
+    if (isPaused) {
+      return (
+        <span className="flex items-center justify-center gap-2">
+          ⏸ Swapping Paused
+        </span>
+      );
+    }
     if (isProcessing) {
       const stepText =
         swapStep === "approving"
@@ -115,6 +123,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
   };
 
   const isButtonDisabled =
+    isPaused ||
     !walletConnected ||
     !isValid ||
     isProcessing ||
@@ -153,6 +162,21 @@ export const BuyTokensPanel = ({ walletConnected }) => {
           Swap your pre-launch MyBoo tokens 1:1 for MYBUBU tokens
         </p>
       </motion.div>
+
+      {/* Paused banner */}
+      {isPaused && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-card p-4 border-yellow-500/40 flex gap-3 items-start"
+        >
+          <span className="text-xl">⏸</span>
+          <div className="text-xs text-muted-foreground leading-relaxed">
+            <span className="text-yellow-500 font-semibold">Swapping Paused:</span>{" "}
+            The MyBoo → MYBUBU swap is temporarily paused. Please check back later.
+          </div>
+        </motion.div>
+      )}
 
       {/* Info banner */}
       <motion.div
