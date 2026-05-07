@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   UserPlus,
   CheckCircle2,
@@ -18,6 +19,7 @@ import { toast } from "react-toastify";
 const DEFAULT_UPLINE = "0x682c5aFeD8cd7f22B1b7Bd30Aa9f16bFd58C255F";
 
 export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const [inviteAddress, setInviteAddress] = useState("");
   const [copied, setCopied] = useState(false);
@@ -53,7 +55,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
 
   useEffect(() => {
     if (joinConfirmed) {
-      toast.success("🎉 Successfully joined MYBUBU!");
+      toast.success(t('app.join.joinSuccess'));
       onJoinSuccess();
       joinReset();
     }
@@ -61,7 +63,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
 
   useEffect(() => {
     if (inviteConfirmed) {
-      toast.success("🎉 Invite sent! 2 MYBUBU transferred.");
+      toast.success(t('app.join.inviteSuccess'));
       setInviteAddress("");
       inviteReset();
     }
@@ -69,14 +71,14 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
 
   useEffect(() => {
     if (joinError) {
-      toast.error(joinError.shortMessage || "Join transaction failed");
+      toast.error(joinError.shortMessage || t('app.join.joinFailed'));
       joinReset();
     }
   }, [joinError]);
 
   useEffect(() => {
     if (inviteError) {
-      toast.error(inviteError.shortMessage || "Invite transaction failed");
+      toast.error(inviteError.shortMessage || t('app.join.inviteFailed'));
       inviteReset();
     }
   }, [inviteError]);
@@ -91,7 +93,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
 
   const handleJoin = () => {
     if (parseFloat(mybubuBalance) < 1) {
-      toast.error("Insufficient MYBUBU balance. You need at least 1 MYBUBU.");
+      toast.error(t('app.join.insufficient1'));
       return;
     }
     joinTransfer(referrerAddress, "1");
@@ -99,11 +101,11 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
 
   const handleInvite = () => {
     if (!inviteAddress || !inviteAddress.startsWith("0x") || inviteAddress.length !== 42) {
-      toast.error("Please enter a valid wallet address to invite");
+      toast.error(t('app.join.invalidAddress'));
       return;
     }
     if (parseFloat(mybubuBalance) < 2) {
-      toast.error("Insufficient MYBUBU balance. You need at least 2 MYBUBU.");
+      toast.error(t('app.join.insufficient2'));
       return;
     }
     inviteTransfer(inviteAddress, "2");
@@ -113,20 +115,19 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
   const inviteIsProcessing = invitePending || inviteConfirming;
 
   const getJoinButtonText = () => {
-    if (joinPending) return "Opening Wallet...";
-    if (joinConfirming) return "Confirming...";
-    return "🤝 Join & Send 1 MYBUBU";
+    if (joinPending) return t('app.join.openingWallet');
+    if (joinConfirming) return t('app.join.confirming');
+    return t('app.join.joinBtn');
   };
 
   const getInviteButtonText = () => {
-    if (invitePending) return "Opening Wallet...";
-    if (inviteConfirming) return "Confirming...";
-    return "📨 Send Invite (2 MYBUBU)";
+    if (invitePending) return t('app.join.openingWallet');
+    if (inviteConfirming) return t('app.join.confirming');
+    return t('app.join.inviteBtn');
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -143,11 +144,9 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
               <CheckCircle2 size={48} className="mx-auto text-primary mb-4" />
             </motion.div>
             <h2 className="font-display text-2xl font-bold gradient-text mb-2">
-              Welcome to MYBUBU! 🎉
+              {t('app.join.joinedTitle')}
             </h2>
-            <p className="text-muted-foreground text-sm">
-              You've joined the ecosystem. Invite others and earn referral rewards!
-            </p>
+            <p className="text-muted-foreground text-sm">{t('app.join.joinedSubtitle')}</p>
           </>
         ) : (
           <>
@@ -157,23 +156,18 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
             >
               <UserPlus size={48} className="mx-auto text-primary mb-4" />
             </motion.div>
-            <h2 className="font-display text-2xl font-bold gradient-text mb-2">
-              Join MYBUBU Ecosystem
-            </h2>
-            <p className="text-muted-foreground text-sm">
-              Send 1 MYBUBU token to your upline to activate your membership
-            </p>
+            <h2 className="font-display text-2xl font-bold gradient-text mb-2">{t('app.join.title')}</h2>
+            <p className="text-muted-foreground text-sm">{t('app.join.subtitle')}</p>
           </>
         )}
         <div className="glass-card p-3 inline-flex items-center gap-2 rounded-xl mt-4">
-          <span className="text-xs text-muted-foreground">Your MYBUBU:</span>
+          <span className="text-xs text-muted-foreground">{t('app.join.yourMybubu')}</span>
           <span className="text-sm font-bold text-primary">
             {parseFloat(mybubuBalance).toFixed(2)}
           </span>
         </div>
       </motion.div>
 
-      {/* 1) Join via Upline */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -182,18 +176,14 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
       >
         <div className="flex items-center gap-3 mb-2">
           <Shield size={20} className="text-primary" />
-          <h3 className="font-display font-semibold text-foreground">
-            Join via Upline
-          </h3>
+          <h3 className="font-display font-semibold text-foreground">{t('app.join.joinViaUpline')}</h3>
           {isJoined && (
             <span className="ml-auto text-xs text-primary font-medium flex items-center gap-1">
-              <CheckCircle2 size={14} /> Joined
+              <CheckCircle2 size={14} /> {t('app.join.joined')}
             </span>
           )}
         </div>
-        <p className="text-xs text-muted-foreground">
-          Your upline address is set from your referral link. 1 MYBUBU will be sent to them.
-        </p>
+        <p className="text-xs text-muted-foreground">{t('app.join.uplineDesc')}</p>
         <input
           type="text"
           value={referrerAddress}
@@ -201,25 +191,23 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
           className="w-full bg-background/30 border border-border rounded-xl px-4 py-3 text-sm text-muted-foreground font-mono cursor-not-allowed opacity-70"
         />
         {referrerAddress === DEFAULT_UPLINE && (
-          <p className="text-xs text-secondary">
-            ⚠️ No referral link detected — using default address. Join via a referral link for better rewards.
-          </p>
+          <p className="text-xs text-secondary">{t('app.join.noRefWarning')}</p>
         )}
         <div className="glass-card p-4 space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Upline</span>
+            <span className="text-muted-foreground">{t('app.join.upline')}</span>
             <span className="text-primary font-mono text-xs">
               {`${referrerAddress.slice(0, 8)}...${referrerAddress.slice(-6)}`}
             </span>
           </div>
           <div className="h-px bg-border" />
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Join Fee</span>
+            <span className="text-muted-foreground">{t('app.join.joinFee')}</span>
             <span className="text-foreground font-bold">1 MYBUBU</span>
           </div>
           <div className="h-px bg-border" />
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Network</span>
+            <span className="text-muted-foreground">{t('app.common.network')}</span>
             <span className="text-secondary font-medium">BSC</span>
           </div>
         </div>
@@ -241,14 +229,13 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
               {getJoinButtonText()}
             </span>
           ) : isJoined ? (
-            "✅ Already Joined"
+            t('app.join.alreadyJoined')
           ) : (
             getJoinButtonText()
           )}
         </motion.button>
       </motion.div>
 
-      {/* 2) Referral Link */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -257,9 +244,7 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
       >
         <div className="flex items-center gap-3 mb-2">
           <Users size={20} className="text-primary" />
-          <h3 className="font-display font-semibold text-foreground">
-            Your Referral Link
-          </h3>
+          <h3 className="font-display font-semibold text-foreground">{t('app.join.yourReferralLink')}</h3>
         </div>
         <div className="glass-card p-4 flex items-center gap-2">
           <code className="text-xs text-primary flex-1 truncate">
@@ -278,12 +263,9 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
             )}
           </button>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Share this link. When someone joins using your address, you earn referral rewards!
-        </p>
+        <p className="text-xs text-muted-foreground">{t('app.join.shareLink')}</p>
       </motion.div>
 
-      {/* 3) Invite a Friend */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -292,22 +274,18 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
       >
         <div className="flex items-center gap-3 mb-2">
           <Send size={20} className="text-secondary" />
-          <h3 className="font-display font-semibold text-foreground">
-            Invite a Friend
-          </h3>
+          <h3 className="font-display font-semibold text-foreground">{t('app.join.inviteFriend')}</h3>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Send 2 MYBUBU tokens to invite someone into the ecosystem directly.
-        </p>
+        <p className="text-xs text-muted-foreground">{t('app.join.inviteDesc')}</p>
         <input
           type="text"
-          placeholder="0x... (Friend's wallet address)"
+          placeholder={t('app.join.invitePlaceholder')}
           value={inviteAddress}
           onChange={(e) => setInviteAddress(e.target.value)}
           className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
         />
         <div className="glass-card p-3 flex justify-between text-sm">
-          <span className="text-muted-foreground">Cost</span>
+          <span className="text-muted-foreground">{t('app.join.cost')}</span>
           <span className="text-foreground font-bold">2 MYBUBU</span>
         </div>
         <motion.button
@@ -333,7 +311,6 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         </motion.button>
       </motion.div>
 
-      {/* Info cards */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -341,8 +318,8 @@ export const JoinPanel = ({ isJoined, onJoinSuccess, walletConnected }) => {
         className="grid grid-cols-1 sm:grid-cols-2 gap-3"
       >
         {[
-          { emoji: "🔗", title: "10-Level Referrals", desc: "Earn up to 5% on referrals" },
-          { emoji: "💎", title: "NFT Boost", desc: "Up to 18x reward multiplier" },
+          { emoji: "🔗", title: t('app.join.info1Title'), desc: t('app.join.info1Desc') },
+          { emoji: "💎", title: t('app.join.info2Title'), desc: t('app.join.info2Desc') },
         ].map((item) => (
           <div
             key={item.title}
