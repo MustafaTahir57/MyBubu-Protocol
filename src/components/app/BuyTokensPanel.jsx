@@ -29,6 +29,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
 
   const isProcessing = swapStep !== "idle";
   const isValid = numAmount > 0;
+  const isPaused = true; // Swap feature paused
 
   // Handle swap: approve → swap
   const handleSwap = () => {
