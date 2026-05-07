@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "about": "About",
+    "mechanism": "Mechanism",
+    "tokenomics": "Tokenomics",
+    "nftNodes": "NFT Nodes",
+    "referral": "Referral",
+    "faq": "FAQ",
+    "buyNow": "🐱 Buy Now",
+    "language": "Language"
+  },
+  "hero": {
+    "tag": "🚀 BSC Network • Dual Token Ecosystem • NFT Nodes 🎯",
+    "title1": "MYBUBU",
+    "title2": "Ecosystem",
+    "subtitle": "A comprehensive DeFi ecosystem with MYBUBU Token, NFT Nodes, and MYMOMO Token working together for sustainable rewards and passive income. 🐾",
+    "launchApp": "🐱 Launch App",
+    "whitepaper": "📄 Whitepaper"
+  },
+  "about": {
+    "kicker": "About MyBubu",
+    "title": "Why Choose",
+    "titleHighlight": "MyBubu",
+    "titleSuffix": "?",
+    "subtitle": "MyBubu isn't just a meme coin – it's a movement! Join the cuddliest community in crypto and watch your investment grow with purr-fection. 🐱💖",
+    "features": {
+      "cute": { "title": "Cute & Cuddly", "desc": "The most adorable meme coin mascot in all of crypto. Who can resist MyBubu?" },
+      "secure": { "title": "Secure & Safe", "desc": "Audited smart contracts and locked liquidity to keep your investment purr-tected." },
+      "fast": { "title": "Lightning Fast", "desc": "Ultra-fast transactions that zoom across the blockchain like a playful kitten." },
+      "community": { "title": "Paw-some Community", "desc": "Join thousands of Bubu lovers in the friendliest crypto community around." },
+      "charity": { "title": "Charity Focused", "desc": "A portion of every transaction goes to animal shelters worldwide. 🐾" },
+      "magic": { "title": "Meme Magic", "desc": "Powered by the strongest meme energy in the crypto universe." }
+    }
+  },
+  "mechanism": {
+    "kicker": "How It Works",
+    "title": "The",
+    "titleHighlight": "Mechanism",
+    "subtitle": "Our automatic LP mechanism on PancakeSwap ensures sustainable liquidity and rewards for all participants.",
+    "steps": {
+      "lp": { "title": "70% LP Deposits", "desc": "Automatically split into 35% Labubu + 35% BNB for PancakeSwap liquidity." },
+      "ref": { "title": "20% Referral Rewards", "desc": "Smart contract manages network rewards across 10 referral levels." },
+      "pool": { "title": "10% Global Pool", "desc": "Distributed equally to users who activate Node Dividend." }
+    },
+    "defenseTitle": "🛡️ Defense Against",
+    "defenseHighlight": "Deflation/Inflation",
+    "defenseSubtitle": "Built-in mechanisms to maintain token value stability",
+    "defense": {
+      "lp": { "title": "1% to LP", "desc": "Every transaction adds liquidity" },
+      "burn": { "title": "1% Burn", "desc": "Dead Wallet burn mechanism" }
+    },
+    "passive": "Passive Income:",
+    "passiveDesc": "1% of total accumulated LP distributed daily"
+  },
+  "tokenomics": {
+    "kicker": "Token Distribution",
+    "title": "Tokenomics",
+    "subtitle": "A carefully designed dual-token ecosystem with MYBUBU and MYMOMO working together for sustainable growth and rewards.",
+    "stats": {
+      "maxSupply": "Max Supply",
+      "transferTax": "Transfer Tax",
+      "teamReserve": "Team Reserve",
+      "network": "Network"
+    },
+    "items": {
+      "lp": { "title": "LP Deposits", "desc": "Split into 35% Labubu + 35% BNB for PancakeSwap liquidity pairing." },
+      "ref": { "title": "Referral & Network", "desc": "Smart contract managed rewards for multi-level referral system." },
+      "pool": { "title": "Global Pool", "desc": "Distributed to users who activate the \"Node Dividend\" feature." },
+      "passive": { "title": "Passive Income", "desc": "Daily distribution of 1% from total accumulated LP to holders." },
+      "lock": { "title": "LP Lock", "desc": "1% of each transaction goes into LP for price stability." },
+      "burn": { "title": "Burn Mechanism", "desc": "1% of each transaction burned to Dead Wallet for deflation." }
+    }
+  },
+  "nft": {
+    "kicker": "NFT Rewards",
+    "title": "NFT Node",
+    "titleSuffix": "Revenue",
+    "subtitle": "Each NFT Node costs 500 USDT and grants you 10,000 MYBUBU tokens. Tokens are released 10% monthly over 10 months!",
+    "stats": { "price": "Node Price", "total": "Total Nodes", "monthly": "Monthly Release", "totalValue": "1000 Only" },
+    "tiers": {
+      "Starter": "Starter", "Bronze": "Bronze", "Silver": "Silver", "Gold": "Gold", "Platinum": "Platinum", "VIP": "VIP"
+    },
+    "node": "Node",
+    "nodes": "Nodes",
+    "howTitle": "📅 How Token Release Works",
+    "buy": { "title": "Buy Nodes", "desc": "Purchase NFT Nodes at 500 USDT each. Each node = 10,000 MYBUBU tokens." },
+    "release": { "title": "Monthly Release", "desc": "10% of your total tokens are released every month for 10 months." },
+    "example": { "title": "Example", "desc": "10 Nodes = 100K MYBUBU → claim 10K tokens each month for 10 months." }
+  },
+  "referral": {
+    "kicker": "Promotion Incentive",
+    "title": "Referral",
+    "titleSuffix": "Network",
+    "subtitle": "Earn rewards across 10 levels by building your network. The more you invite, the higher your tier rewards!",
+    "invite": "Invite",
+    "person": "person",
+    "people": "people",
+    "level": "Level",
+    "levels": "Levels",
+    "reward": "reward",
+    "features": {
+      "deep": { "title": "10 Levels Deep", "desc": "Earn from your entire network" },
+      "instant": { "title": "Instant Rewards", "desc": "Smart contract auto-distribution" },
+      "passive": { "title": "Passive Income", "desc": "Grow while you sleep" }
+    }
+  },
+  "howToBuy": {
+    "kicker": "Get Started",
+    "title": "How to",
+    "titleHighlight": "Buy",
+    "subtitle": "Get in early with MyBoo tokens — the pre-launch gateway to the MYBUBU ecosystem.",
+    "what": "What is MyBoo Token?",
+    "preLaunch": "Pre-Launch Access Token",
+    "intro1": "MyBoo",
+    "intro2": "is the early-access token designed for supporters who want to invest in the MYBUBU project before the official launch. Purchase MyBoo now at a fixed rate and",
+    "intro3": "swap them 1:1 for MYBUBU tokens",
+    "intro4": "once the ecosystem goes live.",
+    "tokenPrice": "Token Price",
+    "standardRate": "Standard Rate",
+    "swapRatio": "Swap Ratio",
+    "payInfo": "Pay with",
+    "or": "or",
+    "limits": "· Min 100 USDT / 0.1 BNB · Max 10,000 USDT / 2 BNB",
+    "buyBtn": "Buy MyBoo Tokens Now",
+    "steps": {
+      "connect": { "title": "Connect Your Wallet", "desc": "Connect your MetaMask, Trust Wallet, or any WalletConnect compatible wallet to get started." },
+      "fund": { "title": "Fund with USDT or BNB", "desc": "Ensure you have BNB for gas fees and either USDT or BNB to purchase MyBoo tokens." },
+      "purchase": { "title": "Purchase MyBoo Tokens", "desc": "Buy MyBoo tokens at the pre-launch price of $0.05 per token. Minimum 100 USDT or 0.1 BNB." },
+      "swap": { "title": "Swap for MYBUBU at Launch", "desc": "Once the MYBUBU ecosystem goes live, swap your MyBoo tokens 1:1 for official MYBUBU tokens." }
+    }
+  },
+  "faq": {
+    "kicker": "Got Questions?",
+    "title": "Frequently",
+    "titleHighlight": "Asked",
+    "items": [
+      { "q": "What is the MYBUBU Ecosystem?", "a": "MYBUBU is a comprehensive DeFi ecosystem on BSC featuring three interconnected smart contracts: MYBUBU Token (main utility), MYBUBU NFT Node (tiered dividend system), and MYMOMO Token (secondary token with burn mechanics). Together they create a sustainable reward and incentive system." },
+      { "q": "How does the LP mechanism work?", "a": "70% of LP deposits are split into 35% Labubu + 35% BNB, paired automatically on PancakeSwap. 20% goes to referral/network rewards, and 10% to the Global Pool for Node Dividend holders." },
+      { "q": "What are the NFT Node tiers and rewards?", "a": "Each NFT Node costs 500 USDT and grants 10,000 MYBUBU tokens. Tokens are released at 10% per month over 10 months. For example, purchasing 10 Nodes gives you 100,000 MYBUBU tokens, claimable at 10,000 tokens per month." },
+      { "q": "How does the referral system work?", "a": "Multi-level referral rewards across 10 levels: Level 1 (1 invite) = 5%, Level 2 (3 invites) = 4%, Level 3 (5 invites) = 3%, Level 4 (7 invites) = 2%, Levels 5-10 (10 invites) = 1% each." },
+      { "q": "What are the tokenomics?", "a": "Max supply is 21,000,000 MYBUBU with 2% transfer tax and 5% team reserve. Each wallet can hold maximum 20,000 MYBUBU. 1% of each transaction goes to LP and 1% is burned for deflation protection." },
+      { "q": "How does the monthly token release work?", "a": "When you purchase NFT Nodes, your MYBUBU tokens are vested over 10 months. Each month, 10% of your total allocation is released and can be claimed. This ensures a sustainable and steady token distribution." }
+    ]
+  },
+  "footer": {
+    "rights": "© 2024 MyBubu Protocol. All rights reserved. 🐱💖",
+    "disclaimer": "Disclaimer: Cryptocurrency investments carry inherent risks. Please do your own research before participating. This is not financial advice. MyBubu is here for fun! 🐾"
+  }
+}
