@@ -1,40 +1,34 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { ArrowDownUp, Repeat, Info } from "lucide-react";
 import { useAccount } from "wagmi";
-import { formatUnits } from "viem";
 import { useUserInfo } from "@/hooks/dataFetcher/useUserInfo";
 import { useMyBooApproval } from "@/hooks/dataSender/useMyBooApproval";
 import { useSwapMyBoo } from "@/hooks/dataSender/useSwapMyBoo";
 import { toast } from "react-toastify";
 
 export const BuyTokensPanel = ({ walletConnected }) => {
+  const { t } = useTranslation();
   const { address } = useAccount();
   const [mybooAmount, setMybooAmount] = useState("");
-  const [swapStep, setSwapStep] = useState("idle"); // idle | approving | swapping
+  const [swapStep, setSwapStep] = useState("idle");
 
   const numAmount = parseFloat(mybooAmount) || 0;
   const mybubuReceived = numAmount;
 
-  // Fetch user's MyBoo balance from presale
-  const { tokensBought, MyBooBalanceRefetch: refetchMyBooBalance } =
-    useUserInfo(address);
+  const { tokensBought, MyBooBalanceRefetch: refetchMyBooBalance } = useUserInfo(address);
   const mybooBalance = parseFloat(tokensBought) || 0;
 
-  // Approval hook
   const approval = useMyBooApproval(address, numAmount > 0 ? mybooAmount : "0");
-
-  // Swap hook
   const swap = useSwapMyBoo();
 
   const isProcessing = swapStep !== "idle";
   const isValid = numAmount > 0;
-  const isPaused = true; // Swap feature paused
+  const isPaused = true;
 
-  // Handle swap: approve → swap
   const handleSwap = () => {
     if (!isValid || !walletConnected) return;
-
     if (approval.needsApproval) {
       setSwapStep("approving");
       approval.handleApprove();
@@ -44,7 +38,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
     }
   };
 
-  // After approval confirms → trigger swap
   useEffect(() => {
     if (approval.approveConfirmed && swapStep === "approving") {
       approval.refetch();
@@ -53,7 +46,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
     }
   }, [approval.approveConfirmed, swapStep]);
 
-  // After swap confirms → success
   useEffect(() => {
     if (swap.isConfirmed && swapStep === "swapping") {
       setSwapStep("idle");
@@ -62,39 +54,27 @@ export const BuyTokensPanel = ({ walletConnected }) => {
       swap.reset();
       approval.resetApprove();
       refetchMyBooBalance();
-      toast.success(
-        "🎉 Swap Successful! Your MyBoo tokens have been swapped for MYBUBU.",
-      );
+      toast.success(t('app.swap.successToast'));
     }
   }, [swap.isConfirmed, swapStep]);
 
-  // Handle errors
   useEffect(() => {
     const err = approval.approveError || swap.error;
     if (err && swapStep !== "idle") {
       setSwapStep("idle");
-      toast.error(err.shortMessage || err.message || "Transaction Failed");
+      toast.error(err.shortMessage || err.message || t('app.myboo.txFailed'));
     }
   }, [approval.approveError, swap.error]);
 
-  // Button text
   const getButtonContent = () => {
     if (isPaused) {
-      return (
-        <span className="flex items-center justify-center gap-2">
-          ⏸ Swapping Paused
-        </span>
-      );
+      return <span className="flex items-center justify-center gap-2">{t('app.swap.pausedBtn')}</span>;
     }
     if (isProcessing) {
       const stepText =
         swapStep === "approving"
-          ? approval.isApproving
-            ? "Approving MyBoo..."
-            : "Wallet Opening..."
-          : swap.isPending
-            ? "Wallet Opening..."
-            : "Swapping...";
+          ? approval.isApproving ? t('app.swap.approving') : t('app.common.openingWallet')
+          : swap.isPending ? t('app.common.openingWallet') : t('app.swap.swapping');
 
       return (
         <span className="flex items-center justify-center gap-2">
@@ -108,28 +88,21 @@ export const BuyTokensPanel = ({ walletConnected }) => {
       );
     }
 
-    if (!walletConnected) return "Connect Wallet First";
-
-    if (isValid && !approval.hasEnoughBalance) {
-      return "Insufficient MyBoo Balance";
-    }
+    if (!walletConnected) return t('app.common.connectFirst');
+    if (isValid && !approval.hasEnoughBalance) return t('app.swap.insufficient');
 
     return (
       <span className="flex items-center justify-center gap-2">
         <Repeat size={18} />
-        {approval.needsApproval ? "Approve & Swap" : "Swap MyBoo → MYBUBU"}
+        {approval.needsApproval ? t('app.swap.approveSwap') : t('app.swap.swapBtn')}
       </span>
     );
   };
 
   const isButtonDisabled =
-    isPaused ||
-    !walletConnected ||
-    !isValid ||
-    isProcessing ||
+    isPaused || !walletConnected || !isValid || isProcessing ||
     (isValid && !approval.hasEnoughBalance);
 
-  // Quick amounts based on user balance
   const quickAmounts =
     mybooBalance > 0
       ? [
@@ -142,28 +115,19 @@ export const BuyTokensPanel = ({ walletConnected }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6 text-center"
         style={{ boxShadow: "0 0 60px hsl(340 80% 65% / 0.1)" }}
       >
-        <motion.div
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
+        <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
           <Repeat size={48} className="mx-auto text-primary mb-4" />
         </motion.div>
-        <h2 className="font-display text-2xl font-bold gradient-text mb-2">
-          Swap MyBoo → MYBUBU
-        </h2>
-        <p className="text-muted-foreground text-sm">
-          Swap your pre-launch MyBoo tokens 1:1 for MYBUBU tokens
-        </p>
+        <h2 className="font-display text-2xl font-bold gradient-text mb-2">{t('app.swap.title')}</h2>
+        <p className="text-muted-foreground text-sm">{t('app.swap.subtitle')}</p>
       </motion.div>
 
-      {/* Paused banner */}
       {isPaused && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -172,13 +136,12 @@ export const BuyTokensPanel = ({ walletConnected }) => {
         >
           <span className="text-xl">⏸</span>
           <div className="text-xs text-muted-foreground leading-relaxed">
-            <span className="text-yellow-500 font-semibold">Swapping Paused:</span>{" "}
-            The MyBoo → MYBUBU swap is temporarily paused. Please check back later.
+            <span className="text-yellow-500 font-semibold">{t('app.swap.pausedLabel')}</span>{" "}
+            {t('app.swap.pausedDesc')}
           </div>
         </motion.div>
       )}
 
-      {/* Info banner */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -187,26 +150,24 @@ export const BuyTokensPanel = ({ walletConnected }) => {
       >
         <Info size={18} className="text-primary mt-0.5 shrink-0" />
         <div className="text-xs text-muted-foreground leading-relaxed">
-          <span className="text-foreground font-semibold">How it works:</span>{" "}
-          Approve your MyBoo tokens, then swap them 1:1 for MYBUBU. This is a{" "}
-          <span className="text-primary font-medium">token migration</span> —
-          your MyBoo will be burned and MYBUBU minted to your wallet.
+          <span className="text-foreground font-semibold">{t('app.swap.howWorks')}</span>{" "}
+          {t('app.swap.howWorksDesc')}{" "}
+          <span className="text-primary font-medium">{t('app.swap.migration')}</span>
+          {t('app.swap.burnedMinted')}
         </div>
       </motion.div>
 
-      {/* Swap Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="glass-card p-6 space-y-4"
       >
-        {/* MyBoo Input */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">You Send</span>
+            <span className="text-sm text-muted-foreground">{t('app.common.youSend')}</span>
             <span className="text-xs text-muted-foreground">
-              Balance:{" "}
+              {t('app.common.balance')}:{" "}
               {walletConnected
                 ? `${mybooBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })} MyBoo`
                 : "—"}
@@ -226,7 +187,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
               <span className="font-bold text-sm text-foreground">MyBoo</span>
             </div>
           </div>
-          {/* Quick amounts */}
           <div className="flex gap-2 mt-2">
             {quickAmounts.map((v) => (
               <motion.button
@@ -243,7 +203,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
           </div>
         </div>
 
-        {/* Swap arrow */}
         <div className="flex justify-center">
           <motion.div
             animate={{ y: [0, 4, 0] }}
@@ -254,18 +213,13 @@ export const BuyTokensPanel = ({ walletConnected }) => {
           </motion.div>
         </div>
 
-        {/* MYBUBU Output */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">You Receive</span>
-            <span className="text-xs text-muted-foreground">
-              Rate: 1 MyBoo = 1 MYBUBU
-            </span>
+            <span className="text-sm text-muted-foreground">{t('app.common.youReceive')}</span>
+            <span className="text-xs text-muted-foreground">{t('app.swap.rate11')}</span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
-            <p className="text-2xl font-display font-bold text-primary">
-              {mybubuReceived.toLocaleString()}
-            </p>
+            <p className="text-2xl font-display font-bold text-primary">{mybubuReceived.toLocaleString()}</p>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
               <span className="text-lg">🐱</span>
               <span className="font-bold text-sm text-foreground">MYBUBU</span>
@@ -273,7 +227,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
           </div>
         </div>
 
-        {/* Validation */}
         <AnimatePresence>
           {numAmount > 0 && !approval.hasEnoughBalance && (
             <motion.p
@@ -282,55 +235,42 @@ export const BuyTokensPanel = ({ walletConnected }) => {
               exit={{ opacity: 0, height: 0 }}
               className="text-xs text-destructive text-center"
             >
-              Insufficient MyBoo balance. You have{" "}
-              {mybooBalance.toLocaleString()} MyBoo.
+              {t('app.swap.insufficientDetail', { balance: mybooBalance.toLocaleString() })}
             </motion.p>
           )}
         </AnimatePresence>
 
-        {/* Swap info */}
         <div className="glass-card p-3 space-y-2">
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">Swap Ratio</span>
+            <span className="text-muted-foreground">{t('app.swap.swapRatio')}</span>
             <span className="text-primary">1:1</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">Type</span>
-            <span className="text-secondary">Token Migration</span>
+            <span className="text-muted-foreground">{t('app.common.type')}</span>
+            <span className="text-secondary">{t('app.common.tokenMigration')}</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">Fee</span>
+            <span className="text-muted-foreground">{t('app.common.fee')}</span>
             <span className="text-primary">0%</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">Approval</span>
-            <span
-              className={
-                approval.needsApproval ? "text-yellow-500" : "text-green-500"
-              }
-            >
+            <span className="text-muted-foreground">{t('app.common.approval')}</span>
+            <span className={approval.needsApproval ? "text-yellow-500" : "text-green-500"}>
               {numAmount > 0
-                ? approval.needsApproval
-                  ? "Needs Approval"
-                  : "Approved ✓"
+                ? approval.needsApproval ? t('app.common.needsApproval') : t('app.common.approved')
                 : "—"}
             </span>
           </div>
         </div>
       </motion.div>
 
-      {/* Swap Button */}
       <motion.button
         whileHover={!isButtonDisabled ? { scale: 1.02 } : {}}
         whileTap={!isButtonDisabled ? { scale: 0.98 } : {}}
         onClick={handleSwap}
         disabled={isButtonDisabled}
         className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-        style={
-          isValid && !isButtonDisabled
-            ? { boxShadow: "var(--shadow-glow)" }
-            : {}
-        }
+        style={isValid && !isButtonDisabled ? { boxShadow: "var(--shadow-glow)" } : {}}
       >
         {getButtonContent()}
       </motion.button>

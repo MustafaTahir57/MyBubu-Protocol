@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Coins, ArrowDown, TrendingUp, Info, Zap, Gift, Sparkles, ShieldAlert, AlertTriangle } from 'lucide-react';
 import { useAccount, useBytecode } from 'wagmi';
 import { useDepositBNB } from '@/hooks/dataSender/useDepositBNB';
@@ -10,27 +11,19 @@ import { toast } from 'react-toastify';
 const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
+  const { t } = useTranslation();
   const [amount, setAmount] = useState('');
   const [showSmartAccountInfo, setShowSmartAccountInfo] = useState(false);
   const { address } = useAccount();
   const { data: bytecode } = useBytecode({ address, query: { enabled: !!address } });
   const isSmartAccount = !!bytecode && bytecode !== '0x' && bytecode.length > 2;
-  const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB , refetch: refetchBnbBalance } = useDepositBNB();
+  const { deposit, isPending, isConfirming, isConfirmed, error, reset, bnbBalance, hasEnoughBNB, refetch: refetchBnbBalance } = useDepositBNB();
 
-  // LP reward claim
-  const {
-    pendingReward,
-    isLoading: isLoadingReward,
-    refetch: refetchPendingReward,
-  } = usePendingLPReward(address);
+  const { pendingReward, isLoading: isLoadingReward, refetch: refetchPendingReward } = usePendingLPReward(address);
 
   const {
-    claimReward,
-    isPending: isClaimPending,
-    isConfirming: isClaimConfirming,
-    isConfirmed: isClaimConfirmed,
-    error: claimError,
-    reset: resetClaim,
+    claimReward, isPending: isClaimPending, isConfirming: isClaimConfirming,
+    isConfirmed: isClaimConfirmed, error: claimError, reset: resetClaim,
   } = useClaimLPReward();
 
   const isClaimProcessing = isClaimPending || isClaimConfirming;
@@ -39,7 +32,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
   useEffect(() => {
     if (isClaimConfirmed) {
-      toast.success('🎉 LP rewards claimed successfully!');
+      toast.success(t('app.deposit.claimSuccess'));
       refetchPendingReward();
       resetClaim();
     }
@@ -47,16 +40,13 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
   useEffect(() => {
     if (claimError) {
-      toast.error(claimError.shortMessage || claimError.message || 'Claim failed');
+      toast.error(claimError.shortMessage || claimError.message || t('app.deposit.claimFailed'));
       resetClaim();
     }
   }, [claimError]);
 
-  const handleClaim = () => {
-    if (!canClaim) return;
-    claimReward();
-  };
-  
+  const handleClaim = () => { if (canClaim) claimReward(); };
+
   const numAmount = parseFloat(amount);
   const isValidNumber = amount !== '' && !isNaN(numAmount) && isFinite(numAmount) && numAmount > 0;
   const isInRange = isValidNumber && numAmount >= 0.1 && numAmount <= 2;
@@ -73,7 +63,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
   useEffect(() => {
     if (isConfirmed) {
-      toast.success('🎉 BNB deposited successfully!');
+      toast.success(t('app.deposit.successToast'));
       refetchBnbBalance();
       setAmount('');
       reset();
@@ -82,7 +72,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error.shortMessage || 'Deposit failed');
+      toast.error(error.shortMessage || t('app.deposit.depositFailed'));
       reset();
     }
   }, [error]);
@@ -93,35 +83,25 @@ export const DepositBNBPanel = ({ walletConnected }) => {
   };
 
   const canDeposit = isInRange && !insufficientBalance;
-
   const hasInput = amount.trim() !== '';
   const isInvalidInput = hasInput && !isValidNumber;
   const isOutOfRange = isValidNumber && !isInRange;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6 text-center"
         style={{ boxShadow: '0 0 60px hsl(30 80% 60% / 0.1)' }}
       >
-        <motion.div
-          animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        >
+        <motion.div animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }} transition={{ duration: 3, repeat: Infinity }}>
           <Coins size={48} className="mx-auto text-secondary mb-4" />
         </motion.div>
-        <h2 className="font-display text-2xl font-bold gradient-text mb-2">
-          Deposit BNB for LP
-        </h2>
-        <p className="text-muted-foreground text-sm">
-          Deposit BNB to receive LP tokens • Min: 0.1 BNB • Max: 2 BNB
-        </p>
+        <h2 className="font-display text-2xl font-bold gradient-text mb-2">{t('app.deposit.title')}</h2>
+        <p className="text-muted-foreground text-sm">{t('app.deposit.subtitle')}</p>
       </motion.div>
 
-      {/* Amount Input */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -129,8 +109,8 @@ export const DepositBNBPanel = ({ walletConnected }) => {
         className="glass-card p-6 space-y-4"
       >
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-muted-foreground">Deposit Amount</span>
-          <span className="text-xs text-muted-foreground">Balance: {walletConnected ? `${bnbBalance.toFixed(4)} BNB` : '—'}</span>
+          <span className="text-sm text-muted-foreground">{t('app.deposit.amount')}</span>
+          <span className="text-xs text-muted-foreground">{t('app.common.balance')}: {walletConnected ? `${bnbBalance.toFixed(4)} BNB` : '—'}</span>
         </div>
 
         <div className="relative">
@@ -140,17 +120,13 @@ export const DepositBNBPanel = ({ walletConnected }) => {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className={`w-full bg-background/50 border rounded-xl px-4 py-4 text-2xl font-display font-bold text-foreground placeholder:text-muted-foreground/30 focus:outline-none transition-all ${
-              isInvalidInput
-                ? 'border-destructive focus:border-destructive focus:ring-1 focus:ring-destructive/30'
+              isInvalidInput ? 'border-destructive focus:border-destructive focus:ring-1 focus:ring-destructive/30'
                 : 'border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/30'
             }`}
           />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary font-bold text-sm">
-            BNB
-          </span>
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary font-bold text-sm">BNB</span>
         </div>
 
-        {/* Preset buttons */}
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
           {presets.map((preset) => (
             <motion.button
@@ -171,22 +147,21 @@ export const DepositBNBPanel = ({ walletConnected }) => {
 
         {isInvalidInput && (
           <p className="text-xs text-destructive flex items-center gap-1">
-            <Info size={12} /> Please enter a valid number
+            <Info size={12} /> {t('app.deposit.validNumber')}
           </p>
         )}
         {isOutOfRange && (
           <p className="text-xs text-destructive flex items-center gap-1">
-            <Info size={12} /> Amount must be between 0.1 and 2 BNB
+            <Info size={12} /> {t('app.deposit.outOfRange')}
           </p>
         )}
         {isInRange && insufficientBalance && (
           <p className="text-xs text-destructive flex items-center gap-1">
-            <Info size={12} /> Insufficient BNB balance
+            <Info size={12} /> {t('app.deposit.insufficient')}
           </p>
         )}
       </motion.div>
 
-      {/* LP Breakdown */}
       {isInRange && (
         <motion.div
           initial={{ opacity: 0, y: 20, height: 0 }}
@@ -195,13 +170,13 @@ export const DepositBNBPanel = ({ walletConnected }) => {
         >
           <h3 className="font-display font-semibold text-foreground flex items-center gap-2 mb-3">
             <TrendingUp size={18} className="text-primary" />
-            Distribution Breakdown
+            {t('app.deposit.breakdown')}
           </h3>
 
           {[
-            { label: 'LP (70%)', sub: `${lpBreakdown.labubu} Labubu + ${lpBreakdown.bnb} BNB`, value: `${lpBreakdown.lp} BNB`, color: 'text-primary' },
-            { label: 'Referral & Rewards (20%)', value: `${lpBreakdown.referral} BNB`, color: 'text-secondary' },
-            { label: 'Global Pool (10%)', value: `${lpBreakdown.globalPool} BNB`, color: 'text-primary' },
+            { label: t('app.deposit.lpRow'), sub: `${lpBreakdown.labubu} Labubu + ${lpBreakdown.bnb} BNB`, value: `${lpBreakdown.lp} BNB`, color: 'text-primary' },
+            { label: t('app.deposit.refRow'), value: `${lpBreakdown.referral} BNB`, color: 'text-secondary' },
+            { label: t('app.deposit.poolRow'), value: `${lpBreakdown.globalPool} BNB`, color: 'text-primary' },
           ].map((item, i) => (
             <motion.div
               key={item.label}
@@ -220,7 +195,6 @@ export const DepositBNBPanel = ({ walletConnected }) => {
         </motion.div>
       )}
 
-      {/* Deposit Button */}
       <div className="space-y-3">
         <motion.button
           whileHover={canDeposit && !isProcessing && !isSmartAccount ? { scale: 1.02 } : {}}
@@ -233,7 +207,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
           {isSmartAccount && walletConnected ? (
             <span className="flex items-center justify-center gap-2">
               <ShieldAlert size={18} />
-              Smart Account Detected — Tap for Info
+              {t('app.deposit.smartDetected')}
             </span>
           ) : isProcessing ? (
             <span className="flex items-center justify-center gap-2">
@@ -242,14 +216,14 @@ export const DepositBNBPanel = ({ walletConnected }) => {
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
               />
-              {isPending ? 'Confirm in Wallet...' : 'Processing...'}
+              {isPending ? t('app.common.confirmWallet') : t('app.common.processing')}
             </span>
           ) : !walletConnected ? (
-            'Connect Wallet First'
+            t('app.common.connectFirst')
           ) : (
             <span className="flex items-center justify-center gap-2">
               <Zap size={18} />
-              Deposit {isValidNumber ? amount : '0'} BNB
+              {t('app.deposit.depositBtn', { amount: isValidNumber ? amount : '0' })}
             </span>
           )}
         </motion.button>
@@ -262,12 +236,11 @@ export const DepositBNBPanel = ({ walletConnected }) => {
             className="w-full flex items-center justify-center gap-2 text-xs text-destructive hover:text-destructive/80 transition-colors"
           >
             <Info size={12} />
-            Why is this disabled?
+            {t('app.deposit.whyDisabled')}
           </motion.button>
         )}
       </div>
 
-      {/* Smart Account Info Modal */}
       <AnimatePresence>
         {showSmartAccountInfo && (
           <motion.div
@@ -282,7 +255,7 @@ export const DepositBNBPanel = ({ walletConnected }) => {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="glass-card max-w-md w-full p-6 space-y-4 border border-destructive/30"
+              className="glass-card max-w-md w-full p-6 space-y-4 border border-destructive/30 max-h-[90vh] overflow-y-auto"
               style={{ boxShadow: '0 0 60px hsl(0 80% 60% / 0.2)' }}
             >
               <div className="flex items-start gap-3">
@@ -290,44 +263,40 @@ export const DepositBNBPanel = ({ walletConnected }) => {
                   <AlertTriangle size={22} className="text-destructive" />
                 </div>
                 <div>
-                  <h3 className="font-display text-lg font-bold text-foreground">
-                    Smart Account Not Supported
-                  </h3>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    The connected address is a contract wallet (Smart Account / AA wallet), not an EOA.
-                  </p>
+                  <h3 className="font-display text-lg font-bold text-foreground">{t('app.deposit.smartTitle')}</h3>
+                  <p className="text-xs text-muted-foreground mt-1">{t('app.deposit.smartIntro')}</p>
                 </div>
               </div>
 
               <div className="space-y-3 text-sm text-muted-foreground">
                 <div>
-                  <p className="text-foreground font-semibold mb-1">Why deposits may revert:</p>
+                  <p className="text-foreground font-semibold mb-1">{t('app.deposit.whyRevert')}</p>
                   <ul className="list-disc list-inside space-y-1 text-xs">
-                    <li>The deposit contract binds LP positions and rewards to the sender. Smart accounts route calls through proxies, so accounting may not match your wallet.</li>
-                    <li>Many smart wallets do not accept BNB refunds via plain transfers, causing the receive/fallback to revert.</li>
-                    <li>Referral tracking is bound to EOA addresses; smart accounts will not accrue rewards correctly.</li>
+                    <li>{t('app.deposit.whyRevert1')}</li>
+                    <li>{t('app.deposit.whyRevert2')}</li>
+                    <li>{t('app.deposit.whyRevert3')}</li>
                   </ul>
                 </div>
 
                 <div>
-                  <p className="text-foreground font-semibold mb-1">How to use an EOA instead:</p>
+                  <p className="text-foreground font-semibold mb-1">{t('app.deposit.useEoa')}</p>
                   <ul className="list-disc list-inside space-y-1 text-xs">
-                    <li>Use a standard EOA wallet such as <span className="text-primary font-medium">TokenPocket</span>, <span className="text-primary font-medium">MetaMask</span>, <span className="text-primary font-medium">Trust Wallet</span>, or <span className="text-primary font-medium">Rabby</span>.</li>
-                    <li>Switch the network to <span className="text-secondary font-medium">BNB Smart Chain (BSC)</span>.</li>
-                    <li>Transfer your BNB from the smart account to the new EOA address.</li>
-                    <li>Disconnect the current wallet, then reconnect using the EOA.</li>
+                    <li>{t('app.deposit.useEoa1')}</li>
+                    <li>{t('app.deposit.useEoa2')}</li>
+                    <li>{t('app.deposit.useEoa3')}</li>
+                    <li>{t('app.deposit.useEoa4')}</li>
                   </ul>
                 </div>
 
                 <div>
-                  <p className="text-foreground font-semibold mb-1">Creating an EOA in TokenPocket:</p>
+                  <p className="text-foreground font-semibold mb-1">{t('app.deposit.tpTitle')}</p>
                   <ul className="list-disc list-inside space-y-1 text-xs">
-                    <li>Install <span className="text-primary font-medium">TokenPocket</span> from the App Store, Google Play, or <span className="text-primary font-medium">tokenpocket.pro</span>.</li>
-                    <li>Open the app and tap <span className="text-foreground font-medium">"No Wallet Yet"</span> → <span className="text-foreground font-medium">"Create Wallet"</span>.</li>
-                    <li>Select <span className="text-secondary font-medium">BNB Smart Chain (BSC)</span> as the network (do NOT pick "Smart Wallet" / "AA Wallet" — choose the standard wallet option).</li>
-                    <li>Set a wallet name and password, then securely back up the <span className="text-foreground font-medium">12-word seed phrase</span>.</li>
-                    <li>Confirm the seed phrase to finish creating your EOA address (starts with <span className="font-mono">0x...</span>).</li>
-                    <li>Send BNB to this new address, then connect it here via WalletConnect or the in-app DApp browser.</li>
+                    <li>{t('app.deposit.tp1')}</li>
+                    <li>{t('app.deposit.tp2')}</li>
+                    <li>{t('app.deposit.tp3')}</li>
+                    <li>{t('app.deposit.tp4')}</li>
+                    <li>{t('app.deposit.tp5')}</li>
+                    <li>{t('app.deposit.tp6')}</li>
                   </ul>
                 </div>
               </div>
@@ -336,14 +305,13 @@ export const DepositBNBPanel = ({ walletConnected }) => {
                 onClick={() => setShowSmartAccountInfo(false)}
                 className="w-full py-3 rounded-xl font-display font-bold text-sm bg-gradient-to-r from-secondary to-primary text-primary-foreground"
               >
-                Got it
+                {t('app.common.gotIt')}
               </button>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Claim LP Rewards Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -360,24 +328,16 @@ export const DepositBNBPanel = ({ walletConnected }) => {
             <Gift size={22} className="text-primary" />
           </motion.div>
           <div>
-            <h3 className="font-display text-lg font-bold text-foreground">
-              Claim LP Rewards
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              Your pending MYBUBU rewards from LP
-            </p>
+            <h3 className="font-display text-lg font-bold text-foreground">{t('app.deposit.claimTitle')}</h3>
+            <p className="text-xs text-muted-foreground">{t('app.deposit.claimSubtitle')}</p>
           </div>
         </div>
 
         <div className="bg-background/50 border border-border rounded-xl p-4 flex items-center justify-between">
           <div>
-            <p className="text-xs text-muted-foreground mb-1">Pending Reward</p>
+            <p className="text-xs text-muted-foreground mb-1">{t('app.deposit.pendingReward')}</p>
             <p className="text-2xl font-display font-bold gradient-text">
-              {!walletConnected
-                ? '—'
-                : isLoadingReward
-                  ? '...'
-                  : pendingRewardNum.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+              {!walletConnected ? '—' : isLoadingReward ? '...' : pendingRewardNum.toLocaleString(undefined, { maximumFractionDigits: 6 })}
               <span className="text-sm text-muted-foreground font-medium ml-2">MYBUBU</span>
             </p>
           </div>
@@ -399,16 +359,16 @@ export const DepositBNBPanel = ({ walletConnected }) => {
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 className="inline-block w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
               />
-              {isClaimPending ? 'Confirm in Wallet...' : 'Claiming...'}
+              {isClaimPending ? t('app.common.confirmWallet') : t('app.common.claiming')}
             </span>
           ) : !walletConnected ? (
-            'Connect Wallet First'
+            t('app.common.connectFirst')
           ) : pendingRewardNum <= 0 ? (
-            'No Rewards to Claim'
+            t('app.deposit.noRewards')
           ) : (
             <span className="flex items-center justify-center gap-2">
               <Gift size={18} />
-              Claim {pendingRewardNum.toLocaleString(undefined, { maximumFractionDigits: 4 })} MYBUBU
+              {t('app.deposit.claimBtn', { amount: pendingRewardNum.toLocaleString(undefined, { maximumFractionDigits: 4 }) })}
             </span>
           )}
         </motion.button>
