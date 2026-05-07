@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "about": "关于我们",
+    "mechanism": "运作机制",
+    "tokenomics": "代币经济",
+    "nftNodes": "NFT 节点",
+    "referral": "推荐计划",
+    "faq": "常见问题",
+    "buyNow": "🐱 立即购买",
+    "language": "语言"
+  },
+  "hero": {
+    "tag": "🚀 BSC 网络 • 双代币生态 • NFT 节点 🎯",
+    "title1": "MYBUBU",
+    "title2": "生态系统",
+    "subtitle": "全方位的 DeFi 生态系统,集 MYBUBU 代币、NFT 节点与 MYMOMO 代币于一体,共同打造可持续的奖励与被动收益。🐾",
+    "launchApp": "🐱 启动应用",
+    "whitepaper": "📄 白皮书"
+  },
+  "about": {
+    "kicker": "关于 MyBubu",
+    "title": "为何选择",
+    "titleHighlight": "MyBubu",
+    "titleSuffix": "?",
+    "subtitle": "MyBubu 不仅是一种迷因币 — 它是一场运动!加入加密货币领域最暖心的社区,与 MyBubu 一起见证您的投资完美成长。🐱💖",
+    "features": {
+      "cute": { "title": "可爱萌宠", "desc": "加密货币界最迷人的迷因币吉祥物,谁能抵挡 MyBubu 的魅力?" },
+      "secure": { "title": "安全可靠", "desc": "经过审计的智能合约和锁定的流动性,全方位守护您的投资。" },
+      "fast": { "title": "极速交易", "desc": "超高速链上交易,如同顽皮的小猫一般灵动迅捷。" },
+      "community": { "title": "贴心社区", "desc": "加入数千名 Bubu 爱好者,体验加密圈最友善的社区氛围。" },
+      "charity": { "title": "公益关怀", "desc": "每笔交易的一部分将捐赠给全球动物收容所。🐾" },
+      "magic": { "title": "迷因魔力", "desc": "由加密宇宙中最强大的迷因能量驱动。" }
+    }
+  },
+  "mechanism": {
+    "kicker": "运作原理",
+    "title": "运作",
+    "titleHighlight": "机制",
+    "subtitle": "我们在 PancakeSwap 上的自动化 LP 机制,确保为所有参与者提供可持续的流动性与奖励。",
+    "steps": {
+      "lp": { "title": "70% LP 注入", "desc": "自动拆分为 35% Labubu + 35% BNB,注入 PancakeSwap 流动性池。" },
+      "ref": { "title": "20% 推荐奖励", "desc": "智能合约自动管理 10 级推荐网络奖励。" },
+      "pool": { "title": "10% 全球奖池", "desc": "平均分配给已激活节点分红的用户。" }
+    },
+    "defenseTitle": "🛡️ 通缩/通胀",
+    "defenseHighlight": "防御机制",
+    "defenseSubtitle": "内建机制,保障代币价值稳定",
+    "defense": {
+      "lp": { "title": "1% 注入 LP", "desc": "每笔交易自动添加流动性" },
+      "burn": { "title": "1% 销毁", "desc": "黑洞地址销毁机制" }
+    },
+    "passive": "被动收益:",
+    "passiveDesc": "每日分配累计 LP 总额的 1%"
+  },
+  "tokenomics": {
+    "kicker": "代币分配",
+    "title": "代币经济",
+    "subtitle": "精心设计的双代币生态:MYBUBU 与 MYMOMO 协同运作,实现可持续增长与丰厚奖励。",
+    "stats": {
+      "maxSupply": "最大供应量",
+      "transferTax": "转账税",
+      "teamReserve": "团队储备",
+      "network": "网络"
+    },
+    "items": {
+      "lp": { "title": "LP 注入", "desc": "拆分为 35% Labubu + 35% BNB,用于 PancakeSwap 流动性配对。" },
+      "ref": { "title": "推荐与网络", "desc": "智能合约管理的多层级推荐奖励系统。" },
+      "pool": { "title": "全球奖池", "desc": "分配给激活「节点分红」功能的用户。" },
+      "passive": { "title": "被动收益", "desc": "每日向持有者分发累计 LP 总额的 1%。" },
+      "lock": { "title": "LP 锁仓", "desc": "每笔交易的 1% 进入 LP,以稳定价格。" },
+      "burn": { "title": "销毁机制", "desc": "每笔交易的 1% 销毁至黑洞地址,实现通缩。" }
+    }
+  },
+  "nft": {
+    "kicker": "NFT 奖励",
+    "title": "NFT 节点",
+    "titleSuffix": "收益",
+    "subtitle": "每个 NFT 节点售价 500 USDT,可获得 10,000 MYBUBU 代币。代币按月释放 10%,共持续 10 个月!",
+    "stats": { "price": "节点价格", "total": "节点总量", "monthly": "月度释放", "totalValue": "限量 1000 个" },
+    "tiers": {
+      "Starter": "入门级", "Bronze": "青铜级", "Silver": "白银级", "Gold": "黄金级", "Platinum": "铂金级", "VIP": "VIP 尊享"
+    },
+    "node": "节点",
+    "nodes": "节点",
+    "howTitle": "📅 代币释放机制",
+    "buy": { "title": "购买节点", "desc": "以每个 500 USDT 的价格购买 NFT 节点,每个节点 = 10,000 MYBUBU 代币。" },
+    "release": { "title": "按月释放", "desc": "您总代币数的 10% 每月释放一次,持续 10 个月。" },
+    "example": { "title": "示例", "desc": "10 个节点 = 100K MYBUBU → 每月可领取 10K 代币,共 10 个月。" }
+  },
+  "referral": {
+    "kicker": "推广激励",
+    "title": "推荐",
+    "titleSuffix": "网络",
+    "subtitle": "通过建立您的网络,可在 10 个层级中赚取奖励。邀请越多,层级奖励越高!",
+    "invite": "邀请",
+    "person": "人",
+    "people": "人",
+    "level": "等级",
+    "levels": "等级",
+    "reward": "奖励",
+    "features": {
+      "deep": { "title": "深达 10 层", "desc": "从您的整个网络中获得收益" },
+      "instant": { "title": "即时奖励", "desc": "智能合约自动分发" },
+      "passive": { "title": "被动收益", "desc": "睡觉时也能赚钱" }
+    }
+  },
+  "howToBuy": {
+    "kicker": "立即开始",
+    "title": "如何",
+    "titleHighlight": "购买",
+    "subtitle": "通过 MyBoo 代币抢先入场 — 通往 MYBUBU 生态的预发布通道。",
+    "what": "MyBoo 代币是什么?",
+    "preLaunch": "预发布访问代币",
+    "intro1": "MyBoo",
+    "intro2": "是为希望在 MYBUBU 项目正式发布前进行投资的支持者打造的早期访问代币。现在以固定汇率购买 MyBoo,",
+    "intro3": "在生态启动后可按 1:1 兑换为 MYBUBU 代币",
+    "intro4": "。",
+    "tokenPrice": "代币价格",
+    "standardRate": "标准汇率",
+    "swapRatio": "兑换比例",
+    "payInfo": "支持",
+    "or": "或",
+    "limits": "支付 · 最低 100 USDT / 0.1 BNB · 最高 10,000 USDT / 2 BNB",
+    "buyBtn": "立即购买 MyBoo 代币",
+    "steps": {
+      "connect": { "title": "连接您的钱包", "desc": "连接 MetaMask、Trust Wallet 或任何兼容 WalletConnect 的钱包以开始使用。" },
+      "fund": { "title": "充值 USDT 或 BNB", "desc": "确保您持有 BNB 用于支付 Gas 费用,以及 USDT 或 BNB 用于购买 MyBoo 代币。" },
+      "purchase": { "title": "购买 MyBoo 代币", "desc": "以 $0.05 的预发布价格购买 MyBoo 代币。最低 100 USDT 或 0.1 BNB。" },
+      "swap": { "title": "上线后兑换 MYBUBU", "desc": "MYBUBU 生态正式上线后,将您的 MyBoo 代币按 1:1 兑换为正式的 MYBUBU 代币。" }
+    }
+  },
+  "faq": {
+    "kicker": "有疑问?",
+    "title": "常见",
+    "titleHighlight": "问题",
+    "items": [
+      { "q": "什么是 MYBUBU 生态系统?", "a": "MYBUBU 是部署于 BSC 的综合性 DeFi 生态,由三个相互关联的智能合约组成:MYBUBU 代币(核心实用代币)、MYBUBU NFT 节点(分级分红系统)以及 MYMOMO 代币(具备销毁机制的辅助代币)。三者共同构建可持续的奖励与激励体系。" },
+      { "q": "LP 机制如何运作?", "a": "70% 的 LP 注入金额拆分为 35% Labubu + 35% BNB,自动在 PancakeSwap 上配对。20% 用于推荐/网络奖励,10% 进入全球奖池,分配给节点分红持有者。" },
+      { "q": "NFT 节点的等级与奖励是什么?", "a": "每个 NFT 节点售价 500 USDT,可获得 10,000 MYBUBU 代币。代币按每月 10% 的比例,在 10 个月内释放完毕。例如,购买 10 个节点可获得 100,000 MYBUBU 代币,每月可领取 10,000 个。" },
+      { "q": "推荐系统如何运作?", "a": "10 个层级的多级推荐奖励:Level 1(邀请 1 人)= 5%,Level 2(邀请 3 人)= 4%,Level 3(邀请 5 人)= 3%,Level 4(邀请 7 人)= 2%,Levels 5-10(邀请 10 人)= 各 1%。" },
+      { "q": "代币经济是怎样的?", "a": "最大供应量为 21,000,000 MYBUBU,转账税 2%,团队储备 5%。每个钱包最多持有 20,000 MYBUBU。每笔交易的 1% 进入 LP,1% 销毁,以实现通缩保护。" },
+      { "q": "代币按月释放如何运作?", "a": "购买 NFT 节点后,您的 MYBUBU 代币将分 10 个月线性释放。每月释放总分配额度的 10% 供您领取。这样可确保代币分配的可持续性与稳定性。" }
+    ]
+  },
+  "footer": {
+    "rights": "© 2024 MyBubu 协议。版权所有。🐱💖",
+    "disclaimer": "免责声明:加密货币投资存在固有风险。参与前请自行研究。本内容不构成财务建议。MyBubu 致力于带来乐趣!🐾"
+  }
+}
