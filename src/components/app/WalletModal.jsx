@@ -75,7 +75,7 @@ export const WalletModal = ({ isOpen, onClose }) => {
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-display text-xl font-bold gradient-text">
-                Connect Wallet
+                {t('app.wallet.title')}
               </h2>
               <motion.button
                 whileHover={{ scale: 1.1 }}
@@ -88,7 +88,7 @@ export const WalletModal = ({ isOpen, onClose }) => {
             </div>
 
             <p className="text-sm text-muted-foreground mb-6">
-              Choose your preferred wallet to connect to BNB Smart Chain
+              {t('app.wallet.subtitle')}
             </p>
 
             {/* Wallet Options */}
@@ -126,7 +126,7 @@ export const WalletModal = ({ isOpen, onClose }) => {
 
             {/* Footer */}
             <p className="text-xs text-muted-foreground/60 text-center mt-6">
-              By connecting, you agree to the Terms of Service
+              {t('app.wallet.terms')}
             </p>
           </motion.div>
         </motion.div>
