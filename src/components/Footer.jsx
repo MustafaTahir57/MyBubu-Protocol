@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Twitter, MessageCircle, Github, Send } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import mybubuLogo from '@/assets/mybubu-logo.png';
 
 const socialLinks = [
@@ -10,6 +11,7 @@ const socialLinks = [
 ];
 
 export const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="relative py-16 border-t border-border/50">
       {/* Floating paw prints */}
