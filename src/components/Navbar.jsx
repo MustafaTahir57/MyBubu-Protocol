@@ -2,17 +2,10 @@ import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { GlowButton } from './GlowButton';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import mybubuLogo from '@/assets/mybubu-logo.png';
-
-const navLinks = [
-  { label: 'About', href: '#about' },
-  { label: 'Mechanism', href: '#mechanism' },
-  { label: 'Tokenomics', href: '#tokenomics' },
-  { label: 'NFT Nodes', href: '#nft-nodes' },
-  { label: 'Referral', href: '#referral' },
-  { label: 'FAQ', href: '#faq' },
-];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,12 +30,7 @@ export const Navbar = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <motion.a
-            href="#"
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-3"
-          >
+          <motion.a href="#" whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
             <motion.img
               src={mybubuLogo}
               alt="MyBubu"
@@ -50,16 +38,13 @@ export const Navbar = () => {
               animate={{ rotate: [0, -5, 5, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
-            <span className="font-display text-2xl font-bold gradient-text">
-              MyBubu
-            </span>
+            <span className="font-display text-2xl font-bold gradient-text">MyBubu</span>
           </motion.a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link, index) => (
               <motion.a
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -70,20 +55,19 @@ export const Navbar = () => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
               </motion.a>
             ))}
-            <GlowButton onClick={() => navigate('/app')}>🐱 Buy Now</GlowButton>
+            <LanguageSwitcher />
+            <GlowButton onClick={() => navigate('/app')}>{t('nav.buyNow')}</GlowButton>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-foreground"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <LanguageSwitcher />
+            <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-foreground">
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <motion.div
         initial={false}
         animate={{ height: isOpen ? 'auto' : 0 }}
@@ -92,7 +76,7 @@ export const Navbar = () => {
         <div className="container mx-auto px-4 py-4 space-y-4">
           {navLinks.map((link) => (
             <a
-              key={link.label}
+              key={link.href}
               href={link.href}
               onClick={() => setIsOpen(false)}
               className="block text-muted-foreground hover:text-primary transition-colors py-2"
@@ -100,7 +84,7 @@ export const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <GlowButton onClick={() => { setIsOpen(false); navigate('/app'); }}>🐱 Buy Now</GlowButton>
+          <GlowButton onClick={() => { setIsOpen(false); navigate('/app'); }}>{t('nav.buyNow')}</GlowButton>
         </div>
       </motion.div>
     </motion.nav>
