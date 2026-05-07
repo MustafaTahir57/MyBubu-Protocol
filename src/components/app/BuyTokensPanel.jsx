@@ -123,6 +123,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
   };
 
   const isButtonDisabled =
+    isPaused ||
     !walletConnected ||
     !isValid ||
     isProcessing ||
