@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Crown, Gem, Plus, Minus, Gift, Coins } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { formatUnits } from 'viem';
@@ -27,74 +28,50 @@ const tiers = [
 const PRICE_PER_NFT = 500;
 
 export const NFTNodePanel = ({ walletConnected }) => {
+  const { t } = useTranslation();
   const [mintCount, setMintCount] = useState(1);
   const [showTiers, setShowTiers] = useState(false);
   const { address } = useAccount();
 
   const totalCost = mintCount * PRICE_PER_NFT;
-  const currentTier = tiers.reduce((acc, t) => (mintCount >= t.nfts ? t : acc), tiers[0]);
+  const currentTier = tiers.reduce((acc, t2) => (mintCount >= t2.nfts ? t2 : acc), tiers[0]);
 
-  // USDT approval for NFT_NODE contract
   const {
-    balance: usdtBalance,
-    hasEnoughBalance,
-    hasEnoughAllowance,
-    needsApproval,
-    handleApprove,
-    isApproving,
-    approveConfirmed,
-    approveError,
-    resetApprove,
+    balance: usdtBalance, hasEnoughBalance, hasEnoughAllowance, needsApproval,
+    handleApprove, isApproving, approveConfirmed, approveError, resetApprove,
     refetch: refetchApproval,
   } = useUSDTApproval(address, String(totalCost), nftNodeAddress);
 
-  // Mint hook
   const {
-    mint,
-    isPending: isMinting,
-    isConfirming: isMintConfirming,
-    isConfirmed: mintConfirmed,
-    error: mintError,
-    reset: resetMint,
+    mint, isPending: isMinting, isConfirming: isMintConfirming,
+    isConfirmed: mintConfirmed, error: mintError, reset: resetMint,
   } = useNFTNodeMint();
 
-  // Claim hooks
   const { pending, hasPending, refetch: refetchPending } = usePendingTokenRewards(address);
   const { nftBalance, lifetimeClaimed, refetch: refetchRewardInfo } = useTokenRewardInfo(address);
   const {
-    claim,
-    isPending: isClaiming,
-    isConfirming: isClaimConfirming,
-    isConfirmed: claimConfirmed,
-    error: claimError,
-    reset: resetClaim,
+    claim, isPending: isClaiming, isConfirming: isClaimConfirming,
+    isConfirmed: claimConfirmed, error: claimError, reset: resetClaim,
   } = useClaimTokenRewards();
 
-  // BNB Dividend hooks
   const { claimable: claimableBNB, hasClaimable: hasClaimableBNB, refetch: refetchBNB } = useClaimableBNB(address);
   const {
-    claim: claimBNB,
-    isPending: isBNBClaiming,
-    isConfirming: isBNBClaimConfirming,
-    isConfirmed: bnbClaimConfirmed,
-    error: bnbClaimError,
-    reset: resetBNBClaim,
+    claim: claimBNB, isPending: isBNBClaiming, isConfirming: isBNBClaimConfirming,
+    isConfirmed: bnbClaimConfirmed, error: bnbClaimError, reset: resetBNBClaim,
   } = useClaimDividends();
 
-  // After approval confirmed → auto-mint
   useEffect(() => {
     if (approveConfirmed) {
-      toast.success('✅ USDT approved! Minting now...');
+      toast.success(t('app.nftpanel.approvedToast'));
       refetchApproval();
       mint(mintCount);
       resetApprove();
     }
   }, [approveConfirmed]);
 
-  // After mint confirmed
   useEffect(() => {
     if (mintConfirmed) {
-      toast.success(`🎉 Successfully minted ${mintCount} NFT Node(s)!`);
+      toast.success(t('app.nftpanel.mintedToast', { count: mintCount }));
       refetchApproval();
       refetchPending();
       refetchRewardInfo();
@@ -102,63 +79,56 @@ export const NFTNodePanel = ({ walletConnected }) => {
     }
   }, [mintConfirmed]);
 
-  // After claim confirmed
   useEffect(() => {
     if (claimConfirmed) {
-      toast.success('🎉 MYBUBU rewards claimed!');
+      toast.success(t('app.nftpanel.rewardsClaimed'));
       refetchPending();
       refetchRewardInfo();
       resetClaim();
     }
   }, [claimConfirmed]);
 
-  // After BNB claim confirmed
   useEffect(() => {
     if (bnbClaimConfirmed) {
-      toast.success('🎉 BNB dividends claimed!');
+      toast.success(t('app.nftpanel.bnbClaimed'));
       refetchBNB();
       refetchRewardInfo();
       resetBNBClaim();
     }
   }, [bnbClaimConfirmed]);
 
-  // Error toasts
   useEffect(() => {
-    if (approveError) toast.error('Approval failed: ' + (approveError.shortMessage || approveError.message));
+    if (approveError) toast.error(t('app.nftpanel.approvalFail') + (approveError.shortMessage || approveError.message));
   }, [approveError]);
   useEffect(() => {
-    if (mintError) toast.error('Mint failed: ' + (mintError.shortMessage || mintError.message));
+    if (mintError) toast.error(t('app.nftpanel.mintFail') + (mintError.shortMessage || mintError.message));
   }, [mintError]);
   useEffect(() => {
-    if (claimError) toast.error('Claim failed: ' + (claimError.shortMessage || claimError.message));
+    if (claimError) toast.error(t('app.nftpanel.claimFail') + (claimError.shortMessage || claimError.message));
   }, [claimError]);
   useEffect(() => {
-    if (bnbClaimError) toast.error('BNB claim failed: ' + (bnbClaimError.shortMessage || bnbClaimError.message));
+    if (bnbClaimError) toast.error(t('app.nftpanel.bnbClaimFail') + (bnbClaimError.shortMessage || bnbClaimError.message));
   }, [bnbClaimError]);
 
   const handleMintClick = () => {
-    if (needsApproval) {
-      handleApprove();
-    } else if (hasEnoughAllowance && hasEnoughBalance) {
-      mint(mintCount);
-    }
+    if (needsApproval) handleApprove();
+    else if (hasEnoughAllowance && hasEnoughBalance) mint(mintCount);
   };
 
   const isProcessing = isApproving || isMinting || isMintConfirming;
   const formattedBalance = usdtBalance !== undefined ? parseFloat(formatUnits(usdtBalance, 18)).toFixed(2) : '0.00';
 
   const getMintButtonText = () => {
-    if (!walletConnected) return 'Connect Wallet First';
-    if (isApproving) return 'Approving USDT...';
-    if (isMinting || isMintConfirming) return 'Minting...';
-    if (!hasEnoughBalance) return `Insufficient USDT (${formattedBalance})`;
-    if (needsApproval) return `Approve ${totalCost.toLocaleString()} USDT`;
-    return `Mint ${mintCount} NFT${mintCount > 1 ? 's' : ''} for ${totalCost.toLocaleString()} USDT`;
+    if (!walletConnected) return t('app.common.connectFirst');
+    if (isApproving) return t('app.nftpanel.approving');
+    if (isMinting || isMintConfirming) return t('app.nftpanel.minting');
+    if (!hasEnoughBalance) return t('app.nftpanel.insufficientUsdt', { bal: formattedBalance });
+    if (needsApproval) return t('app.nftpanel.approveBtn', { amount: totalCost.toLocaleString() });
+    return t('app.nftpanel.mintBtn', { count: mintCount, plural: mintCount > 1 ? 's' : '', amount: totalCost.toLocaleString() });
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -177,15 +147,10 @@ export const NFTNodePanel = ({ walletConnected }) => {
         >
           <Crown size={56} className="mx-auto text-primary mb-4" />
         </motion.div>
-        <h2 className="font-display text-2xl font-bold gradient-text mb-2 relative">
-          NFT Node Minting
-        </h2>
-        <p className="text-muted-foreground text-sm relative">
-          500 USDT per Node • 10,000 MYBUBU per Node • 10% monthly release
-        </p>
+        <h2 className="font-display text-2xl font-bold gradient-text mb-2 relative">{t('app.nftpanel.title')}</h2>
+        <p className="text-muted-foreground text-sm relative">{t('app.nftpanel.subtitle')}</p>
       </motion.div>
 
-      {/* User Stats */}
       {walletConnected && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -194,11 +159,11 @@ export const NFTNodePanel = ({ walletConnected }) => {
           className="glass-card p-4 grid grid-cols-2 gap-4"
         >
           <div className="text-center">
-            <p className="text-xs text-muted-foreground mb-1">Your NFT Nodes</p>
+            <p className="text-xs text-muted-foreground mb-1">{t('app.nftpanel.yourNodes')}</p>
             <p className="font-display font-bold text-2xl gradient-text">{nftBalance}</p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-muted-foreground mb-1">Lifetime Claimed</p>
+            <p className="text-xs text-muted-foreground mb-1">{t('app.nftpanel.lifetime')}</p>
             <p className="font-display font-bold text-2xl gradient-text">
               {parseFloat(lifetimeClaimed).toLocaleString(undefined, { maximumFractionDigits: 2 })}
             </p>
@@ -206,14 +171,12 @@ export const NFTNodePanel = ({ walletConnected }) => {
         </motion.div>
       )}
 
-      {/* Mint Controls */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="glass-card p-6 space-y-6"
       >
-        {/* Current Tier Display */}
         <div className="text-center">
           <motion.div
             key={currentTier.tier}
@@ -221,11 +184,10 @@ export const NFTNodePanel = ({ walletConnected }) => {
             animate={{ scale: 1, opacity: 1 }}
             className={`inline-block px-6 py-2 rounded-full bg-gradient-to-r ${currentTier.color} text-white font-display font-bold text-sm mb-2`}
           >
-            {currentTier.emoji} {currentTier.tier} — {currentTier.tokens} MYBUBU
+            {currentTier.emoji} {t(`nft.tiers.${currentTier.tier}`)} — {currentTier.tokens} MYBUBU
           </motion.div>
         </div>
 
-        {/* Quantity selector */}
         <div className="flex items-center justify-center gap-6">
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -237,7 +199,7 @@ export const NFTNodePanel = ({ walletConnected }) => {
           </motion.button>
           <motion.div key={mintCount} initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="text-center">
             <p className="text-5xl font-display font-bold gradient-text">{mintCount}</p>
-            <p className="text-xs text-muted-foreground mt-1">NFT Nodes</p>
+            <p className="text-xs text-muted-foreground mt-1">{t('app.nftpanel.nfts')}</p>
           </motion.div>
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -249,7 +211,6 @@ export const NFTNodePanel = ({ walletConnected }) => {
           </motion.button>
         </div>
 
-        {/* Quick select */}
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
           {[1, 2, 3, 5, 8, 13].map((n) => (
             <motion.button
@@ -263,44 +224,42 @@ export const NFTNodePanel = ({ walletConnected }) => {
                   : 'glass-card text-muted-foreground hover:text-foreground hover:border-primary/30'
               }`}
             >
-              {n} NFT{n > 1 ? 's' : ''}
+              {n} {n > 1 ? t('app.nftpanel.nodes') : t('app.nftpanel.node')}
             </motion.button>
           ))}
         </div>
 
-        {/* Cost summary */}
         <div className="glass-card p-4 space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">USDT Balance</span>
+            <span className="text-muted-foreground">{t('app.nftpanel.usdtBalance')}</span>
             <span className="text-foreground font-medium">{formattedBalance} USDT</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Price per NFT</span>
+            <span className="text-muted-foreground">{t('app.nftpanel.pricePer')}</span>
             <span className="text-foreground font-medium">500 USDT</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Quantity</span>
+            <span className="text-muted-foreground">{t('app.nftpanel.qty')}</span>
             <span className="text-foreground font-medium">{mintCount}</span>
           </div>
           <div className="h-px bg-border" />
           <div className="flex justify-between">
-            <span className="text-foreground font-semibold">Total Cost</span>
+            <span className="text-foreground font-semibold">{t('app.nftpanel.totalCost')}</span>
             <motion.span key={totalCost} initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="font-display font-bold text-lg text-primary">
               {totalCost.toLocaleString()} USDT
             </motion.span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Total MYBUBU</span>
+            <span className="text-muted-foreground">{t('app.nftpanel.totalMybubu')}</span>
             <span className="text-secondary font-bold">{(mintCount * 10000).toLocaleString()}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Monthly Claim</span>
-            <span className="text-secondary font-bold">{(mintCount * 1000).toLocaleString()} / month</span>
+            <span className="text-muted-foreground">{t('app.nftpanel.monthlyClaim')}</span>
+            <span className="text-secondary font-bold">{t('app.nftpanel.perMonth', { amount: (mintCount * 1000).toLocaleString() })}</span>
           </div>
         </div>
       </motion.div>
 
-      {/* Mint Button */}
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
@@ -326,7 +285,6 @@ export const NFTNodePanel = ({ walletConnected }) => {
         )}
       </motion.button>
 
-      {/* Claimable MYBUBU Rewards */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -335,10 +293,10 @@ export const NFTNodePanel = ({ walletConnected }) => {
       >
         <h3 className="font-display font-bold text-lg text-foreground flex items-center gap-2">
           <Gift size={20} className="text-primary" />
-          Claimable MYBUBU Rewards
+          {t('app.nftpanel.claimableMybubu')}
         </h3>
         <div className="flex justify-between items-center">
-          <span className="text-muted-foreground text-sm">Pending Rewards</span>
+          <span className="text-muted-foreground text-sm">{t('app.nftpanel.pendingRewards')}</span>
           <span className="font-display font-bold text-xl gradient-text">
             {parseFloat(pending).toLocaleString(undefined, { maximumFractionDigits: 4 })} MYBUBU
           </span>
@@ -357,15 +315,14 @@ export const NFTNodePanel = ({ walletConnected }) => {
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
               />
-              Claiming...
+              {t('app.common.claiming')}
             </span>
           ) : (
-            `Claim ${parseFloat(pending).toLocaleString(undefined, { maximumFractionDigits: 4 })} MYBUBU`
+            t('app.nftpanel.claimAmount', { amount: parseFloat(pending).toLocaleString(undefined, { maximumFractionDigits: 4 }) })
           )}
         </motion.button>
       </motion.div>
 
-      {/* Claimable BNB Dividends */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -374,13 +331,11 @@ export const NFTNodePanel = ({ walletConnected }) => {
       >
         <h3 className="font-display font-bold text-lg text-foreground flex items-center gap-2">
           <Coins size={20} className="text-secondary" />
-          Claimable BNB Dividends
+          {t('app.nftpanel.claimableBnb')}
         </h3>
-        <p className="text-xs text-muted-foreground">
-          NFT Node holders share 10% of daily BNB distributions equally.
-        </p>
+        <p className="text-xs text-muted-foreground">{t('app.nftpanel.bnbDesc')}</p>
         <div className="flex justify-between items-center">
-          <span className="text-muted-foreground text-sm">Pending BNB</span>
+          <span className="text-muted-foreground text-sm">{t('app.nftpanel.pendingBnb')}</span>
           <span className="font-display font-bold text-xl gradient-text">
             {parseFloat(claimableBNB).toLocaleString(undefined, { maximumFractionDigits: 6 })} BNB
           </span>
@@ -399,20 +354,19 @@ export const NFTNodePanel = ({ walletConnected }) => {
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
               />
-              Claiming BNB...
+              {t('app.nftpanel.claimingBnb')}
             </span>
           ) : (
-            `Claim ${parseFloat(claimableBNB).toLocaleString(undefined, { maximumFractionDigits: 6 })} BNB`
+            t('app.nftpanel.claimBnb', { amount: parseFloat(claimableBNB).toLocaleString(undefined, { maximumFractionDigits: 6 }) })
           )}
         </motion.button>
       </motion.div>
 
-      {/* Tier Reference */}
       <motion.button
         onClick={() => setShowTiers(!showTiers)}
         className="w-full text-center text-sm text-primary hover:text-primary/80 transition-colors"
       >
-        {showTiers ? 'Hide' : 'View'} All Reward Tiers ✨
+        {showTiers ? t('app.nftpanel.hideTiers') : t('app.nftpanel.viewTiers')}
       </motion.button>
 
       <AnimatePresence>
@@ -435,8 +389,8 @@ export const NFTNodePanel = ({ walletConnected }) => {
                   }`}
                 >
                   <span className="text-2xl">{tier.emoji}</span>
-                  <p className="font-display font-bold text-xs text-foreground mt-1">{tier.tier}</p>
-                  <p className="text-xs text-muted-foreground">{tier.nfts} Node{tier.nfts > 1 ? 's' : ''}</p>
+                  <p className="font-display font-bold text-xs text-foreground mt-1">{t(`nft.tiers.${tier.tier}`)}</p>
+                  <p className="text-xs text-muted-foreground">{tier.nfts} {tier.nfts > 1 ? t('app.nftpanel.nodes') : t('app.nftpanel.node')}</p>
                   <p className="text-sm font-bold text-primary">{tier.tokens} MYBUBU</p>
                 </motion.div>
               ))}
