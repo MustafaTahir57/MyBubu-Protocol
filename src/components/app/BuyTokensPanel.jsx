@@ -79,6 +79,13 @@ export const BuyTokensPanel = ({ walletConnected }) => {
 
   // Button text
   const getButtonContent = () => {
+    if (isPaused) {
+      return (
+        <span className="flex items-center justify-center gap-2">
+          ⏸ Swapping Paused
+        </span>
+      );
+    }
     if (isProcessing) {
       const stepText =
         swapStep === "approving"
