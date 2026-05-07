@@ -79,7 +79,7 @@ export const Footer = () => {
 
           {/* Copyright */}
           <p className="text-muted-foreground text-sm">
-            © 2024 MyBubu Protocol. All rights reserved. 🐱💖
+            {t('footer.rights')}
           </p>
         </div>
 
@@ -90,8 +90,7 @@ export const Footer = () => {
           viewport={{ once: true }}
           className="text-center text-xs text-muted-foreground/60 mt-8 max-w-2xl mx-auto"
         >
-          Disclaimer: Cryptocurrency investments carry inherent risks. Please do your own research 
-          before participating. This is not financial advice. MyBubu is here for fun! 🐾
+          {t('footer.disclaimer')}
         </motion.p>
       </div>
     </footer>
