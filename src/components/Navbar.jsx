@@ -17,6 +17,16 @@ const navLinks = [
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const navLinks = [
+    { label: t('nav.about'), href: '#about' },
+    { label: t('nav.mechanism'), href: '#mechanism' },
+    { label: t('nav.tokenomics'), href: '#tokenomics' },
+    { label: t('nav.nftNodes'), href: '#nft-nodes' },
+    { label: t('nav.referral'), href: '#referral' },
+    { label: t('nav.faq'), href: '#faq' },
+  ];
 
   return (
     <motion.nav
