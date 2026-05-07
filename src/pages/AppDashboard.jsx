@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Users, Coins, ShoppingCart, Crown, Wallet, Repeat } from 'lucide-react';
 import { useAccount, useDisconnect, useSwitchChain } from 'wagmi';
 import mybubuLogo from '@/assets/mybubu-logo.png';
@@ -12,22 +13,24 @@ import { NFTNodePanel } from '@/components/app/NFTNodePanel';
 import { MyBooPanel } from '@/components/app/MyBooPanel';
 import { UserStatsBar } from '@/components/app/UserStatsBar';
 import { WalletModal } from '@/components/app/WalletModal';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { activeChain } from '@/config/wagmi';
 
-const tabs = [
-  { id: 'myboo', label: 'MyBoo Token', icon: ShoppingCart, emoji: '🚀' },
-  { id: 'buy', label: 'Swap', icon: ShoppingCart, emoji: '🔄' },
-  { id: 'join', label: 'Join', icon: Users, emoji: '🤝' },
-  { id: 'deposit', label: 'Deposit BNB', icon: Coins, emoji: '💰' },
-  { id: 'nft', label: 'NFT Nodes', icon: Crown, emoji: '👑' },
-  { id: 'mymomo', label: 'MyMomo', icon: Repeat, emoji: '🐵', locked: true },
-];
-
 const AppDashboard = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('myboo');
   const [isJoined, setIsJoined] = useState(false);
   const [walletModalOpen, setWalletModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const tabs = [
+    { id: 'myboo', label: t('app.tabs.myboo'), icon: ShoppingCart, emoji: '🚀' },
+    { id: 'buy', label: t('app.tabs.swap'), icon: ShoppingCart, emoji: '🔄' },
+    { id: 'join', label: t('app.tabs.join'), icon: Users, emoji: '🤝' },
+    { id: 'deposit', label: t('app.tabs.deposit'), icon: Coins, emoji: '💰' },
+    { id: 'nft', label: t('app.tabs.nft'), icon: Crown, emoji: '👑' },
+    { id: 'mymomo', label: t('app.tabs.mymomo'), icon: Repeat, emoji: '🐵', locked: true },
+  ];
 
   const { address, isConnected, chain } = useAccount();
   const { disconnect } = useDisconnect();
@@ -39,7 +42,6 @@ const AppDashboard = () => {
     switchChain?.({ chainId: activeChain.id });
   };
 
-  // Auto-switch to active chain if wrong chain
   useEffect(() => {
     if (isWrongChain) {
       handleSwitchChain();
@@ -66,14 +68,12 @@ const AppDashboard = () => {
 
   return (
     <div className="bg-background relative overflow-hidden">
-      {/* Animated background */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse-glow" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: '1s' }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px]" />
       </div>
 
-      {/* Top Navigation Bar */}
       <motion.header
         initial={{ y: -80 }}
         animate={{ y: 0 }}
@@ -90,26 +90,28 @@ const AppDashboard = () => {
             <span className="font-display text-lg font-bold gradient-text">MYBUBU</span>
           </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleWalletClick}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all ${
-              isConnected
-                ? 'glass-card border-primary/50 text-primary'
-                : 'bg-gradient-to-r from-primary to-secondary text-primary-foreground'
-            }`}
-          >
-            <Wallet size={16} />
-            {isConnected ? shortAddress : 'Connect Wallet'}
-            {isWrongChain && (
-              <span className="text-xs text-destructive ml-1">⚠️ Wrong Network</span>
-            )}
-          </motion.button>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleWalletClick}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                isConnected
+                  ? 'glass-card border-primary/50 text-primary'
+                  : 'bg-gradient-to-r from-primary to-secondary text-primary-foreground'
+              }`}
+            >
+              <Wallet size={16} />
+              {isConnected ? shortAddress : t('app.common.connectWallet')}
+              {isWrongChain && (
+                <span className="text-xs text-destructive ml-1">{t('app.common.wrongNetwork')}</span>
+              )}
+            </motion.button>
+          </div>
         </div>
       </motion.header>
 
-      {/* Wrong Network Banner */}
       {isWrongChain && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -117,25 +119,22 @@ const AppDashboard = () => {
           className="bg-destructive/10 border-b border-destructive/30 py-3"
         >
           <div className="container mx-auto px-4 flex items-center justify-center gap-3 text-sm">
-            <span className="text-destructive font-medium">⚠️ You're connected to the wrong network</span>
+            <span className="text-destructive font-medium">{t('app.common.wrongNetworkBanner')}</span>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleSwitchChain}
               className="px-4 py-1.5 rounded-lg bg-destructive text-destructive-foreground font-medium text-xs"
             >
-              Switch to {activeChain.name}
+              {t('app.common.switchTo', { name: activeChain.name })}
             </motion.button>
           </div>
         </motion.div>
       )}
 
-      {/* Stats Bar */}
       <UserStatsBar isJoined={isJoined} walletConnected={walletConnected} address={address} />
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8 pb-16 relative z-10">
-        {/* Tab Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -145,7 +144,6 @@ const AppDashboard = () => {
           {tabs.map((tab, index) => {
             const isActive = activeTab === tab.id;
             const isLocked = !!tab.locked;
-            
             return (
               <motion.button
                 key={tab.id}
@@ -168,7 +166,7 @@ const AppDashboard = () => {
                 <span className="text-lg">{tab.emoji}</span>
                 {tab.label}
                 {isLocked && (
-                  <span className="text-xs ml-1">🔒 Soon</span>
+                  <span className="text-xs ml-1">{t('app.tabs.soon')}</span>
                 )}
                 {isActive && (
                   <motion.div
@@ -182,7 +180,6 @@ const AppDashboard = () => {
           })}
         </motion.div>
 
-        {/* Tab Content */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -192,37 +189,19 @@ const AppDashboard = () => {
             transition={{ duration: 0.3 }}
             className="max-w-2xl mx-auto"
           >
-            {activeTab === 'myboo' && (
-              <MyBooPanel walletConnected={walletConnected} />
-            )}
+            {activeTab === 'myboo' && <MyBooPanel walletConnected={walletConnected} />}
             {activeTab === 'join' && (
-              <JoinPanel
-                isJoined={isJoined}
-                onJoinSuccess={handleJoinSuccess}
-                walletConnected={walletConnected}
-              />
+              <JoinPanel isJoined={isJoined} onJoinSuccess={handleJoinSuccess} walletConnected={walletConnected} />
             )}
-            {activeTab === 'deposit' && (
-              <DepositBNBPanel walletConnected={walletConnected} />
-            )}
-            {activeTab === 'buy' && (
-              <BuyTokensPanel walletConnected={walletConnected} />
-            )}
-            {activeTab === 'mymomo' && (
-              <MyMomoPanel walletConnected={walletConnected} />
-            )}
-            {activeTab === 'nft' && (
-              <NFTNodePanel walletConnected={walletConnected} />
-            )}
+            {activeTab === 'deposit' && <DepositBNBPanel walletConnected={walletConnected} />}
+            {activeTab === 'buy' && <BuyTokensPanel walletConnected={walletConnected} />}
+            {activeTab === 'mymomo' && <MyMomoPanel walletConnected={walletConnected} />}
+            {activeTab === 'nft' && <NFTNodePanel walletConnected={walletConnected} />}
           </motion.div>
         </AnimatePresence>
       </main>
 
-      {/* Wallet Modal */}
-      <WalletModal
-        isOpen={walletModalOpen}
-        onClose={() => setWalletModalOpen(false)}
-      />
+      <WalletModal isOpen={walletModalOpen} onClose={() => setWalletModalOpen(false)} />
     </div>
   );
 };

@@ -1,19 +1,21 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { TrendingUp, Users, Gem, Coins } from 'lucide-react';
 import { useUserInfo } from '@/hooks/dataFetcher/useUserInfo';
 import { useTokenRewardInfo } from '@/hooks/dataFetcher/useTokenRewardInfo';
 import { useInviterChildList } from '@/hooks/dataFetcher/useInviterChildList';
 
 export const UserStatsBar = ({ isJoined, walletConnected, address }) => {
+  const { t } = useTranslation();
   const { usdSpent, tokensBought } = useUserInfo(address);
   const { nftBalance } = useTokenRewardInfo(address);
   const { referralCount } = useInviterChildList(address);
 
   const stats = [
-    { label: 'MyBoo Balance', value: parseFloat(tokensBought).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: Coins, color: 'text-primary' },
-    { label: 'USD Deposited', value: parseFloat(usdSpent).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: TrendingUp, color: 'text-secondary' },
-    { label: 'NFTs Owned', value: nftBalance, icon: Gem, color: 'text-primary' },
-    { label: 'Referrals', value: referralCount, icon: Users, color: 'text-secondary' },
+    { label: t('app.stats.myBooBalance'), value: parseFloat(tokensBought).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: Coins, color: 'text-primary' },
+    { label: t('app.stats.usdDeposited'), value: parseFloat(usdSpent).toLocaleString(undefined, { maximumFractionDigits: 2 }), icon: TrendingUp, color: 'text-secondary' },
+    { label: t('app.stats.nftsOwned'), value: nftBalance, icon: Gem, color: 'text-primary' },
+    { label: t('app.stats.referrals'), value: referralCount, icon: Users, color: 'text-secondary' },
   ];
 
   return (

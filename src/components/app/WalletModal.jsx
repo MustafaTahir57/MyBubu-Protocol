@@ -1,31 +1,23 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { X, Loader2 } from "lucide-react";
 import { useConnect, useSwitchChain } from "wagmi";
 import { useAccount } from "wagmi";
 import { toast } from "react-toastify";
 import { activeChain } from "@/config/wagmi";
 
-const walletOptions = [
-  {
-    id: "metaMaskSDK",
-    name: "MetaMask",
-    icon: "🦊",
-    description: "Connect using MetaMask browser extension",
-  },
-  {
-    id: "walletConnect",
-    name: "WalletConnect",
-    icon: "🔗",
-    description: "Scan QR code with your mobile wallet",
-  },
-];
-
 export const WalletModal = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const { connectors, connect, isPending } = useConnect();
   const { isConnected, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
   const [connectingId, setConnectingId] = useState(null);
+
+  const walletOptions = [
+    { id: "metaMaskSDK", name: "MetaMask", icon: "🦊", description: t('app.wallet.metaMaskDesc') },
+    { id: "walletConnect", name: "WalletConnect", icon: "🔗", description: t('app.wallet.wcDesc') },
+  ];
 
   const handleConnect = (walletId) => {
     const connector = connectors.find((c) => c.id === walletId);
@@ -36,16 +28,15 @@ export const WalletModal = ({ isOpen, onClose }) => {
       { connector },
       {
         onSuccess: () => {
-          toast.success("Wallet connected successfully!");
+          toast.success(t('app.wallet.connected'));
           setConnectingId(null);
           onClose();
-          // Switch to active chain after connection
           setTimeout(() => {
             switchChain?.({ chainId: activeChain.id });
           }, 500);
         },
         onError: () => {
-          toast.error("Failed to connect wallet. Please try again.");
+          toast.error(t('app.wallet.failed'));
           setConnectingId(null);
         },
       },
