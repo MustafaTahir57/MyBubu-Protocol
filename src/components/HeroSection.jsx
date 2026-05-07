@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import heroVideo from '@/assets/hero-video.mp4';
 import mybubuLogo from '@/assets/mybubu-logo.png';
 import { GlowButton } from './GlowButton';
@@ -8,6 +9,7 @@ import { ParticleField } from './ParticleField';
 
 export const HeroSection = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { scrollY } = useScroll();
   const logoY = useTransform(scrollY, [0, 500], [0, -100]);
   const logoScale = useTransform(scrollY, [0, 500], [1, 0.8]);
@@ -142,7 +144,7 @@ export const HeroSection = () => {
           className="mb-4"
         >
           <span className="inline-block px-6 py-3 glass-card text-primary text-sm font-medium tracking-wider uppercase border-primary/30">
-            🚀 BSC Network • Dual Token Ecosystem • NFT Nodes 🎯
+            {t('hero.tag')}
           </span>
         </motion.div>
 
@@ -163,7 +165,7 @@ export const HeroSection = () => {
               ease: "linear"
             }}
           >
-            MYBUBU
+            {t('hero.title1')}
           </motion.span>
           <br />
           <motion.span 
@@ -172,7 +174,7 @@ export const HeroSection = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
           >
-            Ecosystem
+            {t('hero.title2')}
           </motion.span>
         </motion.h1>
 
@@ -182,8 +184,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
         >
-          A comprehensive DeFi ecosystem with MYBUBU Token, NFT Nodes, and MYMOMO Token
-          working together for sustainable rewards and passive income. 🐾
+          {t('hero.subtitle')}
         </motion.p>
 
         <motion.div
@@ -192,8 +193,8 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <GlowButton size="large" onClick={() => navigate('/app')}>🐱 Launch App</GlowButton>
-          <GlowButton variant="secondary" size="large">📄 Whitepaper</GlowButton>
+          <GlowButton size="large" onClick={() => navigate('/app')}>{t('hero.launchApp')}</GlowButton>
+          <GlowButton variant="secondary" size="large">{t('hero.whitepaper')}</GlowButton>
         </motion.div>
 
         {/* Scroll indicator */}
