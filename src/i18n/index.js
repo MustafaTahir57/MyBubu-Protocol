@@ -24,8 +24,6 @@ i18n
       es: { translation: es },
       de: { translation: de },
       ar: { translation: ar },
-      // vi: { translation: vi },
-      // th: { translation: th },
       hi: { translation: hi },
       pt: { translation: pt },
     },
