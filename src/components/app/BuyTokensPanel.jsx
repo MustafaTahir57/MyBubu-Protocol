@@ -95,9 +95,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
   }, [approval.approveError, swap.error]);
 
   const getButtonContent = () => {
-    if (isPaused) {
-      return <span className="flex items-center justify-center gap-2">{t('app.swap.pausedBtn')}</span>;
-    }
     if (isProcessing) {
       const stepText =
         swapStep === "approving"
@@ -128,7 +125,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
   };
 
   const isButtonDisabled =
-    isPaused || !walletConnected || !isValid || isProcessing ||
+    !walletConnected || !isValid || isProcessing ||
     (isValid && !approval.hasEnoughBalance);
 
   const quickAmounts =
