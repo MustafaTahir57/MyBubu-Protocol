@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ArrowDownUp, Repeat, Info } from "lucide-react";
+import { ArrowDownUp, Repeat, Info, Gift, Clock } from "lucide-react";
 import { useAccount } from "wagmi";
 import { useUserInfo } from "@/hooks/dataFetcher/useUserInfo";
 import { useMyBooApproval } from "@/hooks/dataSender/useMyBooApproval";
 import { useSwapMyBoo } from "@/hooks/dataSender/useSwapMyBoo";
+import { useSwapUserInfo } from "@/hooks/dataFetcher/useSwapUserInfo";
+import { useClaimAllSwap } from "@/hooks/dataSender/useClaimAllSwap";
 import { toast } from "react-toastify";
 
 export const BuyTokensPanel = ({ walletConnected }) => {
@@ -25,7 +27,33 @@ export const BuyTokensPanel = ({ walletConnected }) => {
 
   const isProcessing = swapStep !== "idle";
   const isValid = numAmount > 0;
-  const isPaused = true;
+
+  const swapInfo = useSwapUserInfo(address);
+  const claim = useClaimAllSwap();
+  const [isClaiming, setIsClaiming] = useState(false);
+
+  const handleClaim = () => {
+    if (swapInfo.claimableNowRaw === 0n || !walletConnected) return;
+    setIsClaiming(true);
+    claim.claimAll();
+  };
+
+  useEffect(() => {
+    if (claim.isConfirmed && isClaiming) {
+      setIsClaiming(false);
+      claim.reset();
+      swapInfo.refetch();
+      toast.success(t('app.swap.claimSuccess'));
+    }
+  }, [claim.isConfirmed, isClaiming]);
+
+  useEffect(() => {
+    if (claim.error && isClaiming) {
+      setIsClaiming(false);
+      toast.error(claim.error.shortMessage || claim.error.message || t('app.swap.claimFailed'));
+    }
+  }, [claim.error]);
+
 
   const handleSwap = () => {
     if (!isValid || !walletConnected) return;
