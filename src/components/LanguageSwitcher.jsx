@@ -6,6 +6,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 const languages = [
   { code: 'en', label: 'English', flag: '🇺🇸' },
   { code: 'zh', label: '中文', flag: '🇨🇳' },
+  { code: 'id', label: 'Bahasa Indonesia', flag: '🇮🇩' },
+  { code: 'fr', label: 'Français', flag: '🇫🇷' },
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  { code: 'ar', label: 'العربية', flag: '🇸🇦' },
+  // { code: 'vi', label: 'Tiếng Việt', flag: '🇻🇳' },
+  // { code: 'th', label: 'ไทย', flag: '🇹🇭' },
+  { code: 'hi', label: 'हिन्दी', flag: '🇮🇳' },
+  { code: 'pt', label: 'Português', flag: '🇵🇹' },
 ];
 
 export const LanguageSwitcher = () => {
