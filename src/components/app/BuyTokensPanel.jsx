@@ -153,19 +153,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
         <p className="text-muted-foreground text-sm">{t('app.swap.subtitle')}</p>
       </motion.div>
 
-      {isPaused && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-4 border-yellow-500/40 flex gap-3 items-start"
-        >
-          <span className="text-xl">⏸</span>
-          <div className="text-xs text-muted-foreground leading-relaxed">
-            <span className="text-yellow-500 font-semibold">{t('app.swap.pausedLabel')}</span>{" "}
-            {t('app.swap.pausedDesc')}
-          </div>
-        </motion.div>
-      )}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
