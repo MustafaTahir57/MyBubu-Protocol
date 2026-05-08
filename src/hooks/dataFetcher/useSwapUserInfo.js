@@ -26,6 +26,8 @@ export const useSwapUserInfo = (address) => {
   const claimableNowRaw = data ? data[5] : 0n;
   const pendingRaw = data ? data[6] : 0n;
 
+  console.log("data ", data, mybubuClaimedRaw)
+
   return {
     hasSwapped,
     swapCount,
