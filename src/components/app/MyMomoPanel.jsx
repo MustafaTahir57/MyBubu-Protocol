@@ -157,14 +157,15 @@ export const MyMomoPanel = ({ walletConnected }) => {
         >
           <div className="flex items-center gap-2 mb-3">
             <Gift size={16} className="text-secondary" />
-            <span className="text-sm font-bold text-foreground">{t('app.mymomo.claimable')}</span>
+            <span className="text-sm font-bold text-foreground">Claimable Zimomo</span>
           </div>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-3xl font-display font-bold text-primary">
                 {parseFloat(claimable).toLocaleString(undefined, { maximumFractionDigits: 4 })}
+                <span className="text-sm text-muted-foreground font-normal ml-2">Zimomo</span>
               </p>
-              <p className="text-xs text-muted-foreground mt-1">{t('app.mymomo.claimableDesc')}</p>
+              <p className="text-xs text-muted-foreground mt-1">Accrues at 0.1% of staked MYBUBU per day</p>
             </div>
             <motion.button
               whileHover={hasClaimable ? { scale: 1.05 } : {}}
@@ -186,7 +187,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
               ) : (
                 <span className="flex items-center gap-2">
                   <Gift size={16} />
-                  {t('app.mymomo.claim')}
+                  Claim Daily
                 </span>
               )}
             </motion.button>
