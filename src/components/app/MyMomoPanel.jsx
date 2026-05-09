@@ -123,28 +123,29 @@ export const MyMomoPanel = ({ walletConnected }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="glass-card p-4 border-primary/20"
+        className="glass-card p-5 border-primary/20"
       >
         <div className="flex items-center gap-2 mb-3">
           <Clock size={16} className="text-secondary" />
-          <span className="text-sm font-bold text-foreground">{t('app.mymomo.vesting')}</span>
+          <span className="text-sm font-bold text-foreground">Lifetime Daily Rewards</span>
         </div>
-        <div className="grid grid-cols-5 gap-1">
-          {Array.from({ length: 10 }, (_, i) => (
-            <div key={i} className="text-center">
-              <div className="text-[10px] text-muted-foreground mb-1">M{i + 1}</div>
-              <div className="h-2 rounded-full bg-primary/20 overflow-hidden">
-                <motion.div
-                  className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
-                  transition={{ delay: 0.1 * i, duration: 0.5 }}
-                />
-              </div>
-              <div className="text-[10px] text-primary mt-1">10%</div>
-            </div>
-          ))}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/20">
+            <div className="text-2xl font-display font-bold gradient-text">0.1%</div>
+            <div className="text-[11px] text-muted-foreground mt-1">Daily Rate</div>
+          </div>
+          <div className="text-center p-3 rounded-xl bg-secondary/5 border border-secondary/20">
+            <div className="text-2xl font-display font-bold gradient-text">∞</div>
+            <div className="text-[11px] text-muted-foreground mt-1">Lifetime</div>
+          </div>
+          <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/20">
+            <div className="text-2xl font-display font-bold gradient-text">24h</div>
+            <div className="text-[11px] text-muted-foreground mt-1">Claim Cycle</div>
+          </div>
         </div>
+        <p className="text-[11px] text-muted-foreground text-center mt-3">
+          Stake MYBUBU and earn <span className="text-primary font-semibold">0.1% Zimomo daily</span> for life. Claimable every 24 hours.
+        </p>
       </motion.div>
 
       {walletConnected && (
