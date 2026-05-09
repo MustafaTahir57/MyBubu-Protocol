@@ -101,8 +101,8 @@ export const MyMomoPanel = ({ walletConnected }) => {
     if (isApproving) return t('app.mymomo.approving');
     if (isDepositing || isDepositConfirming) return t('app.mymomo.staking');
     if (insufficientBalance) return t('app.mymomo.insufficient');
-    if (inputError) return t('app.mymomo.invalidInput');
     if (numAmount > 0 && numAmount < 100) return t('app.mymomo.minLimit');
+    if (inputError) return t('app.mymomo.invalidInput');
     if (needsApproval) return t('app.mymomo.approveStakeBtn');
     return t('app.mymomo.stakeBtn');
   };
