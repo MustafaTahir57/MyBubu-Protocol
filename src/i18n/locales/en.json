@@ -356,6 +356,7 @@
       "stakeBtn": "Stake MYBUBU → MyMomo",
       "validNumber": "Please enter a valid number",
       "greaterZero": "Amount must be greater than 0",
+      "minLimit": "Minimum limit is 100 MYBUBU",
       "approvedToast": "MYBUBU approved! Staking now...",
       "stakedToast": "Staked successfully! Your MyMomo will vest over 10 months.",
       "claimedToast": "MyMomo tokens claimed successfully!",
