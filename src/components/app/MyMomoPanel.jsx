@@ -262,34 +262,38 @@ export const MyMomoPanel = ({ walletConnected }) => {
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">{t('app.mymomo.vestedReceive')}</span>
-            <span className="text-xs text-muted-foreground">{t('app.mymomo.rateLine')}</span>
+            <span className="text-sm text-muted-foreground">Daily Zimomo Earnings</span>
+            <span className="text-xs text-muted-foreground">0.1% / day · lifetime</span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
-            <p className="text-2xl font-display font-bold text-primary">{numAmount.toLocaleString()}</p>
+            <p className="text-2xl font-display font-bold text-primary">{dailyReward}</p>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
               <span className="text-lg">🐵</span>
-              <span className="font-bold text-sm text-foreground">MyMomo</span>
+              <span className="font-bold text-sm text-foreground">Zimomo / day</span>
             </div>
           </div>
         </div>
 
         <div className="glass-card p-3 space-y-2">
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">{t('app.mymomo.stakeRatio')}</span>
-            <span className="text-primary">1:1</span>
+            <span className="text-muted-foreground">Reward Token</span>
+            <span className="text-primary">Zimomo</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">{t('app.common.type')}</span>
-            <span className="text-secondary">{t('app.mymomo.vestingType')}</span>
+            <span className="text-muted-foreground">Daily Rate</span>
+            <span className="text-secondary">0.1% of staked MYBUBU</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">{t('app.mymomo.vesting')}</span>
-            <span className="text-primary">{t('app.mymomo.vestingValue')}</span>
+            <span className="text-muted-foreground">Duration</span>
+            <span className="text-primary">Lifetime</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">{t('app.mymomo.monthlyRelease')}</span>
-            <span className="text-primary">{monthlyRelease} MyMomo</span>
+            <span className="text-muted-foreground">Claim Cycle</span>
+            <span className="text-primary">Every 24 hours</span>
+          </div>
+          <div className="flex justify-between text-xs">
+            <span className="text-muted-foreground">Estimated Daily</span>
+            <span className="text-primary">{dailyReward} Zimomo</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">{t('app.common.fee')}</span>
