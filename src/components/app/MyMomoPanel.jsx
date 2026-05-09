@@ -49,6 +49,8 @@ export const MyMomoPanel = ({ walletConnected }) => {
       setInputError(t('app.mymomo.validNumber'));
     } else if (val && parseFloat(val) === 0) {
       setInputError(t('app.mymomo.greaterZero'));
+    } else if (val && parseFloat(val) < 100) {
+      setInputError(t('app.mymomo.minLimit'));
     }
   };
 
