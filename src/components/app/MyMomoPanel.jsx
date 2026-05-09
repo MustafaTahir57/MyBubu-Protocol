@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ArrowDownUp, Clock, Lock, Gift, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowDownUp, Clock, Lock, Gift, AlertCircle } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { useMybubuApproval } from '@/hooks/dataSender/useMybubuApproval';
 import { useMymomoDeposit } from '@/hooks/dataSender/useMymomoDeposit';
@@ -147,7 +147,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           </div>
         </div>
         <p className="text-[11px] text-muted-foreground text-center mt-3">
-          Stake MYBUBU and earn <span className="text-primary font-semibold">0.1% Zimomo daily</span> for life. Claimable every 24 hours.
+          Stake MYBUBU and earn <span className="text-primary font-semibold">0.1% MyMomo daily</span> for life. Claimable every 24 hours.
         </p>
       </motion.div>
 
@@ -160,13 +160,13 @@ export const MyMomoPanel = ({ walletConnected }) => {
         >
           <div className="flex items-center gap-2 mb-3">
             <Gift size={16} className="text-secondary" />
-            <span className="text-sm font-bold text-foreground">Claimable Zimomo</span>
+            <span className="text-sm font-bold text-foreground">Claimable MyMomo</span>
           </div>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-3xl font-display font-bold text-primary">
                 {parseFloat(claimable).toLocaleString(undefined, { maximumFractionDigits: 4 })}
-                <span className="text-sm text-muted-foreground font-normal ml-2">Zimomo</span>
+                <span className="text-sm text-muted-foreground font-normal ml-2">MyMomo</span>
               </p>
               <p className="text-xs text-muted-foreground mt-1">Accrues at 0.1% of staked MYBUBU per day</p>
             </div>
@@ -265,14 +265,14 @@ export const MyMomoPanel = ({ walletConnected }) => {
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">Daily Zimomo Earnings</span>
+            <span className="text-sm text-muted-foreground">Daily MyMomo Earnings</span>
             <span className="text-xs text-muted-foreground">0.1% / day · lifetime</span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
             <p className="text-2xl font-display font-bold text-primary">{dailyReward}</p>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
               <span className="text-lg">🐵</span>
-              <span className="font-bold text-sm text-foreground">Zimomo / day</span>
+              <span className="font-bold text-sm text-foreground">MyMomo / day</span>
             </div>
           </div>
         </div>
@@ -280,7 +280,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
         <div className="glass-card p-3 space-y-2">
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Reward Token</span>
-            <span className="text-primary">Zimomo</span>
+            <span className="text-primary">MyMomo</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Daily Rate</span>
@@ -296,7 +296,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Estimated Daily</span>
-            <span className="text-primary">{dailyReward} Zimomo</span>
+            <span className="text-primary">{dailyReward} MyMomo</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">{t('app.common.fee')}</span>
