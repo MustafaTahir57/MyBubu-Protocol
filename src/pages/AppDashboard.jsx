@@ -29,7 +29,7 @@ const AppDashboard = () => {
     { id: 'join', label: t('app.tabs.join'), icon: Users, emoji: '🤝' },
     { id: 'deposit', label: t('app.tabs.deposit'), icon: Coins, emoji: '💰' },
     { id: 'nft', label: t('app.tabs.nft'), icon: Crown, emoji: '👑' },
-    { id: 'mymomo', label: t('app.tabs.mymomo'), icon: Repeat, emoji: '🐵', locked: true },
+    { id: 'mymomo', label: t('app.tabs.mymomo'), icon: Repeat, emoji: '🐵' },
   ];
 
   const { address, isConnected, chain } = useAccount();
@@ -143,31 +143,24 @@ const AppDashboard = () => {
         >
           {tabs.map((tab, index) => {
             const isActive = activeTab === tab.id;
-            const isLocked = !!tab.locked;
             return (
               <motion.button
                 key={tab.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index }}
-                whileHover={!isLocked ? { scale: 1.05, y: -2 } : {}}
-                whileTap={!isLocked ? { scale: 0.95 } : {}}
-                onClick={() => !isLocked && setActiveTab(tab.id)}
-                disabled={isLocked}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setActiveTab(tab.id)}
                 className={`relative flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all ${
                   isActive
                     ? 'bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-lg'
-                    : isLocked
-                    ? 'glass-card text-muted-foreground/50 cursor-not-allowed'
                     : 'glass-card text-muted-foreground hover:text-foreground hover:border-primary/30'
                 }`}
                 style={isActive ? { boxShadow: 'var(--shadow-glow-sm)' } : {}}
               >
                 <span className="text-lg">{tab.emoji}</span>
                 {tab.label}
-                {isLocked && (
-                  <span className="text-xs ml-1">{t('app.tabs.soon')}</span>
-                )}
                 {isActive && (
                   <motion.div
                     layoutId="activeTabIndicator"

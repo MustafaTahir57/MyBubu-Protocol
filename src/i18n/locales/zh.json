@@ -244,7 +244,18 @@
       "insufficient": "MyBoo 余额不足",
       "insufficientDetail": "MyBoo 余额不足,您当前持有 {{balance}} MyBoo。",
       "swapRatio": "兑换比例",
-      "successToast": "🎉 兑换成功!您的 MyBoo 已成功兑换为 MYBUBU。"
+      "successToast": "🎉 兑换成功!您的 MyBoo 已成功兑换为 MYBUBU。",
+      "claimTitle": "您的 MYBUBU 释放进度",
+      "claimSubtitle": "兑换所得的 MYBUBU 按线性方式逐步释放,可随时领取已解锁部分。",
+      "claimableNow": "当前可领取",
+      "pendingVesting": "待释放(锁仓中)",
+      "totalAllocated": "总分配",
+      "alreadyClaimed": "已领取",
+      "claimBtn": "领取 MYBUBU",
+      "claiming": "领取中...",
+      "nothingToClaim": "暂无可领取数量",
+      "claimSuccess": "🎉 领取成功!MYBUBU 已发送到您的钱包。",
+      "claimFailed": "领取失败"
     },
     "join": {
       "joinedTitle": "欢迎加入 MYBUBU! 🎉",

@@ -34,7 +34,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
   } = useMymomoClaim();
 
   const numAmount = parseFloat(mybubuAmount) || 0;
-  const monthlyRelease = numAmount > 0 ? (numAmount * 0.1).toFixed(2) : '0.00';
+  const dailyReward = numAmount > 0 ? (numAmount * 0.001).toFixed(4) : '0.0000';
   const isValidAmount = numAmount > 0 && !inputError;
   const insufficientBalance = isValidAmount && !hasEnoughBalance;
 
@@ -123,28 +123,29 @@ export const MyMomoPanel = ({ walletConnected }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="glass-card p-4 border-primary/20"
+        className="glass-card p-5 border-primary/20"
       >
         <div className="flex items-center gap-2 mb-3">
           <Clock size={16} className="text-secondary" />
-          <span className="text-sm font-bold text-foreground">{t('app.mymomo.vesting')}</span>
+          <span className="text-sm font-bold text-foreground">Lifetime Daily Rewards</span>
         </div>
-        <div className="grid grid-cols-5 gap-1">
-          {Array.from({ length: 10 }, (_, i) => (
-            <div key={i} className="text-center">
-              <div className="text-[10px] text-muted-foreground mb-1">M{i + 1}</div>
-              <div className="h-2 rounded-full bg-primary/20 overflow-hidden">
-                <motion.div
-                  className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
-                  transition={{ delay: 0.1 * i, duration: 0.5 }}
-                />
-              </div>
-              <div className="text-[10px] text-primary mt-1">10%</div>
-            </div>
-          ))}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/20">
+            <div className="text-2xl font-display font-bold gradient-text">0.1%</div>
+            <div className="text-[11px] text-muted-foreground mt-1">Daily Rate</div>
+          </div>
+          <div className="text-center p-3 rounded-xl bg-secondary/5 border border-secondary/20">
+            <div className="text-2xl font-display font-bold gradient-text">∞</div>
+            <div className="text-[11px] text-muted-foreground mt-1">Lifetime</div>
+          </div>
+          <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/20">
+            <div className="text-2xl font-display font-bold gradient-text">24h</div>
+            <div className="text-[11px] text-muted-foreground mt-1">Claim Cycle</div>
+          </div>
         </div>
+        <p className="text-[11px] text-muted-foreground text-center mt-3">
+          Stake MYBUBU and earn <span className="text-primary font-semibold">0.1% Zimomo daily</span> for life. Claimable every 24 hours.
+        </p>
       </motion.div>
 
       {walletConnected && (
@@ -156,14 +157,15 @@ export const MyMomoPanel = ({ walletConnected }) => {
         >
           <div className="flex items-center gap-2 mb-3">
             <Gift size={16} className="text-secondary" />
-            <span className="text-sm font-bold text-foreground">{t('app.mymomo.claimable')}</span>
+            <span className="text-sm font-bold text-foreground">Claimable Zimomo</span>
           </div>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-3xl font-display font-bold text-primary">
                 {parseFloat(claimable).toLocaleString(undefined, { maximumFractionDigits: 4 })}
+                <span className="text-sm text-muted-foreground font-normal ml-2">Zimomo</span>
               </p>
-              <p className="text-xs text-muted-foreground mt-1">{t('app.mymomo.claimableDesc')}</p>
+              <p className="text-xs text-muted-foreground mt-1">Accrues at 0.1% of staked MYBUBU per day</p>
             </div>
             <motion.button
               whileHover={hasClaimable ? { scale: 1.05 } : {}}
@@ -185,7 +187,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
               ) : (
                 <span className="flex items-center gap-2">
                   <Gift size={16} />
-                  {t('app.mymomo.claim')}
+                  Claim Daily
                 </span>
               )}
             </motion.button>
@@ -260,34 +262,38 @@ export const MyMomoPanel = ({ walletConnected }) => {
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">{t('app.mymomo.vestedReceive')}</span>
-            <span className="text-xs text-muted-foreground">{t('app.mymomo.rateLine')}</span>
+            <span className="text-sm text-muted-foreground">Daily Zimomo Earnings</span>
+            <span className="text-xs text-muted-foreground">0.1% / day · lifetime</span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
-            <p className="text-2xl font-display font-bold text-primary">{numAmount.toLocaleString()}</p>
+            <p className="text-2xl font-display font-bold text-primary">{dailyReward}</p>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
               <span className="text-lg">🐵</span>
-              <span className="font-bold text-sm text-foreground">MyMomo</span>
+              <span className="font-bold text-sm text-foreground">Zimomo / day</span>
             </div>
           </div>
         </div>
 
         <div className="glass-card p-3 space-y-2">
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">{t('app.mymomo.stakeRatio')}</span>
-            <span className="text-primary">1:1</span>
+            <span className="text-muted-foreground">Reward Token</span>
+            <span className="text-primary">Zimomo</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">{t('app.common.type')}</span>
-            <span className="text-secondary">{t('app.mymomo.vestingType')}</span>
+            <span className="text-muted-foreground">Daily Rate</span>
+            <span className="text-secondary">0.1% of staked MYBUBU</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">{t('app.mymomo.vesting')}</span>
-            <span className="text-primary">{t('app.mymomo.vestingValue')}</span>
+            <span className="text-muted-foreground">Duration</span>
+            <span className="text-primary">Lifetime</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">{t('app.mymomo.monthlyRelease')}</span>
-            <span className="text-primary">{monthlyRelease} MyMomo</span>
+            <span className="text-muted-foreground">Claim Cycle</span>
+            <span className="text-primary">Every 24 hours</span>
+          </div>
+          <div className="flex justify-between text-xs">
+            <span className="text-muted-foreground">Estimated Daily</span>
+            <span className="text-primary">{dailyReward} Zimomo</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">{t('app.common.fee')}</span>

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ArrowDownUp, Repeat, Info } from "lucide-react";
+import { ArrowDownUp, Repeat, Info, Gift, Clock } from "lucide-react";
 import { useAccount } from "wagmi";
 import { useUserInfo } from "@/hooks/dataFetcher/useUserInfo";
 import { useMyBooApproval } from "@/hooks/dataSender/useMyBooApproval";
 import { useSwapMyBoo } from "@/hooks/dataSender/useSwapMyBoo";
+import { useSwapUserInfo } from "@/hooks/dataFetcher/useSwapUserInfo";
+import { useClaimAllSwap } from "@/hooks/dataSender/useClaimAllSwap";
 import { toast } from "react-toastify";
 
 export const BuyTokensPanel = ({ walletConnected }) => {
@@ -25,7 +27,33 @@ export const BuyTokensPanel = ({ walletConnected }) => {
 
   const isProcessing = swapStep !== "idle";
   const isValid = numAmount > 0;
-  const isPaused = true;
+
+  const swapInfo = useSwapUserInfo(address);
+  const claim = useClaimAllSwap();
+  const [isClaiming, setIsClaiming] = useState(false);
+
+  const handleClaim = () => {
+    if (swapInfo.claimableNowRaw === 0n || !walletConnected) return;
+    setIsClaiming(true);
+    claim.claimAll();
+  };
+
+  useEffect(() => {
+    if (claim.isConfirmed && isClaiming) {
+      setIsClaiming(false);
+      claim.reset();
+      swapInfo.refetch();
+      toast.success(t('app.swap.claimSuccess'));
+    }
+  }, [claim.isConfirmed, isClaiming]);
+
+  useEffect(() => {
+    if (claim.error && isClaiming) {
+      setIsClaiming(false);
+      toast.error(claim.error.shortMessage || claim.error.message || t('app.swap.claimFailed'));
+    }
+  }, [claim.error]);
+
 
   const handleSwap = () => {
     if (!isValid || !walletConnected) return;
@@ -54,6 +82,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
       swap.reset();
       approval.resetApprove();
       refetchMyBooBalance();
+      swapInfo.refetch();
       toast.success(t('app.swap.successToast'));
     }
   }, [swap.isConfirmed, swapStep]);
@@ -67,9 +96,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
   }, [approval.approveError, swap.error]);
 
   const getButtonContent = () => {
-    if (isPaused) {
-      return <span className="flex items-center justify-center gap-2">{t('app.swap.pausedBtn')}</span>;
-    }
     if (isProcessing) {
       const stepText =
         swapStep === "approving"
@@ -100,7 +126,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
   };
 
   const isButtonDisabled =
-    isPaused || !walletConnected || !isValid || isProcessing ||
+    !walletConnected || !isValid || isProcessing ||
     (isValid && !approval.hasEnoughBalance);
 
   const quickAmounts =
@@ -128,19 +154,6 @@ export const BuyTokensPanel = ({ walletConnected }) => {
         <p className="text-muted-foreground text-sm">{t('app.swap.subtitle')}</p>
       </motion.div>
 
-      {isPaused && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-4 border-yellow-500/40 flex gap-3 items-start"
-        >
-          <span className="text-xl">⏸</span>
-          <div className="text-xs text-muted-foreground leading-relaxed">
-            <span className="text-yellow-500 font-semibold">{t('app.swap.pausedLabel')}</span>{" "}
-            {t('app.swap.pausedDesc')}
-          </div>
-        </motion.div>
-      )}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -274,6 +287,92 @@ export const BuyTokensPanel = ({ walletConnected }) => {
       >
         {getButtonContent()}
       </motion.button>
+
+      {walletConnected && swapInfo.hasSwapped && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="glass-card p-6 space-y-4 border-primary/30"
+          style={{ boxShadow: "0 0 60px hsl(340 80% 65% / 0.08)" }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+              <Gift size={18} className="text-primary-foreground" />
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-foreground">{t('app.swap.claimTitle')}</h3>
+              <p className="text-xs text-muted-foreground">{t('app.swap.claimSubtitle')}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-background/50 border border-primary/30 rounded-xl p-4">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                <Gift size={12} className="text-primary" />
+                {t('app.swap.claimableNow')}
+              </div>
+              <p className="font-display text-lg font-bold gradient-text break-all">
+                {parseFloat(swapInfo.claimableNow).toLocaleString(undefined, { maximumFractionDigits: 4 })}
+              </p>
+              <p className="text-[10px] text-muted-foreground">MYBUBU</p>
+            </div>
+
+            <div className="bg-background/30 border border-border/50 rounded-xl p-4">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                <Clock size={12} className="text-secondary" />
+                {t('app.swap.pendingVesting')}
+              </div>
+              <p className="font-display text-lg font-bold text-secondary break-all">
+                {parseFloat(swapInfo.pending).toLocaleString(undefined, { maximumFractionDigits: 4 })}
+              </p>
+              <p className="text-[10px] text-muted-foreground">MYBUBU</p>
+            </div>
+          </div>
+
+          <div className="glass-card p-3 space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">{t('app.swap.totalAllocated')}</span>
+              <span className="text-foreground font-medium">
+                {parseFloat(swapInfo.mybubuAllocated).toLocaleString(undefined, { maximumFractionDigits: 4 })} MYBUBU
+              </span>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">{t('app.swap.alreadyClaimed')}</span>
+              <span className="text-green-500 font-medium">
+                {parseFloat(swapInfo.mybubuClaimed).toLocaleString(undefined, { maximumFractionDigits: 4 })} MYBUBU
+              </span>
+            </div>
+          </div>
+
+          <motion.button
+            whileHover={swapInfo.claimableNowRaw > 0n && !isClaiming ? { scale: 1.02 } : {}}
+            whileTap={swapInfo.claimableNowRaw > 0n && !isClaiming ? { scale: 0.98 } : {}}
+            onClick={handleClaim}
+            disabled={swapInfo.claimableNowRaw === 0n || isClaiming || claim.isConfirming}
+            className="w-full py-3 rounded-xl font-display font-bold text-sm bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            style={swapInfo.claimableNowRaw > 0n && !isClaiming ? { boxShadow: "var(--shadow-glow)" } : {}}
+          >
+            {isClaiming || claim.isConfirming ? (
+              <span className="flex items-center justify-center gap-2">
+                <motion.span
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+                />
+                {t('app.swap.claiming')}
+              </span>
+            ) : swapInfo.claimableNowRaw === 0n ? (
+              t('app.swap.nothingToClaim')
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                <Gift size={16} />
+                {t('app.swap.claimBtn')}
+              </span>
+            )}
+          </motion.button>
+        </motion.div>
+      )}
     </div>
   );
 };

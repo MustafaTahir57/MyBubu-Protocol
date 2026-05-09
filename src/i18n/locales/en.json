@@ -244,7 +244,18 @@
       "insufficient": "Insufficient MyBoo Balance",
       "insufficientDetail": "Insufficient MyBoo balance. You have {{balance}} MyBoo.",
       "swapRatio": "Swap Ratio",
-      "successToast": "🎉 Swap Successful! Your MyBoo tokens have been swapped for MYBUBU."
+      "successToast": "🎉 Swap Successful! Your MyBoo tokens have been swapped for MYBUBU.",
+      "claimTitle": "Your MYBUBU Vesting",
+      "claimSubtitle": "MYBUBU from your swaps unlocks linearly. Claim what's available.",
+      "claimableNow": "Claimable Now",
+      "pendingVesting": "Pending (Vesting)",
+      "totalAllocated": "Total Allocated",
+      "alreadyClaimed": "Already Claimed",
+      "claimBtn": "Claim MYBUBU",
+      "claiming": "Claiming...",
+      "nothingToClaim": "Nothing to Claim Yet",
+      "claimSuccess": "🎉 Claimed! MYBUBU sent to your wallet.",
+      "claimFailed": "Claim failed"
     },
     "join": {
       "joinedTitle": "Welcome to MYBUBU! 🎉",
