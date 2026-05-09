@@ -34,7 +34,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
   } = useMymomoClaim();
 
   const numAmount = parseFloat(mybubuAmount) || 0;
-  const monthlyRelease = numAmount > 0 ? (numAmount * 0.1).toFixed(2) : '0.00';
+  const dailyReward = numAmount > 0 ? (numAmount * 0.001).toFixed(4) : '0.0000';
   const isValidAmount = numAmount > 0 && !inputError;
   const insufficientBalance = isValidAmount && !hasEnoughBalance;
 
