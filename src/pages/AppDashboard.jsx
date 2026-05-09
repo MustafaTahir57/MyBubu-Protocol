@@ -29,7 +29,7 @@ const AppDashboard = () => {
     { id: 'join', label: t('app.tabs.join'), icon: Users, emoji: '🤝' },
     { id: 'deposit', label: t('app.tabs.deposit'), icon: Coins, emoji: '💰' },
     { id: 'nft', label: t('app.tabs.nft'), icon: Crown, emoji: '👑' },
-    { id: 'mymomo', label: t('app.tabs.mymomo'), icon: Repeat, emoji: '🐵', locked: true },
+    { id: 'mymomo', label: t('app.tabs.mymomo'), icon: Repeat, emoji: '🐵' },
   ];
 
   const { address, isConnected, chain } = useAccount();
