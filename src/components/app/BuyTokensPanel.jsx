@@ -82,6 +82,7 @@ export const BuyTokensPanel = ({ walletConnected }) => {
       swap.reset();
       approval.resetApprove();
       refetchMyBooBalance();
+      swapInfo.refetch();
       toast.success(t('app.swap.successToast'));
     }
   }, [swap.isConfirmed, swapStep]);
