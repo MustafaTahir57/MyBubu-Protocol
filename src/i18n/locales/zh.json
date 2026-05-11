@@ -356,7 +356,7 @@
       "stakeBtn": "质押 MYBUBU → MyMomo",
       "validNumber": "请输入有效的数字",
       "greaterZero": "金额必须大于 0",
-      "minLimit": "最低限额为 100 MYBUBU",
+      "minLimit": "最低限额为 1000 MYBUBU",
       "approvedToast": "MYBUBU 授权成功!正在质押...",
       "stakedToast": "质押成功!您的 MyMomo 将在 10 个月内线性释放。",
       "claimedToast": "MyMomo 代币领取成功!",
