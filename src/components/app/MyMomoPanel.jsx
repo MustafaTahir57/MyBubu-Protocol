@@ -150,7 +150,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           </div>
         </div>
         <p className="text-[11px] text-muted-foreground text-center mt-3">
-          Inject MYBUBU and earn <span className="text-primary font-semibold">0.01% MyMomo daily</span> for life. Claimable every 24 hours.
+          Inject MYBUBU and earn <span className="text-primary font-semibold">{dailyRatePercentLabel} MyMomo daily</span> for life. Claimable every 24 hours.
         </p>
       </motion.div>
 
