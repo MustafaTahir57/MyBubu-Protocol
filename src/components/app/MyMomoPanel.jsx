@@ -34,7 +34,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
   } = useMymomoClaim();
 
   const numAmount = parseFloat(mybubuAmount) || 0;
-  const dailyReward = numAmount > 0 ? (numAmount * 0.001).toFixed(4) : '0.0000';
+  const dailyReward = numAmount > 0 ? (numAmount * 0.0001).toFixed(4) : '0.0000';
   const isValidAmount = numAmount >= 1000 && !inputError;
   const insufficientBalance = isValidAmount && !hasEnoughBalance;
 
@@ -64,7 +64,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
 
   useEffect(() => {
     if (depositConfirmed) {
-      toast.success(t('app.mymomo.stakedToast'));
+      toast.success(t('app.mymomo.injectedToast'));
       setMybubuAmount('');
       refetchApproval();
       refetchClaimable();
@@ -83,13 +83,13 @@ export const MyMomoPanel = ({ walletConnected }) => {
     if (approveError) toast.error(t('app.mymomo.approvalFail') + (approveError.shortMessage || approveError.message));
   }, [approveError]);
   useEffect(() => {
-    if (depositError) toast.error(t('app.mymomo.stakeFail') + (depositError.shortMessage || depositError.message));
+    if (depositError) toast.error(t('app.mymomo.injectFail') + (depositError.shortMessage || depositError.message));
   }, [depositError]);
   useEffect(() => {
     if (claimError) toast.error(t('app.mymomo.claimFail') + (claimError.shortMessage || claimError.message));
   }, [claimError]);
 
-  const handleStake = () => {
+  const handleInject = () => {
     if (needsApproval) handleApprove();
     else if (hasEnoughAllowance && hasEnoughBalance) deposit(mybubuAmount);
   };
@@ -99,12 +99,12 @@ export const MyMomoPanel = ({ walletConnected }) => {
   const getButtonText = () => {
     if (!walletConnected) return t('app.common.connectFirst');
     if (isApproving) return t('app.mymomo.approving');
-    if (isDepositing || isDepositConfirming) return t('app.mymomo.staking');
+    if (isDepositing || isDepositConfirming) return t('app.mymomo.injecting');
     if (insufficientBalance) return t('app.mymomo.insufficient');
     if (numAmount > 0 && numAmount < 1000) return t('app.mymomo.minLimit');
     if (inputError) return t('app.mymomo.invalidInput');
-    if (needsApproval) return t('app.mymomo.approveStakeBtn');
-    return t('app.mymomo.stakeBtn');
+    if (needsApproval) return t('app.mymomo.approveInjectBtn');
+    return t('app.mymomo.injectBtn');
   };
 
   return (
@@ -134,7 +134,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
         </div>
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/20">
-            <div className="text-2xl font-display font-bold gradient-text">0.1%</div>
+            <div className="text-2xl font-display font-bold gradient-text">0.01%</div>
             <div className="text-[11px] text-muted-foreground mt-1">Daily Rate</div>
           </div>
           <div className="text-center p-3 rounded-xl bg-secondary/5 border border-secondary/20">
@@ -147,7 +147,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           </div>
         </div>
         <p className="text-[11px] text-muted-foreground text-center mt-3">
-          Stake MYBUBU and earn <span className="text-primary font-semibold">0.1% MyMomo daily</span> for life. Claimable every 24 hours.
+          Inject MYBUBU and earn <span className="text-primary font-semibold">0.01% MyMomo daily</span> for life. Claimable every 24 hours.
         </p>
       </motion.div>
 
@@ -168,7 +168,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
                 {parseFloat(claimable).toLocaleString(undefined, { maximumFractionDigits: 4 })}
                 <span className="text-sm text-muted-foreground font-normal ml-2">MyMomo</span>
               </p>
-              <p className="text-xs text-muted-foreground mt-1">Accrues at 0.1% of staked MYBUBU per day</p>
+              <p className="text-xs text-muted-foreground mt-1">Accrues at 0.01% of injected MYBUBU per day</p>
             </div>
             <motion.button
               whileHover={hasClaimable ? { scale: 1.05 } : {}}
@@ -206,7 +206,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
       >
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">{t('app.common.youStake')}</span>
+            <span className="text-sm text-muted-foreground">You Inject</span>
             <span className="text-xs text-muted-foreground">
               {t('app.common.balance')}: {walletConnected ? `${parseFloat(formattedBalance).toLocaleString(undefined, { maximumFractionDigits: 4 })} MYBUBU` : '—'}
             </span>
@@ -266,7 +266,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">Daily MyMomo Earnings</span>
-            <span className="text-xs text-muted-foreground">0.1% / day · lifetime</span>
+            <span className="text-xs text-muted-foreground">0.01% / day · lifetime</span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
             <p className="text-2xl font-display font-bold text-primary">{dailyReward}</p>
@@ -284,7 +284,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Daily Rate</span>
-            <span className="text-secondary">0.1% of staked MYBUBU</span>
+            <span className="text-secondary">0.01% of injected MYBUBU</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Duration</span>
@@ -306,7 +306,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground">{t('app.common.step')}</span>
               <span className="text-secondary flex items-center gap-1">
-                <Lock size={10} /> {t('app.mymomo.approveStakeStep')}
+                <Lock size={10} /> Approve → Inject
               </span>
             </div>
           )}
@@ -316,7 +316,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
       <motion.button
         whileHover={isValidAmount && !insufficientBalance ? { scale: 1.02 } : {}}
         whileTap={isValidAmount && !insufficientBalance ? { scale: 0.98 } : {}}
-        onClick={handleStake}
+        onClick={handleInject}
         disabled={!walletConnected || !isValidAmount || insufficientBalance || isProcessing}
         className="w-full py-4 rounded-xl font-display font-bold text-base bg-gradient-to-r from-primary to-secondary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         style={isValidAmount && !insufficientBalance ? { boxShadow: 'var(--shadow-glow)' } : {}}
