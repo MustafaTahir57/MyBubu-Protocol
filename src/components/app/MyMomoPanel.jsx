@@ -269,7 +269,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">Daily MyMomo Earnings</span>
-            <span className="text-xs text-muted-foreground">0.01% / day · lifetime</span>
+            <span className="text-xs text-muted-foreground">{dailyRatePercentLabel} / day · lifetime</span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
             <p className="text-2xl font-display font-bold text-primary">{dailyReward}</p>
