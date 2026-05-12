@@ -7,6 +7,7 @@ import { useMybubuApproval } from '@/hooks/dataSender/useMybubuApproval';
 import { useMymomoDeposit } from '@/hooks/dataSender/useMymomoDeposit';
 import { useMymomoClaim } from '@/hooks/dataSender/useMymomoClaim';
 import { useGetTotalClaimable } from '@/hooks/dataFetcher/useGetTotalClaimable';
+import { useMymomoRate } from '@/hooks/dataFetcher/useMymomoRate';
 import { toast } from 'react-toastify';
 
 export const MyMomoPanel = ({ walletConnected }) => {
