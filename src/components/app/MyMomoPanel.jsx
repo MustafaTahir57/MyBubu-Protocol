@@ -171,7 +171,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
                 {parseFloat(claimable).toLocaleString(undefined, { maximumFractionDigits: 4 })}
                 <span className="text-sm text-muted-foreground font-normal ml-2">MyMomo</span>
               </p>
-              <p className="text-xs text-muted-foreground mt-1">Accrues at 0.01% of injected MYBUBU per day</p>
+              <p className="text-xs text-muted-foreground mt-1">Accrues at {dailyRatePercentLabel} of injected MYBUBU per day</p>
             </div>
             <motion.button
               whileHover={hasClaimable ? { scale: 1.05 } : {}}
