@@ -137,7 +137,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
         </div>
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/20">
-            <div className="text-2xl font-display font-bold gradient-text">0.01%</div>
+            <div className="text-2xl font-display font-bold gradient-text">{dailyRatePercentLabel}</div>
             <div className="text-[11px] text-muted-foreground mt-1">Daily Rate</div>
           </div>
           <div className="text-center p-3 rounded-xl bg-secondary/5 border border-secondary/20">
