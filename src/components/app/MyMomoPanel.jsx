@@ -287,7 +287,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Daily Rate</span>
-            <span className="text-secondary">0.01% of injected MYBUBU</span>
+            <span className="text-secondary">{dailyRatePercentLabel} of injected MYBUBU</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Duration</span>
