@@ -7,6 +7,7 @@ import { useMybubuApproval } from '@/hooks/dataSender/useMybubuApproval';
 import { useMymomoDeposit } from '@/hooks/dataSender/useMymomoDeposit';
 import { useMymomoClaim } from '@/hooks/dataSender/useMymomoClaim';
 import { useGetTotalClaimable } from '@/hooks/dataFetcher/useGetTotalClaimable';
+import { useMymomoRate } from '@/hooks/dataFetcher/useMymomoRate';
 import { toast } from 'react-toastify';
 
 export const MyMomoPanel = ({ walletConnected }) => {
@@ -33,8 +34,10 @@ export const MyMomoPanel = ({ walletConnected }) => {
     isConfirmed: claimConfirmed, error: claimError, reset: resetClaim,
   } = useMymomoClaim();
 
+  const { dailyRatePercentLabel, dailyRewardMultiplier } = useMymomoRate();
+
   const numAmount = parseFloat(mybubuAmount) || 0;
-  const dailyReward = numAmount > 0 ? (numAmount * 0.0001).toFixed(4) : '0.0000';
+  const dailyReward = numAmount > 0 ? (numAmount * dailyRewardMultiplier).toFixed(4) : '0.0000';
   const isValidAmount = numAmount >= 1000 && !inputError;
   const insufficientBalance = isValidAmount && !hasEnoughBalance;
 
@@ -134,7 +137,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
         </div>
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center p-3 rounded-xl bg-primary/5 border border-primary/20">
-            <div className="text-2xl font-display font-bold gradient-text">0.01%</div>
+            <div className="text-2xl font-display font-bold gradient-text">{dailyRatePercentLabel}</div>
             <div className="text-[11px] text-muted-foreground mt-1">Daily Rate</div>
           </div>
           <div className="text-center p-3 rounded-xl bg-secondary/5 border border-secondary/20">
@@ -147,7 +150,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           </div>
         </div>
         <p className="text-[11px] text-muted-foreground text-center mt-3">
-          Inject MYBUBU and earn <span className="text-primary font-semibold">0.01% MyMomo daily</span> for life. Claimable every 24 hours.
+          Inject MYBUBU and earn <span className="text-primary font-semibold">{dailyRatePercentLabel} MyMomo daily</span> for life. Claimable every 24 hours.
         </p>
       </motion.div>
 
@@ -168,7 +171,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
                 {parseFloat(claimable).toLocaleString(undefined, { maximumFractionDigits: 4 })}
                 <span className="text-sm text-muted-foreground font-normal ml-2">MyMomo</span>
               </p>
-              <p className="text-xs text-muted-foreground mt-1">Accrues at 0.01% of injected MYBUBU per day</p>
+              <p className="text-xs text-muted-foreground mt-1">Accrues at {dailyRatePercentLabel} of injected MYBUBU per day</p>
             </div>
             <motion.button
               whileHover={hasClaimable ? { scale: 1.05 } : {}}
@@ -266,7 +269,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">Daily MyMomo Earnings</span>
-            <span className="text-xs text-muted-foreground">0.01% / day · lifetime</span>
+            <span className="text-xs text-muted-foreground">{dailyRatePercentLabel} / day · lifetime</span>
           </div>
           <div className="relative bg-background/30 border border-border/50 rounded-xl p-4">
             <p className="text-2xl font-display font-bold text-primary">{dailyReward}</p>
@@ -284,7 +287,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Daily Rate</span>
-            <span className="text-secondary">0.01% of injected MYBUBU</span>
+            <span className="text-secondary">{dailyRatePercentLabel} of injected MYBUBU</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Duration</span>
