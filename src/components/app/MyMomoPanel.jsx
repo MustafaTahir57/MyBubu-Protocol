@@ -34,8 +34,10 @@ export const MyMomoPanel = ({ walletConnected }) => {
     isConfirmed: claimConfirmed, error: claimError, reset: resetClaim,
   } = useMymomoClaim();
 
+  const { dailyRatePercentLabel, dailyRewardMultiplier } = useMymomoRate();
+
   const numAmount = parseFloat(mybubuAmount) || 0;
-  const dailyReward = numAmount > 0 ? (numAmount * 0.0001).toFixed(4) : '0.0000';
+  const dailyReward = numAmount > 0 ? (numAmount * dailyRewardMultiplier).toFixed(4) : '0.0000';
   const isValidAmount = numAmount >= 1000 && !inputError;
   const insufficientBalance = isValidAmount && !hasEnoughBalance;
 
