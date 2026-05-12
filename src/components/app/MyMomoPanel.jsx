@@ -64,7 +64,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
 
   useEffect(() => {
     if (depositConfirmed) {
-      toast.success(t('app.mymomo.stakedToast'));
+      toast.success(t('app.mymomo.injectedToast'));
       setMybubuAmount('');
       refetchApproval();
       refetchClaimable();
@@ -83,7 +83,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
     if (approveError) toast.error(t('app.mymomo.approvalFail') + (approveError.shortMessage || approveError.message));
   }, [approveError]);
   useEffect(() => {
-    if (depositError) toast.error(t('app.mymomo.stakeFail') + (depositError.shortMessage || depositError.message));
+    if (depositError) toast.error(t('app.mymomo.injectFail') + (depositError.shortMessage || depositError.message));
   }, [depositError]);
   useEffect(() => {
     if (claimError) toast.error(t('app.mymomo.claimFail') + (claimError.shortMessage || claimError.message));
