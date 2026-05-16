@@ -11,8 +11,8 @@ const languages = [
   { code: 'es', label: 'Español', flag: '🇪🇸' },
   { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
   { code: 'ar', label: 'العربية', flag: '🇸🇦' },
-  // { code: 'vi', label: 'Tiếng Việt', flag: '🇻🇳' },
-  // { code: 'th', label: 'ไทย', flag: '🇹🇭' },
+  { code: 'vi', label: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'th', label: 'ไทย', flag: '🇹🇭' },
   { code: 'hi', label: 'हिन्दी', flag: '🇮🇳' },
   { code: 'pt', label: 'Português', flag: '🇵🇹' },
 ];

@@ -10,6 +10,8 @@ import hi from './locales/hi.json';
 import id from './locales/id.json';
 import pt from './locales/pt.json';
 import fr from './locales/fr.json';
+import vi from "./locales/vi.json"
+import th from "./locales/th.json"
 
 
 i18n
@@ -26,6 +28,8 @@ i18n
       ar: { translation: ar },
       hi: { translation: hi },
       pt: { translation: pt },
+      vi: { translation: vi },
+      th: { translation: th },
     },
     fallbackLng: 'en',
     interpolation: { escapeValue: false },
