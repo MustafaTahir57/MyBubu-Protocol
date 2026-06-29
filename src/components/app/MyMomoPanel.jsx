@@ -242,7 +242,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
           )}
 
           <div className="flex gap-2 mt-2">
-            {[1000, 5000, 10000, 50000].map((v) => (
+            {[10, 1000, 5000, 10000, 50000].map((v) => (
               <motion.button
                 key={v}
                 whileHover={{ scale: 1.05 }}

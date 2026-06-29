@@ -356,7 +356,7 @@
       "injectBtn": "Inject MYBUBU → MyMomo",
       "validNumber": "Please enter a valid number",
       "greaterZero": "Amount must be greater than 0",
-      "minLimit": "Minimum limit is 1000 MYBUBU",
+      "minLimit": "Minimum limit is 10 MYBUBU",
       "approvedToast": "MYBUBU approved! Injecting now...",
       "injectedToast": "Injected successfully! Your MyMomo accrues at 0.01% daily.",
       "claimedToast": "MyMomo tokens claimed successfully!",
