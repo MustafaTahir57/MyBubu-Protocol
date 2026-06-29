@@ -38,7 +38,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
 
   const numAmount = parseFloat(mybubuAmount) || 0;
   const dailyReward = numAmount > 0 ? (numAmount * dailyRewardMultiplier).toFixed(4) : '0.0000';
-  const isValidAmount = numAmount >= 1000 && !inputError;
+  const isValidAmount = numAmount >= 10 && !inputError;
   const insufficientBalance = isValidAmount && !hasEnoughBalance;
 
   const handleInputChange = (e) => {
@@ -52,7 +52,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
       setInputError(t('app.mymomo.validNumber'));
     } else if (val && parseFloat(val) === 0) {
       setInputError(t('app.mymomo.greaterZero'));
-    } else if (val && parseFloat(val) < 1000) {
+    } else if (val && parseFloat(val) < 10) {
       setInputError(t('app.mymomo.minLimit'));
     }
   };
