@@ -38,7 +38,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
 
   const numAmount = parseFloat(mybubuAmount) || 0;
   const dailyReward = numAmount > 0 ? (numAmount * dailyRewardMultiplier).toFixed(4) : '0.0000';
-  const isValidAmount = numAmount >= 1000 && !inputError;
+  const isValidAmount = numAmount >= 10 && !inputError;
   const insufficientBalance = isValidAmount && !hasEnoughBalance;
 
   const handleInputChange = (e) => {
@@ -52,7 +52,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
       setInputError(t('app.mymomo.validNumber'));
     } else if (val && parseFloat(val) === 0) {
       setInputError(t('app.mymomo.greaterZero'));
-    } else if (val && parseFloat(val) < 1000) {
+    } else if (val && parseFloat(val) < 10) {
       setInputError(t('app.mymomo.minLimit'));
     }
   };
@@ -104,7 +104,7 @@ export const MyMomoPanel = ({ walletConnected }) => {
     if (isApproving) return t('app.mymomo.approving');
     if (isDepositing || isDepositConfirming) return t('app.mymomo.injecting');
     if (insufficientBalance) return t('app.mymomo.insufficient');
-    if (numAmount > 0 && numAmount < 1000) return t('app.mymomo.minLimit');
+    if (numAmount > 0 && numAmount < 10) return t('app.mymomo.minLimit');
     if (inputError) return t('app.mymomo.invalidInput');
     if (needsApproval) return t('app.mymomo.approveInjectBtn');
     return t('app.mymomo.injectBtn');
