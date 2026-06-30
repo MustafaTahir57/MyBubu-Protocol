@@ -8,7 +8,7 @@ import { usePendingLPReward } from '@/hooks/dataFetcher/usePendingLPReward';
 import { useClaimLPReward } from '@/hooks/dataSender/useClaimLPReward';
 import { toast } from 'react-toastify';
 
-const presets = [0.1, 0.2, 0.5, 1.0, 1.5, 2.0];
+const presets = [0.01, 0.05,  0.1, 0.5, 1.0, 1.5, 2.0];
 
 export const DepositBNBPanel = ({ walletConnected }) => {
   const { t } = useTranslation();
