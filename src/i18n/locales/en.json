@@ -294,10 +294,10 @@
     },
     "deposit": {
       "title": "Deposit BNB for LP",
-      "subtitle": "Deposit BNB to receive LP tokens • Min: 0.1 BNB • Max: 2 BNB",
+      "subtitle": "Deposit BNB to receive LP tokens • Min: 0.01 BNB • Max: 2 BNB",
       "amount": "Deposit Amount",
       "validNumber": "Please enter a valid number",
-      "outOfRange": "Amount must be between 0.1 and 2 BNB",
+      "outOfRange": "Amount must be between 0.01 and 2 BNB",
       "insufficient": "Insufficient BNB balance",
       "breakdown": "Distribution Breakdown",
       "lpRow": "LP (70%)",
