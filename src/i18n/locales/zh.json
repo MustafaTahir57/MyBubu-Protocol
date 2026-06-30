@@ -294,10 +294,10 @@
     },
     "deposit": {
       "title": "存入 BNB 获取 LP",
-      "subtitle": "存入 BNB 即可获得 LP 代币 • 最低 0.1 BNB • 最高 2 BNB",
+      "subtitle": "存入 BNB 即可获得 LP 代币 • 最低 0.01 BNB • 最高 2 BNB",
       "amount": "存入数量",
       "validNumber": "请输入有效的数字",
-      "outOfRange": "金额必须在 0.1 至 2 BNB 之间",
+      "outOfRange": "金额必须在 0.01 至 2 BNB 之间",
       "insufficient": "BNB 余额不足",
       "breakdown": "分配明细",
       "lpRow": "LP(70%)",

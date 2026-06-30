@@ -294,10 +294,10 @@
     },
     "deposit": {
       "title": "Nạp BNB để Nhận LP",
-      "subtitle": "Nạp BNB để nhận token LP • Tối thiểu 0.1 BNB • Tối đa 2 BNB",
+      "subtitle": "Nạp BNB để nhận token LP • Tối thiểu 0.01 BNB • Tối đa 2 BNB",
       "amount": "Số Lượng Nạp",
       "validNumber": "Vui lòng nhập số hợp lệ",
-      "outOfRange": "Số tiền phải nằm trong khoảng 0.1 đến 2 BNB",
+      "outOfRange": "Số tiền phải nằm trong khoảng 0.01 đến 2 BNB",
       "insufficient": "Số dư BNB không đủ",
       "breakdown": "Chi Tiết Phân Bổ",
       "lpRow": "LP (70%)",

@@ -283,10 +283,10 @@
     },
     "deposit": {
       "title": "إيداع BNB للحصول على LP",
-      "subtitle": "أودع BNB للحصول على رموز LP • الحد الأدنى 0.1 BNB • الحد الأقصى 2 BNB",
+      "subtitle": "أودع BNB للحصول على رموز LP • الحد الأدنى 0.01 BNB • الحد الأقصى 2 BNB",
       "amount": "مبلغ الإيداع",
       "validNumber": "يرجى إدخال رقم صحيح",
-      "outOfRange": "يجب أن يكون المبلغ بين 0.1 و 2 BNB",
+      "outOfRange": "يجب أن يكون المبلغ بين 0.01 و 2 BNB",
       "insufficient": "رصيد BNB غير كافٍ",
       "breakdown": "تفصيل التوزيع",
       "lpRow": "LP (70%)",
